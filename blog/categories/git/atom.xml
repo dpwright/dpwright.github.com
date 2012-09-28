@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | Wright Access]]></title>
+  <link href="http://dpwright.github.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://dpwright.github.com/"/>
+  <updated>2012-09-28T19:21:44+09:00</updated>
+  <id>http://dpwright.github.com/</id>
+  <author>
+    <name><![CDATA[Daniel P. Wright]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git script to rebase all child branches following a command]]></title>
+    <link href="http://dpwright.github.com/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command/"/>
+    <updated>2012-09-25T10:27:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command</id>
+    <content type="html"><![CDATA[<p>This script looks at the current status of the DAG to find the children of the
+current branch, runs an action, then rebases those children.  It is particularly
+useful for users of <code>git-svn</code>, who may find themselves having to rebase all
+topic branches (and sub-topics which build off those) every time they <code>git svn
+rebase</code> or <code>git svn dcommit</code>.</p>
+
+<p>For pure git projects, this is considered by many to be bad form, so use with
+discretion.  People who like a linear history might like it.</p>
+
+<p>I expect the script, in its current state, will fail in cases where the rebase
+can't be done automatically, but for simple day-to-day operations it makes
+<code>git-svn</code> that bit less painful to use :-)</p>
+
+<p><div><script src='https://gist.github.com/3779324.js?file=git-rar.rb'></script>
+<noscript><pre><code>#!/usr/bin/ruby
+#GistID: 3779324
+
+require 'escape'
+
+exit if ARGV.empty?
+
+current_branch = `git symbolic-ref -q HEAD`.sub(/^refs\/heads\//, &quot;&quot;).strip
+exit if current_branch.empty?
+
+IGNORED_BRANCHES = `git branch -r --no-color`.sub(/^[ *]*/, &quot;&quot;).split(&quot;\n&quot;).collect{ |e| e.strip } &lt;&lt; &quot;HEAD&quot;
+
+def branches_on(commit)
+	log = `git log --pretty=%d --simplify-by-decoration #{commit} | head -n 1`
+	branches = log.sub(/^ \(([^)]+)\).*$/, '\1').split(&quot;, &quot;)
+	branches.collect{ |e| e.strip }.reject{ |b| (IGNORED_BRANCHES &lt;&lt; commit).include? b }
+end
+
+def children_of(branch)
+	log = `git branch --no-color --contains #{branch} | sed 's/^[ *]*//' | grep -v \&quot;^#{branch}$\&quot;`
+	log.split(&quot;\n&quot;)
+end
+
+def branch_tree_from(branch)
+	siblings = branches_on branch
+	children = children_of(branch).reject{|c| siblings.include? c}
+	if children.empty?
+		return [branch]
+	else
+		return [branch, siblings.collect{|s| [s]} + children.collect{|c| branch_tree_from(c)}]
+	end
+end
+
+def rebase_all_children(tree)
+	parent = tree.shift
+	children = tree.shift
+	children.map do |e|
+		system &quot;git rebase #{parent} #{e.first}&quot;
+
+		if e.size &gt; 1
+			rebase_all_children e
+		end
+	end
+end
+
+initial_tree = branch_tree_from current_branch
+
+if system &quot;git #{Escape.shell_command(ARGV)}&quot;
+	rebase_all_children initial_tree
+	system &quot;git checkout #{current_branch}&quot;
+end</code></pre></noscript></div>
+</p>
+
+<p>I have an alias set up to invoke it with <code>git rar</code> ("Run and Rebase"), so that I
+can type, for example, <code>git rar svn rebase</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to get a git commit sha1 from an SVN revision number in git-svn]]></title>
+    <link href="http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/"/>
+    <updated>2012-08-01T19:00:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn</id>
+    <content type="html"><![CDATA[<p>This little snippet is useful if you use git-svn -- it gives you an alias to get
+a git commit ID from an SVN revision number. If you work with others who say
+things like, "I think this problem was introduced in revision 10342" it can come
+in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global
+<code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
+
+<p><div><script src='https://gist.github.com/3225360.js?file=.gitconfig'></script>
+<noscript><pre><code>svn-ref = &quot;!f() { git log --grep \\&quot;git-svn-id.*@$1\\&quot; --pretty=%H; }; f&quot;</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to amend old commits]]></title>
+    <link href="http://dpwright.github.com/blog/2012/06/26/git-alias-to-amend-old-commits/"/>
+    <updated>2012-06-26T19:50:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/06/26/git-alias-to-amend-old-commits</id>
+    <content type="html"><![CDATA[<p><code>git commit --amend</code> is a useful little command for fixing mistakes in log
+messages just after you’ve made a commit, but sometimes you don’t realise your
+error until a few commits down the line, by which time it’s too late. You have
+to reset to the earlier version, amend the commit message, and then rebase all
+your commits since then on top of the new, amended commit.</p>
+
+<p>Earlier today, in #git on freenode, somebody who went by the name of constant
+mentioned that they wanted to do this in one command. Another member of the
+chat, frogsonwheels, suggested a solution which essentially did as described
+above in a series of git commands strung together using <code>&amp;amp;&amp;amp;</code>.</p>
+
+<p>I decided to tidy it up a bit and put it into a git alias, thus:</p>
+
+<p><div><script src='https://gist.github.com/2993701.js?file=.gitconfig'></script>
+<noscript><pre><code>amend-commit = &quot;!f() { START=`(git symbolic-ref -q HEAD || git rev-parse HEAD) | cut -d&quot;/&quot; -f 3`; git checkout -q $1 &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD $1 $START; }; f&quot;</code></pre></noscript></div>
+</p>
+
+<p>Note that this is still doing the rebase mentioned above, it’s just automatin
+the steps a little bit. These means that all the usual warnings regarding rebase
+apply: don’t run this command on a commit which has already been published.
+Also, this rebases the currently checked out branch/revision, which means if any
+other branches have been made based off the amended commit <em>or any commit
+since</em>, those branches won’t be rebased and you’ll have to rebase them
+automatically once you’ve done the amend-commit. You can usually tell if this
+is the case pretty easily by inspecting the output of <code>git log --graph --oneline
+--decorate</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to open all diffs in vim tabs]]></title>
+    <link href="http://dpwright.github.com/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs/"/>
+    <updated>2012-06-05T15:46:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs</id>
+    <content type="html"><![CDATA[<p>This is a handy little alias I've been using recently to open all unstaged diffs
+in a single instance of vim, one tab per file. Add the following to the
+<code>[alias]</code> section of your <code>~/.gitconfig</code>:</p>
+
+<p><div><script src='https://gist.github.com/2873132.js?file=.gitconfig'></script>
+<noscript><pre><code>dt = &quot;!f() { vim -p $(git diff --name-only) +\&quot;tabdo Gdiff $@\&quot; +tabfirst; }; f&quot;
+</code></pre></noscript></div>
+</p>
+
+<p>Known issues:</p>
+
+<ul>
+<li>It requires tpope's <a href="https://github.com/tpope/vim-fugitive">vim-fugitive</a> plugin to work.</li>
+<li>It only works with unstaged diffs -- it would be nice to be able to pass an
+arbitrary range of commits and see the diffs between them.</li>
+</ul>
+
+
+<p>Both of the above could be resolved by writing a little script to open all the
+diffs in vim rather than using fugitive's <code>:Gdiff</code> command, but for now this
+little alias does the job nicely.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[File-specific merge resolution in git]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/11/file-specific-merge-resolution-in-git/"/>
+    <updated>2012-05-11T14:18:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/11/file-specific-merge-resolution-in-git</id>
+    <content type="html"><![CDATA[<p>I've been using git-svn for a while now so that I can take advantage of the
+power and convenience of git without having to bother everyone else on the
+project (who are all happily using SVN). It was a bit frustrating at first, but
+once I got the hang of the basic workflow and settled into a routine I started
+to really like it, and now I don't think I could ever go back to using the SVN
+client directly.</p>
+
+<p>One annoyance I've come across multiple times using both SVN and Git is that of
+checked in binary files. Ideally, we'd only check in the source files and build
+off that, but in practice this is problematic for a number of reasons. We'd like
+the non-programmers on the team to be able to build the project without having
+to have the compiler toolchain installed; we'd like the version of our
+executable everyone is running to be guaranteed to be the same; and we'd like it
+to be possible to checkout the project and start running it straight away
+without having to do a build.</p>
+
+<p>The problem with this is that we get a lot of merge conflicts on the binary
+files we're checking in. Take the executable; programmers rebuild this every
+time they hit "compile". It is almost certain that each time you pull, there'll
+be a new copy of the executable in the repo that clashes with yours.</p>
+
+<p>The solution is simple: we always want to accept our version of the executable
+file. That way the timestamp will be older than the new source files we've
+received from the repo, so when we run make it will pick up on that and rebuild
+the executable with the new code we've just pulled in.</p>
+
+<p>The problem is, I've never found a way to automate that for specific files in
+the repo. With SVN, the majority of the team use TortoiseSVN as their interface,
+which doesn't seem to offer that sort of flexibility. With git, I was aware of
+the "ours" and "Xours" merge strategies but didn't know how to apply them only
+to specific files in a merge. I'd read some tips about adding
+<code>merge=ours</code> into the .gitattributes file, but it didn't seem to
+work.</p>
+
+<p>Well, after a little bit of digging around on stackoverflow, I found <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">this
+question</a>, the first answer to which explains how to do exactly that simply
+and easily. Basically, you have to create a script, which acts as a custom merge
+driver. Since git's default behaviour is to leave your copy as-is during a
+binary merge, all that driver has to do is <code>exit 0</code>:-</p>
+
+<p><div><script src='https://gist.github.com/2657349.js?file=git-merge-keep-mine.sh'></script>
+<noscript><pre><code># I want to keep MY version when there is a conflict
+# Nothing to do: %A (the second parameter) already contains my version
+# Just indicate the merge has been successfully &quot;resolved&quot; with the exit status
+exit 0</code></pre></noscript></div>
+</p>
+
+<p>As a convenience, I added a "keep theirs" driver to go with it:-</p>
+
+<p><div><script src='https://gist.github.com/2657356.js?file=git-merge-keep-theirs.sh'></script>
+<noscript><pre><code># I want to keep THEIR version when there is a conflict
+# Copy their version over ours and report success
+cp -f $3 $2
+exit 0</code></pre></noscript></div>
+</p>
+
+<p>Once those scripts are in place, it's simply a matter of defining them in your
+<code>.git/config</code> file, and then setting which files should use them
+using <code>.gitattributes</code>:-</p>
+
+<p><div><script src='https://gist.github.com/2657379.js?file=config'></script>
+<noscript><pre><code>[merge &quot;keep-mine&quot;]
+        name = Always keep mine during merge
+        driver = git-merge-keep-mine.sh %O %A %B
+[merge &quot;keep-theirs&quot;]
+        name = Always keep theirs during merge
+        driver = git-merge-keep-theirs.sh %O %A %B</code></pre></noscript></div>
+
+<div><script src='https://gist.github.com/2657379.js?file=.gitattributes'></script>
+<noscript><pre><code>*.exe -crlf -diff merge=keep-mine
+*.tga -crlf -diff merge=keep-mine
+</code></pre></noscript></div>
+</p>
+
+<p>And that's it! My merges have become <em>much</em> more pleasant since I set this up.</p>
+
+<p>If anybody knows how to do this sort of thing using [Tortoise]SVN, I'd love to
+hear about it in the comments!</p>
+
+<p>(Note: All the above code samples were copied almost verbatim from the
+previously mentioned <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">stackoverflow entry</a>. I don't claim credit for any of
+it.)</p>
+]]></content>
+  </entry>
+  
+</feed>

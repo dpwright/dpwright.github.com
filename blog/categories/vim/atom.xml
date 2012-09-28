@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: vim | Wright Access]]></title>
+  <link href="http://dpwright.github.com/blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://dpwright.github.com/"/>
+  <updated>2012-09-28T19:21:44+09:00</updated>
+  <id>http://dpwright.github.com/</id>
+  <author>
+    <name><![CDATA[Daniel P. Wright]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to open all diffs in vim tabs]]></title>
+    <link href="http://dpwright.github.com/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs/"/>
+    <updated>2012-06-05T15:46:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs</id>
+    <content type="html"><![CDATA[<p>This is a handy little alias I've been using recently to open all unstaged diffs
+in a single instance of vim, one tab per file. Add the following to the
+<code>[alias]</code> section of your <code>~/.gitconfig</code>:</p>
+
+<p><div><script src='https://gist.github.com/2873132.js?file=.gitconfig'></script>
+<noscript><pre><code>dt = &quot;!f() { vim -p $(git diff --name-only) +\&quot;tabdo Gdiff $@\&quot; +tabfirst; }; f&quot;
+</code></pre></noscript></div>
+</p>
+
+<p>Known issues:</p>
+
+<ul>
+<li>It requires tpope's <a href="https://github.com/tpope/vim-fugitive">vim-fugitive</a> plugin to work.</li>
+<li>It only works with unstaged diffs -- it would be nice to be able to pass an
+arbitrary range of commits and see the diffs between them.</li>
+</ul>
+
+
+<p>Both of the above could be resolved by writing a little script to open all the
+diffs in vim rather than using fugitive's <code>:Gdiff</code> command, but for now this
+little alias does the job nicely.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to extract an intention-revealing name using Vim]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim/"/>
+    <updated>2012-05-03T17:14:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim</id>
+    <content type="html"><![CDATA[<blockquote><p>This method has a <a href="http://c2.com/cgi/wiki?MagicNumber">magic number</a>:</p></blockquote>
+
+<pre><code>def wait_time
+  @env[QUEUE_WAIT_HEADER].to_i / 1000
+end
+</code></pre>
+
+<blockquote><p>Let's extract that to an <a href="http://c2.com/cgi/wiki?IdentifiersRevealIntent">intention-revealing name</a>. We'll type</p></blockquote>
+
+<pre><code>/1000&lt;Enter&gt;                           # Find the number we want to extract
+cwmilliseconds_per_second&lt;Esc&gt;         # Replace the number with a variable name
+O&lt;Ctrl+A&gt; = &lt;Esc&gt;p                     # Assign the replaced number to the variable
+</code></pre>
+
+<blockquote><p>The result:</p></blockquote>
+
+<pre><code>def wait_time
+  milliseconds_per_second = 1000
+  @env[QUEUE_WAIT_HEADER].to_i / milliseconds_per_second
+end
+</code></pre>
+
+<p><blockquote><p></p><footer><strong>thoughtbot</strong> <cite><a href='http://robots.thoughtbot.com/post/22258289125/how-to-extract-an-intention-revealing-name-using-vim'>robots.thoughtbot.com/post/&hellip;</a></cite></footer></blockquote></p>
+
+<p>Nice vim tip for getting rid of magic numbers in code.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Invoking ex commands on a subset of files]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files/"/>
+    <updated>2012-04-17T10:02:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files</id>
+    <content type="html"><![CDATA[<p>I use <code>sed</code> a lot for modifications I need to make to a number of
+files, which is great, but as it happens relatively infrequently I need to
+remind myself how to do certain things as and when I come across them.</p>
+
+<p>On the other hand, I use <code>vim</code> every day for my general editing, and
+am making increasingly heavy use of its command syntax to automate some of my
+editing tasks.  As a result, I am probably more familiar with <code>vim</code>'s
+command syntax than <code>sed</code>.</p>
+
+<p>Yesterday I had a simple problem to solve: for every file containing string
+SEARCH, I wanted to delete any line matching LINE.  Here's a couple of ways you
+could do it using sed:</p>
+
+<p><div><script src='https://gist.github.com/2402616.js?file=selectivelydelete-sed.sh'></script>
+<noscript><pre><code>grep -Rl &quot;SEARCH&quot; . | while read FILE; do sed -i &quot;&quot; &quot;/LINE/d&quot; $FILE; done
+grep -Rl &quot;SEARCH&quot; . | while read FILE; do sed &quot;/LINE/d&quot; $FILE &gt; tmp; mv tmp $FILE ; done</code></pre></noscript></div>
+</p>
+
+<p>The first is non-portable and works with BSD <code>sed</code>; for GNU
+<code>sed</code> you'd have to remove the "" after the -i.  The second is a
+little more portable but requires a temporary file.</p>
+
+<p>Just for kicks, though, I thought I'd do it in <code>ex</code> this time. 
+Here's how that looks:</p>
+
+<p><div><script src='https://gist.github.com/2402657.js?file=selectivelydelete-ex.sh'></script>
+<noscript><pre><code>grep -Rl &quot;SEARCH&quot; . | while read FILE; do (echo &quot;g/LINE/d&quot;; echo 'wq') | ex -s FILE; done</code></pre></noscript></div>
+</p>
+
+<p>Admittedly, for a simple task like this it's probably pointless, but there have
+been times where I've repeated a command in <code>vim</code> over a series of
+files where this might come in ha</p>
+]]></content>
+  </entry>
+  
+</feed>

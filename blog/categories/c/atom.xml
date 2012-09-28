@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: c | Wright Access]]></title>
+  <link href="http://dpwright.github.com/blog/categories/c/atom.xml" rel="self"/>
+  <link href="http://dpwright.github.com/"/>
+  <updated>2012-09-28T19:21:44+09:00</updated>
+  <id>http://dpwright.github.com/</id>
+  <author>
+    <name><![CDATA[Daniel P. Wright]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Visualising #include trees]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/10/visualising-include-trees/"/>
+    <updated>2012-04-10T08:31:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/10/visualising-include-trees</id>
+    <content type="html"><![CDATA[<p><img src="http://files.dpwright.com/opengl-includes.png" title="OpenGL include tree" ></p>
+
+<p>Just put a new script up <a href="https://github.com/vitei/generate-include-graph.rb">on github</a> which generates graphs visualising
+<code>#include</code> trees.  The above image shows what actually gets pulled in
+when you <code>#include</code> the main header for <a href="http://www.opengl.org/">OpenGL</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

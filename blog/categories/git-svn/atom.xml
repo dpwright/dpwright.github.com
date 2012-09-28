@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git-svn | Wright Access]]></title>
+  <link href="http://dpwright.github.com/blog/categories/git-svn/atom.xml" rel="self"/>
+  <link href="http://dpwright.github.com/"/>
+  <updated>2012-09-28T19:21:44+09:00</updated>
+  <id>http://dpwright.github.com/</id>
+  <author>
+    <name><![CDATA[Daniel P. Wright]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git script to rebase all child branches following a command]]></title>
+    <link href="http://dpwright.github.com/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command/"/>
+    <updated>2012-09-25T10:27:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command</id>
+    <content type="html"><![CDATA[<p>This script looks at the current status of the DAG to find the children of the
+current branch, runs an action, then rebases those children.  It is particularly
+useful for users of <code>git-svn</code>, who may find themselves having to rebase all
+topic branches (and sub-topics which build off those) every time they <code>git svn
+rebase</code> or <code>git svn dcommit</code>.</p>
+
+<p>For pure git projects, this is considered by many to be bad form, so use with
+discretion.  People who like a linear history might like it.</p>
+
+<p>I expect the script, in its current state, will fail in cases where the rebase
+can't be done automatically, but for simple day-to-day operations it makes
+<code>git-svn</code> that bit less painful to use :-)</p>
+
+<p><div><script src='https://gist.github.com/3779324.js?file=git-rar.rb'></script>
+<noscript><pre><code>#!/usr/bin/ruby
+#GistID: 3779324
+
+require 'escape'
+
+exit if ARGV.empty?
+
+current_branch = `git symbolic-ref -q HEAD`.sub(/^refs\/heads\//, &quot;&quot;).strip
+exit if current_branch.empty?
+
+IGNORED_BRANCHES = `git branch -r --no-color`.sub(/^[ *]*/, &quot;&quot;).split(&quot;\n&quot;).collect{ |e| e.strip } &lt;&lt; &quot;HEAD&quot;
+
+def branches_on(commit)
+	log = `git log --pretty=%d --simplify-by-decoration #{commit} | head -n 1`
+	branches = log.sub(/^ \(([^)]+)\).*$/, '\1').split(&quot;, &quot;)
+	branches.collect{ |e| e.strip }.reject{ |b| (IGNORED_BRANCHES &lt;&lt; commit).include? b }
+end
+
+def children_of(branch)
+	log = `git branch --no-color --contains #{branch} | sed 's/^[ *]*//' | grep -v \&quot;^#{branch}$\&quot;`
+	log.split(&quot;\n&quot;)
+end
+
+def branch_tree_from(branch)
+	siblings = branches_on branch
+	children = children_of(branch).reject{|c| siblings.include? c}
+	if children.empty?
+		return [branch]
+	else
+		return [branch, siblings.collect{|s| [s]} + children.collect{|c| branch_tree_from(c)}]
+	end
+end
+
+def rebase_all_children(tree)
+	parent = tree.shift
+	children = tree.shift
+	children.map do |e|
+		system &quot;git rebase #{parent} #{e.first}&quot;
+
+		if e.size &gt; 1
+			rebase_all_children e
+		end
+	end
+end
+
+initial_tree = branch_tree_from current_branch
+
+if system &quot;git #{Escape.shell_command(ARGV)}&quot;
+	rebase_all_children initial_tree
+	system &quot;git checkout #{current_branch}&quot;
+end</code></pre></noscript></div>
+</p>
+
+<p>I have an alias set up to invoke it with <code>git rar</code> ("Run and Rebase"), so that I
+can type, for example, <code>git rar svn rebase</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to get a git commit sha1 from an SVN revision number in git-svn]]></title>
+    <link href="http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/"/>
+    <updated>2012-08-01T19:00:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn</id>
+    <content type="html"><![CDATA[<p>This little snippet is useful if you use git-svn -- it gives you an alias to get
+a git commit ID from an SVN revision number. If you work with others who say
+things like, "I think this problem was introduced in revision 10342" it can come
+in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global
+<code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
+
+<p><div><script src='https://gist.github.com/3225360.js?file=.gitconfig'></script>
+<noscript><pre><code>svn-ref = &quot;!f() { git log --grep \\&quot;git-svn-id.*@$1\\&quot; --pretty=%H; }; f&quot;</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

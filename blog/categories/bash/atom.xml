@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: bash | Wright Access]]></title>
+  <link href="http://dpwright.github.com/blog/categories/bash/atom.xml" rel="self"/>
+  <link href="http://dpwright.github.com/"/>
+  <updated>2012-09-28T19:21:44+09:00</updated>
+  <id>http://dpwright.github.com/</id>
+  <author>
+    <name><![CDATA[Daniel P. Wright]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Bash oneliner: watch a filesize]]></title>
+    <link href="http://dpwright.github.com/blog/2012/06/25/bash-oneliner-watch-a-filesize/"/>
+    <updated>2012-06-25T11:16:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/06/25/bash-oneliner-watch-a-filesize</id>
+    <content type="html"><![CDATA[<p>Sometimes, when running a long operation modifying a single file, I want to
+monitor its progress by watching that file's size increase. Here's a simple
+one-liner which will print the incrementing filesize until Ctrl-C is pressed:</p>
+
+<p><div><script src='https://gist.github.com/2986038.js?file=filesize.sh'></script>
+<noscript><pre><code>while true; do echo -e -n &quot;\r`ls -l -h FILENAME | awk '{ print $5 }'`&quot;; done</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SVN post-commit hook: email file owner]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/30/svn-post-commit-hook-email-file-owner/"/>
+    <updated>2012-05-30T14:36:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/30/svn-post-commit-hook-email-file-owner</id>
+    <content type="html"><![CDATA[<p>It's a common enough situation: we want SVN to email a notification to
+developers when somebody modifies a file they are in control of. SVN post-commit
+hooks let us send an email when the file is modified; but how do we determine to
+whom that email should be sent?</p>
+
+<p>I came up with two solutions. Neither is very clever, but they both give a
+little clue at least. The first looks through the log and determines who has
+committed changes to that file the greatest number of times. The second looks at
+the blame log for the file to determine who has modified the most <em>lines</em> in the
+file. My script just emails both people</p>
+
+<p>Just copy the script below and call it from your <code>post-commit</code> file to get
+started. You'll want to change the value of DOMAIN to match the domain you want
+to email notifications to. The third parameter is the name of the project, so
+you can use the script for multiple repositories.</p>
+
+<p>I just threw this script together so it's nothing special -- if you'd like to
+make improvements why not <a href="https://gist.github.com/2833953">fork the gist</a>?</p>
+
+<p><div><script src='https://gist.github.com/2833953.js?file=svn-notify-hook.sh'></script>
+<noscript><pre><code>#!/usr/bin/env bash
+
+LOOK=/usr/bin/svnlook
+REPOS=&quot;$1&quot;
+REV=&quot;$2&quot;
+PROJECT=&quot;$3&quot;
+
+AUTHOR=$($LOOK author $REPOS -r $REV)
+
+DOMAIN=domain.com
+
+OWNERS=&quot;&quot;
+for FILE in $($LOOK changed $REPOS -r $REV | awk '{ print $2 }')
+do
+        OWNER_LOG=$(svn log &quot;file://$REPOS/$FILE&quot; 2&gt; /dev/null | grep &quot;^r[0-9]* | &quot; | awk '{ print $3 }' | sort | uniq -c | sort | tail -n 1 | awk '{ print $2 }')
+        if [[ &quot;$OWNER_LOG&quot; != &quot;$AUTHOR&quot; &amp;&amp; &quot;$OWNERS&quot; != *&quot; $OWNER_LOG &quot;* ]]
+        then
+                OWNERS=&quot;$OWNERS $OWNER_LOG &quot;
+        fi
+
+        OWNER_BLAME=$(svn blame -x &quot;-w --ignore-eol-style&quot; &quot;file://$REPOS/$FILE&quot; 2&gt; /dev/null | awk '{ print $2 }' | sort | uniq -c | sort | tail -n 1 | awk '{ print $2 }')
+        if [[ &quot;$OWNER_BLAME&quot; != &quot;&quot; &amp;&amp; &quot;$OWNER_BLAME&quot; != &quot;$AUTHOR&quot; &amp;&amp; &quot;$OWNERS&quot; != *&quot; $OWNER_BLAME &quot;* ]]
+        then
+                OWNERS=&quot;$OWNERS $OWNER_BLAME &quot;
+        fi
+done
+
+if [[ &quot;$OWNERS&quot; != &quot;&quot; ]]
+then
+        RECIPIENTS=$(for PERSON in $OWNERS; do echo -n &quot;--to $PERSON@$DOMAIN &quot;; 
+done)
+
+        /usr/local/bin/svnnotify                          \\
+            --repos-path     &quot;$REPOS&quot;                     \\
+            --revision       &quot;$REV&quot;                       \\
+            --subject-prefix &quot;[$PROJECT-svn]&quot;             \\
+            --attach-diff                                 \\
+            --diff-switches  '-x &quot;-w --ignore-eol-style&quot;' \\
+            --user-domain    $DOMAIN                      \\
+            $RECIPIENTS
+fi
+</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: subversion | Wright Access]]></title>
+  <link href="http://dpwright.github.com/blog/categories/subversion/atom.xml" rel="self"/>
+  <link href="http://dpwright.github.com/"/>
+  <updated>2012-09-28T19:21:44+09:00</updated>
+  <id>http://dpwright.github.com/</id>
+  <author>
+    <name><![CDATA[Daniel P. Wright]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to get a git commit sha1 from an SVN revision number in git-svn]]></title>
+    <link href="http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/"/>
+    <updated>2012-08-01T19:00:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn</id>
+    <content type="html"><![CDATA[<p>This little snippet is useful if you use git-svn -- it gives you an alias to get
+a git commit ID from an SVN revision number. If you work with others who say
+things like, "I think this problem was introduced in revision 10342" it can come
+in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global
+<code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
+
+<p><div><script src='https://gist.github.com/3225360.js?file=.gitconfig'></script>
+<noscript><pre><code>svn-ref = &quot;!f() { git log --grep \\&quot;git-svn-id.*@$1\\&quot; --pretty=%H; }; f&quot;</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SVN post-commit hook: email file owner]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/30/svn-post-commit-hook-email-file-owner/"/>
+    <updated>2012-05-30T14:36:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/30/svn-post-commit-hook-email-file-owner</id>
+    <content type="html"><![CDATA[<p>It's a common enough situation: we want SVN to email a notification to
+developers when somebody modifies a file they are in control of. SVN post-commit
+hooks let us send an email when the file is modified; but how do we determine to
+whom that email should be sent?</p>
+
+<p>I came up with two solutions. Neither is very clever, but they both give a
+little clue at least. The first looks through the log and determines who has
+committed changes to that file the greatest number of times. The second looks at
+the blame log for the file to determine who has modified the most <em>lines</em> in the
+file. My script just emails both people</p>
+
+<p>Just copy the script below and call it from your <code>post-commit</code> file to get
+started. You'll want to change the value of DOMAIN to match the domain you want
+to email notifications to. The third parameter is the name of the project, so
+you can use the script for multiple repositories.</p>
+
+<p>I just threw this script together so it's nothing special -- if you'd like to
+make improvements why not <a href="https://gist.github.com/2833953">fork the gist</a>?</p>
+
+<p><div><script src='https://gist.github.com/2833953.js?file=svn-notify-hook.sh'></script>
+<noscript><pre><code>#!/usr/bin/env bash
+
+LOOK=/usr/bin/svnlook
+REPOS=&quot;$1&quot;
+REV=&quot;$2&quot;
+PROJECT=&quot;$3&quot;
+
+AUTHOR=$($LOOK author $REPOS -r $REV)
+
+DOMAIN=domain.com
+
+OWNERS=&quot;&quot;
+for FILE in $($LOOK changed $REPOS -r $REV | awk '{ print $2 }')
+do
+        OWNER_LOG=$(svn log &quot;file://$REPOS/$FILE&quot; 2&gt; /dev/null | grep &quot;^r[0-9]* | &quot; | awk '{ print $3 }' | sort | uniq -c | sort | tail -n 1 | awk '{ print $2 }')
+        if [[ &quot;$OWNER_LOG&quot; != &quot;$AUTHOR&quot; &amp;&amp; &quot;$OWNERS&quot; != *&quot; $OWNER_LOG &quot;* ]]
+        then
+                OWNERS=&quot;$OWNERS $OWNER_LOG &quot;
+        fi
+
+        OWNER_BLAME=$(svn blame -x &quot;-w --ignore-eol-style&quot; &quot;file://$REPOS/$FILE&quot; 2&gt; /dev/null | awk '{ print $2 }' | sort | uniq -c | sort | tail -n 1 | awk '{ print $2 }')
+        if [[ &quot;$OWNER_BLAME&quot; != &quot;&quot; &amp;&amp; &quot;$OWNER_BLAME&quot; != &quot;$AUTHOR&quot; &amp;&amp; &quot;$OWNERS&quot; != *&quot; $OWNER_BLAME &quot;* ]]
+        then
+                OWNERS=&quot;$OWNERS $OWNER_BLAME &quot;
+        fi
+done
+
+if [[ &quot;$OWNERS&quot; != &quot;&quot; ]]
+then
+        RECIPIENTS=$(for PERSON in $OWNERS; do echo -n &quot;--to $PERSON@$DOMAIN &quot;; 
+done)
+
+        /usr/local/bin/svnnotify                          \\
+            --repos-path     &quot;$REPOS&quot;                     \\
+            --revision       &quot;$REV&quot;                       \\
+            --subject-prefix &quot;[$PROJECT-svn]&quot;             \\
+            --attach-diff                                 \\
+            --diff-switches  '-x &quot;-w --ignore-eol-style&quot;' \\
+            --user-domain    $DOMAIN                      \\
+            $RECIPIENTS
+fi
+</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[File-specific merge resolution in git]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/11/file-specific-merge-resolution-in-git/"/>
+    <updated>2012-05-11T14:18:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/11/file-specific-merge-resolution-in-git</id>
+    <content type="html"><![CDATA[<p>I've been using git-svn for a while now so that I can take advantage of the
+power and convenience of git without having to bother everyone else on the
+project (who are all happily using SVN). It was a bit frustrating at first, but
+once I got the hang of the basic workflow and settled into a routine I started
+to really like it, and now I don't think I could ever go back to using the SVN
+client directly.</p>
+
+<p>One annoyance I've come across multiple times using both SVN and Git is that of
+checked in binary files. Ideally, we'd only check in the source files and build
+off that, but in practice this is problematic for a number of reasons. We'd like
+the non-programmers on the team to be able to build the project without having
+to have the compiler toolchain installed; we'd like the version of our
+executable everyone is running to be guaranteed to be the same; and we'd like it
+to be possible to checkout the project and start running it straight away
+without having to do a build.</p>
+
+<p>The problem with this is that we get a lot of merge conflicts on the binary
+files we're checking in. Take the executable; programmers rebuild this every
+time they hit "compile". It is almost certain that each time you pull, there'll
+be a new copy of the executable in the repo that clashes with yours.</p>
+
+<p>The solution is simple: we always want to accept our version of the executable
+file. That way the timestamp will be older than the new source files we've
+received from the repo, so when we run make it will pick up on that and rebuild
+the executable with the new code we've just pulled in.</p>
+
+<p>The problem is, I've never found a way to automate that for specific files in
+the repo. With SVN, the majority of the team use TortoiseSVN as their interface,
+which doesn't seem to offer that sort of flexibility. With git, I was aware of
+the "ours" and "Xours" merge strategies but didn't know how to apply them only
+to specific files in a merge. I'd read some tips about adding
+<code>merge=ours</code> into the .gitattributes file, but it didn't seem to
+work.</p>
+
+<p>Well, after a little bit of digging around on stackoverflow, I found <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">this
+question</a>, the first answer to which explains how to do exactly that simply
+and easily. Basically, you have to create a script, which acts as a custom merge
+driver. Since git's default behaviour is to leave your copy as-is during a
+binary merge, all that driver has to do is <code>exit 0</code>:-</p>
+
+<p><div><script src='https://gist.github.com/2657349.js?file=git-merge-keep-mine.sh'></script>
+<noscript><pre><code># I want to keep MY version when there is a conflict
+# Nothing to do: %A (the second parameter) already contains my version
+# Just indicate the merge has been successfully &quot;resolved&quot; with the exit status
+exit 0</code></pre></noscript></div>
+</p>
+
+<p>As a convenience, I added a "keep theirs" driver to go with it:-</p>
+
+<p><div><script src='https://gist.github.com/2657356.js?file=git-merge-keep-theirs.sh'></script>
+<noscript><pre><code># I want to keep THEIR version when there is a conflict
+# Copy their version over ours and report success
+cp -f $3 $2
+exit 0</code></pre></noscript></div>
+</p>
+
+<p>Once those scripts are in place, it's simply a matter of defining them in your
+<code>.git/config</code> file, and then setting which files should use them
+using <code>.gitattributes</code>:-</p>
+
+<p><div><script src='https://gist.github.com/2657379.js?file=config'></script>
+<noscript><pre><code>[merge &quot;keep-mine&quot;]
+        name = Always keep mine during merge
+        driver = git-merge-keep-mine.sh %O %A %B
+[merge &quot;keep-theirs&quot;]
+        name = Always keep theirs during merge
+        driver = git-merge-keep-theirs.sh %O %A %B</code></pre></noscript></div>
+
+<div><script src='https://gist.github.com/2657379.js?file=.gitattributes'></script>
+<noscript><pre><code>*.exe -crlf -diff merge=keep-mine
+*.tga -crlf -diff merge=keep-mine
+</code></pre></noscript></div>
+</p>
+
+<p>And that's it! My merges have become <em>much</em> more pleasant since I set this up.</p>
+
+<p>If anybody knows how to do this sort of thing using [Tortoise]SVN, I'd love to
+hear about it in the comments!</p>
+
+<p>(Note: All the above code samples were copied almost verbatim from the
+previously mentioned <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">stackoverflow entry</a>. I don't claim credit for any of
+it.)</p>
+]]></content>
+  </entry>
+  
+</feed>

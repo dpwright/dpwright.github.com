@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: zeroconf | Wright Access]]></title>
+  <link href="http://dpwright.github.com/blog/categories/zeroconf/atom.xml" rel="self"/>
+  <link href="http://dpwright.github.com/"/>
+  <updated>2012-09-28T19:21:44+09:00</updated>
+  <id>http://dpwright.github.com/</id>
+  <author>
+    <name><![CDATA[Daniel P. Wright]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Accessing networked Macs from FreeBSD]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/24/accessing-networked-macs-from-freebsd/"/>
+    <updated>2012-04-24T10:27:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/24/accessing-networked-macs-from-freebsd</id>
+    <content type="html"><![CDATA[<p>Macs on a network automatically find each other using <a href="http://en.wikipedia.org/wiki/Bonjour_(software)">Bonjour</a>, to avoid the
+need to add them to the hosts file.  If you're trying to access a host that ends
+in ".local" and it's not working, chances are you need to set up Zeroconf in
+FreeBSD.  The open equivalent of Bonjour is <a href="http://en.wikipedia.org/wiki/Avahi_(software)">Avahi</a>, which is available in
+ports.</p>
+
+<p><a href="http://www.endeavoursofanengineer.com/blog/2010/05/08/installing-avahi-on-freebsd-2/">This link</a> gives an easy guide to setting that up, so you can easily
+communicate with other computers on the local network from your FreeBSD box.</p></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Git alias to amend old commits - Wright Access</title>
+  <meta name="author" content="Daniel P. Wright">
+
+  
+  <meta name="description" content="git commit --amend is a useful little command for fixing mistakes in log
+messages just after you’ve made a commit, but sometimes you don’t realise &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dpwright.github.com/blog/2012/06/26/git-alias-to-amend-old-commits/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Wright Access" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-35158763-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Wright Access</a></h1>
+  
+    <h2>dpwright's notes on code, Japan, Japanese, and anything else.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dpwright.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Git Alias to Amend Old Commits</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-26T19:50:00+09:00" pubdate data-updated="true">Jun 26<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><code>git commit --amend</code> is a useful little command for fixing mistakes in log
+messages just after you’ve made a commit, but sometimes you don’t realise your
+error until a few commits down the line, by which time it’s too late. You have
+to reset to the earlier version, amend the commit message, and then rebase all
+your commits since then on top of the new, amended commit.</p>
+
+<p>Earlier today, in #git on freenode, somebody who went by the name of constant
+mentioned that they wanted to do this in one command. Another member of the
+chat, frogsonwheels, suggested a solution which essentially did as described
+above in a series of git commands strung together using <code>&amp;amp;&amp;amp;</code>.</p>
+
+<p>I decided to tidy it up a bit and put it into a git alias, thus:</p>
+
+<div><script src='https://gist.github.com/2993701.js?file=.gitconfig'></script>
+<noscript><pre><code>amend-commit = &quot;!f() { START=`(git symbolic-ref -q HEAD || git rev-parse HEAD) | cut -d&quot;/&quot; -f 3`; git checkout -q $1 &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD $1 $START; }; f&quot;</code></pre></noscript></div>
+
+
+<p>Note that this is still doing the rebase mentioned above, it’s just automatin
+the steps a little bit. These means that all the usual warnings regarding rebase
+apply: don’t run this command on a commit which has already been published.
+Also, this rebases the currently checked out branch/revision, which means if any
+other branches have been made based off the amended commit <em>or any commit
+since</em>, those branches won’t be rebased and you’ll have to rebase them
+automatically once you’ve done the amend-commit. You can usually tell if this
+is the case pretty easily by inspecting the output of <code>git log --graph --oneline
+--decorate</code>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Daniel P. Wright</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-26T19:50:00+09:00" pubdate data-updated="true">Jun 26<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/alias/'>alias</a>, <a class='category' href='/blog/categories/git/'>git</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://dpwright.github.com/blog/2012/06/26/git-alias-to-amend-old-commits/" data-via="danielpwright" data-counturl="http://dpwright.github.com/blog/2012/06/26/git-alias-to-amend-old-commits/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/06/25/bash-oneliner-watch-a-filesize/" title="Previous Post: Bash oneliner: watch a filesize">&laquo; Bash oneliner: watch a filesize</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/" title="Next Post: Git alias to get a git commit sha1 from an SVN revision number in git-svn">Git alias to get a git commit sha1 from an SVN revision number in git-svn &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command/">Git script to rebase all child branches following a command</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/">Git alias to get a git commit sha1 from an SVN revision number in git-svn</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/26/git-alias-to-amend-old-commits/">Git alias to amend old commits</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/25/bash-oneliner-watch-a-filesize/">Bash oneliner: watch a filesize</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs/">Git alias to open all diffs in vim tabs</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/dpwright">@dpwright</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'dpwright',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("danielpwright", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/danielpwright" class="twitter-follow-button" data-show-count="false">Follow @danielpwright</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Daniel P. Wright -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

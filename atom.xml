@@ -1,16 +1,575 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[Wright Access]]></title>
   <link href="http://dpwright.github.com/atom.xml" rel="self"/>
   <link href="http://dpwright.github.com/"/>
-  <updated>2012-09-28T15:15:34+09:00</updated>
+  <updated>2012-09-28T19:21:44+09:00</updated>
   <id>http://dpwright.github.com/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Daniel P. Wright]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Git script to rebase all child branches following a command]]></title>
+    <link href="http://dpwright.github.com/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command/"/>
+    <updated>2012-09-25T10:27:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command</id>
+    <content type="html"><![CDATA[<p>This script looks at the current status of the DAG to find the children of the
+current branch, runs an action, then rebases those children.  It is particularly
+useful for users of <code>git-svn</code>, who may find themselves having to rebase all
+topic branches (and sub-topics which build off those) every time they <code>git svn
+rebase</code> or <code>git svn dcommit</code>.</p>
+
+<p>For pure git projects, this is considered by many to be bad form, so use with
+discretion.  People who like a linear history might like it.</p>
+
+<p>I expect the script, in its current state, will fail in cases where the rebase
+can&#8217;t be done automatically, but for simple day-to-day operations it makes
+<code>git-svn</code> that bit less painful to use :-)</p>
+
+<div><script src='https://gist.github.com/3779324.js?file=git-rar.rb'></script>
+<noscript><pre><code>#!/usr/bin/ruby
+#GistID: 3779324
+
+require 'escape'
+
+exit if ARGV.empty?
+
+current_branch = `git symbolic-ref -q HEAD`.sub(/^refs\/heads\//, &quot;&quot;).strip
+exit if current_branch.empty?
+
+IGNORED_BRANCHES = `git branch -r --no-color`.sub(/^[ *]*/, &quot;&quot;).split(&quot;\n&quot;).collect{ |e| e.strip } &lt;&lt; &quot;HEAD&quot;
+
+def branches_on(commit)
+    log = `git log --pretty=%d --simplify-by-decoration #{commit} | head -n 1`
+    branches = log.sub(/^ \(([^)]+)\).*$/, '\1').split(&quot;, &quot;)
+    branches.collect{ |e| e.strip }.reject{ |b| (IGNORED_BRANCHES &lt;&lt; commit).include? b }
+end
+
+def children_of(branch)
+    log = `git branch --no-color --contains #{branch} | sed 's/^[ *]*//' | grep -v \&quot;^#{branch}$\&quot;`
+    log.split(&quot;\n&quot;)
+end
+
+def branch_tree_from(branch)
+    siblings = branches_on branch
+    children = children_of(branch).reject{|c| siblings.include? c}
+    if children.empty?
+        return [branch]
+    else
+        return [branch, siblings.collect{|s| [s]} + children.collect{|c| branch_tree_from(c)}]
+    end
+end
+
+def rebase_all_children(tree)
+    parent = tree.shift
+    children = tree.shift
+    children.map do |e|
+        system &quot;git rebase #{parent} #{e.first}&quot;
+
+        if e.size &gt; 1
+            rebase_all_children e
+        end
+    end
+end
+
+initial_tree = branch_tree_from current_branch
+
+if system &quot;git #{Escape.shell_command(ARGV)}&quot;
+    rebase_all_children initial_tree
+    system &quot;git checkout #{current_branch}&quot;
+end</code></pre></noscript></div>
+
+
+<p>I have an alias set up to invoke it with <code>git rar</code> (&#8220;Run and Rebase&#8221;), so that I
+can type, for example, <code>git rar svn rebase</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to get a git commit sha1 from an SVN revision number in git-svn]]></title>
+    <link href="http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/"/>
+    <updated>2012-08-01T19:00:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn</id>
+    <content type="html"><![CDATA[<p>This little snippet is useful if you use git-svn &#8211; it gives you an alias to get
+a git commit ID from an SVN revision number. If you work with others who say
+things like, &#8220;I think this problem was introduced in revision 10342&#8221; it can come
+in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global
+<code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
+
+<div><script src='https://gist.github.com/3225360.js?file=.gitconfig'></script>
+<noscript><pre><code>svn-ref = &quot;!f() { git log --grep \\&quot;git-svn-id.*@$1\\&quot; --pretty=%H; }; f&quot;</code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to amend old commits]]></title>
+    <link href="http://dpwright.github.com/blog/2012/06/26/git-alias-to-amend-old-commits/"/>
+    <updated>2012-06-26T19:50:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/06/26/git-alias-to-amend-old-commits</id>
+    <content type="html"><![CDATA[<p><code>git commit --amend</code> is a useful little command for fixing mistakes in log
+messages just after you’ve made a commit, but sometimes you don’t realise your
+error until a few commits down the line, by which time it’s too late. You have
+to reset to the earlier version, amend the commit message, and then rebase all
+your commits since then on top of the new, amended commit.</p>
+
+<p>Earlier today, in #git on freenode, somebody who went by the name of constant
+mentioned that they wanted to do this in one command. Another member of the
+chat, frogsonwheels, suggested a solution which essentially did as described
+above in a series of git commands strung together using <code>&amp;amp;&amp;amp;</code>.</p>
+
+<p>I decided to tidy it up a bit and put it into a git alias, thus:</p>
+
+<div><script src='https://gist.github.com/2993701.js?file=.gitconfig'></script>
+<noscript><pre><code>amend-commit = &quot;!f() { START=`(git symbolic-ref -q HEAD || git rev-parse HEAD) | cut -d&quot;/&quot; -f 3`; git checkout -q $1 &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD $1 $START; }; f&quot;</code></pre></noscript></div>
+
+
+<p>Note that this is still doing the rebase mentioned above, it’s just automatin
+the steps a little bit. These means that all the usual warnings regarding rebase
+apply: don’t run this command on a commit which has already been published.
+Also, this rebases the currently checked out branch/revision, which means if any
+other branches have been made based off the amended commit <em>or any commit
+since</em>, those branches won’t be rebased and you’ll have to rebase them
+automatically once you’ve done the amend-commit. You can usually tell if this
+is the case pretty easily by inspecting the output of <code>git log --graph --oneline
+--decorate</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bash oneliner: watch a filesize]]></title>
+    <link href="http://dpwright.github.com/blog/2012/06/25/bash-oneliner-watch-a-filesize/"/>
+    <updated>2012-06-25T11:16:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/06/25/bash-oneliner-watch-a-filesize</id>
+    <content type="html"><![CDATA[<p>Sometimes, when running a long operation modifying a single file, I want to
+monitor its progress by watching that file&#8217;s size increase. Here&#8217;s a simple
+one-liner which will print the incrementing filesize until Ctrl-C is pressed:</p>
+
+<div><script src='https://gist.github.com/2986038.js?file=filesize.sh'></script>
+<noscript><pre><code>while true; do echo -e -n &quot;\r`ls -l -h FILENAME | awk '{ print $5 }'`&quot;; done</code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git alias to open all diffs in vim tabs]]></title>
+    <link href="http://dpwright.github.com/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs/"/>
+    <updated>2012-06-05T15:46:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs</id>
+    <content type="html"><![CDATA[<p>This is a handy little alias I&#8217;ve been using recently to open all unstaged diffs
+in a single instance of vim, one tab per file. Add the following to the
+<code>[alias]</code> section of your <code>~/.gitconfig</code>:</p>
+
+<div><script src='https://gist.github.com/2873132.js?file=.gitconfig'></script>
+<noscript><pre><code>dt = &quot;!f() { vim -p $(git diff --name-only) +\&quot;tabdo Gdiff $@\&quot; +tabfirst; }; f&quot;
+</code></pre></noscript></div>
+
+
+<p>Known issues:</p>
+
+<ul>
+<li>It requires tpope&#8217;s <a href="https://github.com/tpope/vim-fugitive">vim-fugitive</a> plugin to work.</li>
+<li>It only works with unstaged diffs &#8211; it would be nice to be able to pass an
+arbitrary range of commits and see the diffs between them.</li>
+</ul>
+
+
+<p>Both of the above could be resolved by writing a little script to open all the
+diffs in vim rather than using fugitive&#8217;s <code>:Gdiff</code> command, but for now this
+little alias does the job nicely.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SVN post-commit hook: email file owner]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/30/svn-post-commit-hook-email-file-owner/"/>
+    <updated>2012-05-30T14:36:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/30/svn-post-commit-hook-email-file-owner</id>
+    <content type="html"><![CDATA[<p>It&#8217;s a common enough situation: we want SVN to email a notification to
+developers when somebody modifies a file they are in control of. SVN post-commit
+hooks let us send an email when the file is modified; but how do we determine to
+whom that email should be sent?</p>
+
+<p>I came up with two solutions. Neither is very clever, but they both give a
+little clue at least. The first looks through the log and determines who has
+committed changes to that file the greatest number of times. The second looks at
+the blame log for the file to determine who has modified the most <em>lines</em> in the
+file. My script just emails both people</p>
+
+<p>Just copy the script below and call it from your <code>post-commit</code> file to get
+started. You&#8217;ll want to change the value of DOMAIN to match the domain you want
+to email notifications to. The third parameter is the name of the project, so
+you can use the script for multiple repositories.</p>
+
+<p>I just threw this script together so it&#8217;s nothing special &#8211; if you&#8217;d like to
+make improvements why not <a href="https://gist.github.com/2833953">fork the gist</a>?</p>
+
+<div><script src='https://gist.github.com/2833953.js?file=svn-notify-hook.sh'></script>
+<noscript><pre><code>#!/usr/bin/env bash
+
+LOOK=/usr/bin/svnlook
+REPOS=&quot;$1&quot;
+REV=&quot;$2&quot;
+PROJECT=&quot;$3&quot;
+
+AUTHOR=$($LOOK author $REPOS -r $REV)
+
+DOMAIN=domain.com
+
+OWNERS=&quot;&quot;
+for FILE in $($LOOK changed $REPOS -r $REV | awk '{ print $2 }')
+do
+        OWNER_LOG=$(svn log &quot;file://$REPOS/$FILE&quot; 2&gt; /dev/null | grep &quot;^r[0-9]* | &quot; | awk '{ print $3 }' | sort | uniq -c | sort | tail -n 1 | awk '{ print $2 }')
+        if [[ &quot;$OWNER_LOG&quot; != &quot;$AUTHOR&quot; &amp;&amp; &quot;$OWNERS&quot; != *&quot; $OWNER_LOG &quot;* ]]
+        then
+                OWNERS=&quot;$OWNERS $OWNER_LOG &quot;
+        fi
+
+        OWNER_BLAME=$(svn blame -x &quot;-w --ignore-eol-style&quot; &quot;file://$REPOS/$FILE&quot; 2&gt; /dev/null | awk '{ print $2 }' | sort | uniq -c | sort | tail -n 1 | awk '{ print $2 }')
+        if [[ &quot;$OWNER_BLAME&quot; != &quot;&quot; &amp;&amp; &quot;$OWNER_BLAME&quot; != &quot;$AUTHOR&quot; &amp;&amp; &quot;$OWNERS&quot; != *&quot; $OWNER_BLAME &quot;* ]]
+        then
+                OWNERS=&quot;$OWNERS $OWNER_BLAME &quot;
+        fi
+done
+
+if [[ &quot;$OWNERS&quot; != &quot;&quot; ]]
+then
+        RECIPIENTS=$(for PERSON in $OWNERS; do echo -n &quot;--to $PERSON@$DOMAIN &quot;; 
+done)
+
+        /usr/local/bin/svnnotify                          \\
+            --repos-path     &quot;$REPOS&quot;                     \\
+            --revision       &quot;$REV&quot;                       \\
+            --subject-prefix &quot;[$PROJECT-svn]&quot;             \\
+            --attach-diff                                 \\
+            --diff-switches  '-x &quot;-w --ignore-eol-style&quot;' \\
+            --user-domain    $DOMAIN                      \\
+            $RECIPIENTS
+fi
+</code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[File-specific merge resolution in git]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/11/file-specific-merge-resolution-in-git/"/>
+    <updated>2012-05-11T14:18:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/11/file-specific-merge-resolution-in-git</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve been using git-svn for a while now so that I can take advantage of the
+power and convenience of git without having to bother everyone else on the
+project (who are all happily using SVN). It was a bit frustrating at first, but
+once I got the hang of the basic workflow and settled into a routine I started
+to really like it, and now I don&#8217;t think I could ever go back to using the SVN
+client directly.</p>
+
+<p>One annoyance I&#8217;ve come across multiple times using both SVN and Git is that of
+checked in binary files. Ideally, we&#8217;d only check in the source files and build
+off that, but in practice this is problematic for a number of reasons. We&#8217;d like
+the non-programmers on the team to be able to build the project without having
+to have the compiler toolchain installed; we&#8217;d like the version of our
+executable everyone is running to be guaranteed to be the same; and we&#8217;d like it
+to be possible to checkout the project and start running it straight away
+without having to do a build.</p>
+
+<p>The problem with this is that we get a lot of merge conflicts on the binary
+files we&#8217;re checking in. Take the executable; programmers rebuild this every
+time they hit &#8220;compile&#8221;. It is almost certain that each time you pull, there&#8217;ll
+be a new copy of the executable in the repo that clashes with yours.</p>
+
+<p>The solution is simple: we always want to accept our version of the executable
+file. That way the timestamp will be older than the new source files we&#8217;ve
+received from the repo, so when we run make it will pick up on that and rebuild
+the executable with the new code we&#8217;ve just pulled in.</p>
+
+<p>The problem is, I&#8217;ve never found a way to automate that for specific files in
+the repo. With SVN, the majority of the team use TortoiseSVN as their interface,
+which doesn&#8217;t seem to offer that sort of flexibility. With git, I was aware of
+the &#8220;ours&#8221; and &#8220;Xours&#8221; merge strategies but didn&#8217;t know how to apply them only
+to specific files in a merge. I&#8217;d read some tips about adding
+<code>merge=ours</code> into the .gitattributes file, but it didn&#8217;t seem to
+work.</p>
+
+<p>Well, after a little bit of digging around on stackoverflow, I found <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">this
+question</a>, the first answer to which explains how to do exactly that simply
+and easily. Basically, you have to create a script, which acts as a custom merge
+driver. Since git&#8217;s default behaviour is to leave your copy as-is during a
+binary merge, all that driver has to do is <code>exit 0</code>:-</p>
+
+<div><script src='https://gist.github.com/2657349.js?file=git-merge-keep-mine.sh'></script>
+<noscript><pre><code># I want to keep MY version when there is a conflict
+# Nothing to do: %A (the second parameter) already contains my version
+# Just indicate the merge has been successfully &quot;resolved&quot; with the exit status
+exit 0</code></pre></noscript></div>
+
+
+<p>As a convenience, I added a &#8220;keep theirs&#8221; driver to go with it:-</p>
+
+<div><script src='https://gist.github.com/2657356.js?file=git-merge-keep-theirs.sh'></script>
+<noscript><pre><code># I want to keep THEIR version when there is a conflict
+# Copy their version over ours and report success
+cp -f $3 $2
+exit 0</code></pre></noscript></div>
+
+
+<p>Once those scripts are in place, it&#8217;s simply a matter of defining them in your
+<code>.git/config</code> file, and then setting which files should use them
+using <code>.gitattributes</code>:-</p>
+
+<div><script src='https://gist.github.com/2657379.js?file=config'></script>
+<noscript><pre><code>[merge &quot;keep-mine&quot;]
+        name = Always keep mine during merge
+        driver = git-merge-keep-mine.sh %O %A %B
+[merge &quot;keep-theirs&quot;]
+        name = Always keep theirs during merge
+        driver = git-merge-keep-theirs.sh %O %A %B</code></pre></noscript></div>
+
+
+
+
+<div><script src='https://gist.github.com/2657379.js?file=.gitattributes'></script>
+<noscript><pre><code>*.exe -crlf -diff merge=keep-mine
+*.tga -crlf -diff merge=keep-mine
+</code></pre></noscript></div>
+
+
+<p>And that&#8217;s it! My merges have become <em>much</em> more pleasant since I set this up.</p>
+
+<p>If anybody knows how to do this sort of thing using [Tortoise]SVN, I&#8217;d love to
+hear about it in the comments!</p>
+
+<p>(Note: All the above code samples were copied almost verbatim from the
+previously mentioned <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">stackoverflow entry</a>. I don&#8217;t claim credit for any of
+it.)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[プログラマは詩人なのか、魔法使いなのか？]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/09/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%81%AF%E8%A9%A9%E4%BA%BA%E3%81%AA%E3%81%AE%E3%81%8B%E3%80%81%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AA%E3%81%AE%E3%81%8B%EF%BC%9F/"/>
+    <updated>2012-05-09T20:18:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/09/プログラマは詩人なのか、魔法使いなのか？</id>
+    <content type="html"><![CDATA[<blockquote><p>プログラマは、詩人同様に、純粋な思考物からほんの少ししか離れていないところで 仕事をする。想像力を発揮することによって空中に城郭を築く。創造のメディアでも、 これほど柔軟で、こんなに容易に磨きをかけたり手直しできたり、壮大なコンセプト の構築をこれほどやすやすと実現できるものは、ほんのわずかしかない。</p><p>その上、プログラムというものは、詩人の言葉と違って、実現に動いて働き出す。 プログラム実体から独立した目に見える出力ももたらす。結果を印刷し、絵を描き、 音を出し、腕を動かすといったことを行う。神話や伝説の魔法は、いまや実現となった。 キーボードで呪文を正しく打ち込めば、ディスプレイに生命が吐き込まれ、これまでは 存在しなかったような、またあり得ないはずだったもの目の前に見せてくれる。</p><p>…この点においても、コンピュータは伝説の魔法に似ている。呪文の一字一句たりとも 正しくなければ、魔法は使えない。だが、人間はそんなふうに完璧であることに慣れてないし、 それが必要となるような分野もほとんどない。完璧という要件に適合することが、 プログラミングの学習において最も難しいことだと私は思う。</p><footer><strong>フレデリック・P・ブルックス Jr.</strong> <cite>人月の神話</cite></footer></blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to extract an intention-revealing name using Vim]]></title>
+    <link href="http://dpwright.github.com/blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim/"/>
+    <updated>2012-05-03T17:14:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim</id>
+    <content type="html"><![CDATA[<blockquote><p>This method has a <a href="http://c2.com/cgi/wiki?MagicNumber">magic number</a>:</p></blockquote>
+
+<pre><code>def wait_time
+  @env[QUEUE_WAIT_HEADER].to_i / 1000
+end
+</code></pre>
+
+<blockquote><p>Let&#8217;s extract that to an <a href="http://c2.com/cgi/wiki?IdentifiersRevealIntent">intention-revealing name</a>. We&#8217;ll type</p></blockquote>
+
+<pre><code>/1000&lt;Enter&gt;                           # Find the number we want to extract
+cwmilliseconds_per_second&lt;Esc&gt;         # Replace the number with a variable name
+O&lt;Ctrl+A&gt; = &lt;Esc&gt;p                     # Assign the replaced number to the variable
+</code></pre>
+
+<blockquote><p>The result:</p></blockquote>
+
+<pre><code>def wait_time
+  milliseconds_per_second = 1000
+  @env[QUEUE_WAIT_HEADER].to_i / milliseconds_per_second
+end
+</code></pre>
+
+<blockquote><p></p><footer><strong>thoughtbot</strong> <cite><a href='http://robots.thoughtbot.com/post/22258289125/how-to-extract-an-intention-revealing-name-using-vim'>robots.thoughtbot.com/post/&hellip;</a></cite></footer></blockquote>
+
+
+<p>Nice vim tip for getting rid of magic numbers in code.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Programming as poetry and magic]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/27/programming-as-poetry-and-magic/"/>
+    <updated>2012-04-27T09:46:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/27/programming-as-poetry-and-magic</id>
+    <content type="html"><![CDATA[<blockquote><p>The programmer, like the poet, works only slightly removed from pure<br/>thought-stuff. He builds castles in the air, from air, creating by exertion of<br/>the imagination. Few media of creation are so flexible, so easy to polish and<br/>rework, so readily capable of realizing grand conceptual structures. Yet the<br/>program construct, unlike the poet&#8217;s words, is real in the sense that it moves<br/>and works, producing visible outputs separate from the construct itself. It<br/>prints results, draws pictures, produces sounds, moves arms. The magic of myth<br/>and legend has come true in our time. One types the correct incantation on a<br/>keyboard, and a display screen comes to life, showing things that never were nor<br/>could be. &#8230; The computer resembles the magic of legend in this respect, too.<br/>If one character, one pause, of the incantation is not strictly in proper<br/>form, the magic doesn&#8217;t work. Human beings are not accustomed to being perfect,<br/>and few areas of human activity demand it. Adjusting to the requirement for<br/>perfection is, I think, the most difficult part of learning to program.</p><footer><strong>Frederick P. Brooks</strong> <cite>The Mythical Man-Month</cite></footer></blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Accessing networked Macs from FreeBSD]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/24/accessing-networked-macs-from-freebsd/"/>
+    <updated>2012-04-24T10:27:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/24/accessing-networked-macs-from-freebsd</id>
+    <content type="html"><![CDATA[<p>Macs on a network automatically find each other using <a href="http://en.wikipedia.org/wiki/Bonjour_(software)">Bonjour</a>, to avoid the
+need to add them to the hosts file.  If you&#8217;re trying to access a host that ends
+in &#8220;.local&#8221; and it&#8217;s not working, chances are you need to set up Zeroconf in
+FreeBSD.  The open equivalent of Bonjour is <a href="http://en.wikipedia.org/wiki/Avahi_(software)">Avahi</a>, which is available in
+ports.</p>
+
+<p><a href="http://www.endeavoursofanengineer.com/blog/2010/05/08/installing-avahi-on-freebsd-2/">This link</a> gives an easy guide to setting that up, so you can easily
+communicate with other computers on the local network from your FreeBSD box.</p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Invoking ex commands on a subset of files]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files/"/>
+    <updated>2012-04-17T10:02:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files</id>
+    <content type="html"><![CDATA[<p>I use <code>sed</code> a lot for modifications I need to make to a number of
+files, which is great, but as it happens relatively infrequently I need to
+remind myself how to do certain things as and when I come across them.</p>
+
+<p>On the other hand, I use <code>vim</code> every day for my general editing, and
+am making increasingly heavy use of its command syntax to automate some of my
+editing tasks.  As a result, I am probably more familiar with <code>vim</code>&#8217;s
+command syntax than <code>sed</code>.</p>
+
+<p>Yesterday I had a simple problem to solve: for every file containing string
+SEARCH, I wanted to delete any line matching LINE.  Here&#8217;s a couple of ways you
+could do it using sed:</p>
+
+<div><script src='https://gist.github.com/2402616.js?file=selectivelydelete-sed.sh'></script>
+<noscript><pre><code>grep -Rl &quot;SEARCH&quot; . | while read FILE; do sed -i &quot;&quot; &quot;/LINE/d&quot; $FILE; done
+grep -Rl &quot;SEARCH&quot; . | while read FILE; do sed &quot;/LINE/d&quot; $FILE &gt; tmp; mv tmp $FILE ; done</code></pre></noscript></div>
+
+
+<p>The first is non-portable and works with BSD <code>sed</code>; for GNU
+<code>sed</code> you&#8217;d have to remove the &#8220;&#8221; after the -i.  The second is a
+little more portable but requires a temporary file.</p>
+
+<p>Just for kicks, though, I thought I&#8217;d do it in <code>ex</code> this time. 
+Here&#8217;s how that looks:</p>
+
+<div><script src='https://gist.github.com/2402657.js?file=selectivelydelete-ex.sh'></script>
+<noscript><pre><code>grep -Rl &quot;SEARCH&quot; . | while read FILE; do (echo &quot;g/LINE/d&quot;; echo 'wq') | ex -s FILE; done</code></pre></noscript></div>
+
+
+<p>Admittedly, for a simple task like this it&#8217;s probably pointless, but there have
+been times where I&#8217;ve repeated a command in <code>vim</code> over a series of
+files where this might come in ha</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using Ruby to send mail through GMail's SMTP servers]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/16/using-ruby-to-send-mail-through-gmails-smtp-servers/"/>
+    <updated>2012-04-16T09:59:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/16/using-ruby-to-send-mail-through-gmails-smtp-servers</id>
+    <content type="html"><![CDATA[<p>A few days ago, I ran into a problem.  I have a script set up on my Dreamhost
+server which occasionally sends me notification emails.  It had been running
+fine for a couple of weeks, but suddenly they stopped coming through.  I checked
+the logs and saw I&#8217;d been getting an &#8220;Access Denied&#8221; error from the SMTP
+server:</p>
+
+<blockquote><p>554 5.7.1 &lt;mail@address.com&gt;: Recipient address rejected: Access denied</p></blockquote>
+
+<p>Up until this point I&#8217;d simply been using &#8216;localhost&#8217; as my SMTP server, but I
+guess they might not like me doing that.  I&#8217;m not sure whether the servers they
+use to manage their users&#8217; email are the same as their hosting servers, and
+either way I&#8217;d switched to using Google Apps to manage my email years ago.  The
+easiest solution, it seemed, was to switch to using Google&#8217;s SMTP server.</p>
+
+<p>Just switching the server addresses and adding username/password info wasn&#8217;t
+enough though &#8211; the connection was refused:</p>
+
+<blockquote><p>Connection refused - connect(2) (Errno::ECONNREFUSED)</p></blockquote>
+
+<p>This is because Google mail only supports TLS/SSL connections (quite sensibly). 
+Unfortunately, it seems the version of Ruby installed on Dreamhost&#8217;s servers by
+default (1.8.7) doesn&#8217;t support TLS connections out of the box.</p>
+
+<p>Thankfully, there&#8217;s a gem for that!  If you <code>gem install tlsmail</code>,
+the enable_tls function becomes available and you can communicate with Google
+Mail&#8217;s servers.</p>
+
+<p>I did all this, but there was still one gotcha.  Using my previous code directly
+but replacing the servers with Google&#8217;s resulted in the following error:</p>
+
+<blockquote><p>555 5.5.2 Syntax error. yw3sm17774749obb.7 (Net::SMTPFatalError)</p></blockquote>
+
+<p>Note that this is an SMTP error, rather than a Ruby one.  A little googling
+turned up <a href="http://www.ruby-forum.com/topic/185075">this thread</a>, which suggested
+that the latest ruby version automatically adds angled brackets to the email
+address you supply to Net::SMTP&#8217;s send_message function.  I hadn&#8217;t upgraded my
+Ruby version, but I had made use of the tlsmail gem, so maybe that had done it.</p>
+
+<p>I modified the call so that it specified the email address alone, without the
+name or angled brackets.  I left the headers in the message itself intact.  It
+worked!  Here&#8217;s the resulting code:</p>
+
+<div><script src='https://gist.github.com/2395670.js?file=rubygmail.rb'></script>
+<noscript><pre><code>#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'tlsmail'
+
+msg=&lt;&lt;EOF
+From: Test Sender &lt;sender@domain.com&gt;
+To: Test Recipient &lt;recipient@domain.com&gt;
+Subject: test
+
+This is a test
+EOF
+
+Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
+Net::SMTP.start('smtp.gmail.com', 587, 'domain.com', 'sender@domain.com', 'password', :login) do |smtp|
+        smtp.send_message msg, &quot;sender@domain.com&quot;, &quot;recipient@domain.com&quot;
+end</code></pre></noscript></div>
+
+
+<p>Note this works with mail provided by Google Apps as well as plain vanilla
+Google Mail. In the latter case, specify &#8220;gmail.com&#8221; as the domain, otherwise
+use your own.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[OGRE #include tree]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/10/ogre-include-tree/"/>
+    <updated>2012-04-10T10:54:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/10/ogre-include-tree</id>
+    <content type="html"><![CDATA[<p><img src="http://files.dpwright.com/ogre-includes.png" title="OGRE include tree" ></p>
+
+<p>My <a href="https://github.com/vitei/generate-include-graph.rb">include graph generator script</a> being run on ogre.h from the <a href="http://www.ogre3d.org/">OGRE</a>
+rendering engine.  The graph is far too complicated to read, but idly scrolling
+around is quite mesmerising.  These files are ALL included the moment you type
+<code>#include &lt;OGRE/Ogre.h&gt;</code>.</p>
+
+<p>This isn&#8217;t really a criticism of the design of OGRE (which is actually not all
+that bad), just a general interest thing.  Of course you can avoid including
+quite so many files by only including the specific classes you need.  With some
+libraries, that doesn&#8217;t help you much.</p>
+
+<p>(Full resolution image <a href="http://files.dpwright.com/ogre-includes.png">here</a>)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Visualising #include trees]]></title>
+    <link href="http://dpwright.github.com/blog/2012/04/10/visualising-include-trees/"/>
+    <updated>2012-04-10T08:31:00+09:00</updated>
+    <id>http://dpwright.github.com/blog/2012/04/10/visualising-include-trees</id>
+    <content type="html"><![CDATA[<p><img src="http://files.dpwright.com/opengl-includes.png" title="OpenGL include tree" ></p>
+
+<p>Just put a new script up <a href="https://github.com/vitei/generate-include-graph.rb">on github</a> which generates graphs visualising
+<code>#include</code> trees.  The above image shows what actually gets pulled in
+when you <code>#include</code> the main header for <a href="http://www.opengl.org/">OpenGL</a>.</p>
+]]></content>
+  </entry>
   
 </feed>
