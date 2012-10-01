@@ -1,23 +1,37 @@
+$mono: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace !default;
+$sans: "Helvetica Neue", Arial, sans-serif !default;
+$serif: Georgia, Times, "Times New Roman", serif !default;
+$code-border-radius: 0px;
+$code-font-size: 80%;
+$display-line-numbers: false;
+
 .highlight, html .gist .gist-file .gist-syntax .gist-highlight {
+  table { border-spacing: 0px; }
+  table, thead, tbody, tfoot, tr, th, td, pre {
+    margin: 0px;
+    padding: 0px;
+    border-width: 0px;
+    vartical-align: baseline;
+  }
   table td.code { width: 100%; }
   .line-numbers {
+    @if not $display-line-numbers { display: none; }
     text-align: right;
-    font-size: 13px;
-    line-height: 1.45em;
+    font-size: $code-font-size;
+    line-height: 145%;
     @if $solarized == light {
-      background: lighten($base03, 1) $noise-bg !important;
+      background-color: lighten($base03, 1) !important;
       border-right: 1px solid darken($base02, 2) !important;
       @include box-shadow(lighten($base03, 2) -1px 0 inset);
       text-shadow: lighten($base02, 2) 0 -1px;
     } @else {
-      background: $base02 $noise-bg !important;
+      background-color: $base02 !important;
       border-right: 1px solid darken($base03, 2) !important;
       @include box-shadow(lighten($base02, 2) -1px 0 inset);
       text-shadow: darken($base02, 10) 0 -1px;
     }
     span { color: $base01 !important; }
     padding: .8em !important;
-    @include border-radius(0);
   }
   border: 1px solid $pre-border !important;
 }
@@ -45,16 +59,16 @@ html .gist .gist-file {
    padding: .6em 0.8em;
    border: 1px solid lighten($base02, 2) !important;
    color: $base01;
-   font-size: .7em !important;
+   font-size: 70% !important;
    @if $solarized == light {
-     background: lighten($base03, 2) $noise-bg;
+     background-color: lighten($base03, 2);
      border: 1px solid $pre-border !important;
      border-top: 1px solid lighten($base03, 2) !important;
    } @else {
-     background: $base02 $noise-bg;
+     background-color: $base02;
    }
-   @extend .sans;
-   line-height: 1.5em;
+   font-family: $sans;
+   line-height: 150%;
     a {
       color: mix($base1, $base01) !important;
       @include hover-link;
@@ -64,7 +78,7 @@ html .gist .gist-file {
       position: absolute; top: 0; left:0; right:-10px;
       color: #474747 !important;
       @extend .code-title;
-      &:hover { color: $link-color !important; }
+      &:hover { color: $base1 !important; }
     }
     a[href*=raw]{
       @extend .download-source;
@@ -73,12 +87,11 @@ html .gist .gist-file {
   }
 }
 pre {
-  background: $pre-bg $noise-bg;
-  @include border-radius(.4em);
-  @extend .mono;
+  background-color: $pre-bg;
+  font-family: $mono;
   border: 1px solid $pre-border;
-  line-height: 1.45em;
-  font-size: 13px;
+  line-height: 145%;
+  font-size: $code-font-size;
   margin-bottom: 2.1em;
   padding: .8em 1em;
   color: $pre-color;
@@ -86,24 +99,23 @@ pre {
 }
 h3.filename {
   @extend .code-title;
-  + pre { @include border-top-radius(0px); }
 }
 
 p, li {
   code {
-    @extend .mono;
+    font-family: $mono;
     display: inline-block;
     white-space: no-wrap;
     background: #fff;
-    font-size: .8em;
-    line-height: 1.5em;
+    font-size: 80%;
+    line-height: 150%;
     color: #555;
-    border: 1px solid #ddd;
-    @include border-radius(.4em);
+    border: 1px solid #ccc;
     padding: 0 .3em;
     margin: -1px 0;
+    @include border-radius($code-border-radius);
   }
-  pre code { font-size: 1em !important; background: none; border: none; }
+  pre code { font-size: 100% !important; background: none; border: none; }
 }
 
 .pre-code {
@@ -114,8 +126,8 @@ p, li {
   display: block;
   padding: .8em !important;
   overflow-x: auto;
-  line-height: 1.45em;
-  background: $base03 $noise-bg !important;
+  line-height: 145%;
+  background-color: $base03 !important;
   color: $base1 !important;
   span { color: $base1 !important; }
   span { font-style: normal !important; font-weight: normal !important; }
@@ -187,7 +199,12 @@ p, li {
 }
 
 .highlight, .gist-highlight {
-  pre { background: none; @include border-radius(none); border: none; padding: 0; margin-bottom: 0; }
+  pre {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 0;
+  }
   margin-bottom: 1.8em;
   background: $base03;
   overflow-y: hidden;
@@ -202,8 +219,14 @@ $solar-scroll-thumb: rgba(#fff, .2);
 }
 
 pre, .highlight, .gist-highlight {
-  &::-webkit-scrollbar {  height: .5em; background: $solar-scroll-bg; }
-  &::-webkit-scrollbar-thumb:horizontal { background: $solar-scroll-thumb;  -webkit-border-radius: 4px; border-radius: 4px }
+  &::-webkit-scrollbar {
+    height: .5em;
+    background: $solar-scroll-bg;
+  }
+  &::-webkit-scrollbar-thumb:horizontal {
+    background: $solar-scroll-thumb;
+    @include experimental(border-radius, $code-border-radius);
+  }
 }
 
 .highlight code { @extend .pre-code; background: #000;}
@@ -221,24 +244,31 @@ figure.code {
   .highlight {
     margin-bottom: 0;
   }
+  > :first-child {
+    @include border-top-radius($code-border-radius);
+  }
+  > :last-child {
+    @include border-bottom-radius($code-border-radius);
+  }
 }
 
 .code-title {
   text-align: center;
-  font-size: 13px;
-  line-height: 2em;
-  text-shadow: #cbcccc 0 1px 0;
-  color: #474747;
+  font-size: $code-font-size;
+  line-height: 200%;
+  // text-shadow: #cbcccc 0 1px 0;
+  color: #333333;
   font-weight: normal;
   margin-bottom: 0;
-  @include border-top-radius(5px);
   font-family: "Helvetica Neue", Arial, "Lucida Grande", "Lucida Sans Unicode", Lucida, sans-serif;
-  background: #aaaaaa image-url("code_bg.png") top repeat-x;
-  border: 1px solid #565656;
-  border-top-color: #cbcbcb;
-  border-left-color: #a5a5a5;
-  border-right-color: #a5a5a5;
-  border-bottom: 0;
+//  background: #aaaaaa image-url("code_bg.png") top repeat-x;
+  background-color: #ccc;
+  border : {
+    width: 1px;
+    style: solid;
+    color: #999;
+    bottom: 0;
+  }
 }
 
 .download-source {
@@ -246,7 +276,7 @@ figure.code {
   @include hover-link;
   color: #666 !important;
   z-index: 1;
-  font-size: 13px;
+  font-size: $code-font-size;
   text-shadow: #cbcccc 0 1px 0;
   padding-left: 3em;
 }

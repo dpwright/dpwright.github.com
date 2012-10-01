@@ -1,11 +1,16 @@
+{% comment %} -*- coding:utf-8 -*- {% endcomment %}
 {% if site.github_user %}
 <section>
-  <h1>GitHub Repos</h1>
+  <h2>
+    Git リポジトリ
+    &mdash;
+    <a href="https://github.com/{{site.github_user}}">GitHub</a>
+  </h2>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">読込中 ...</li>
   </ul>
   {% if site.github_show_profile_link %}
-  <a href="https://github.com/{{site.github_user}}">@{{site.github_user}}</a> on GitHub
+  <a href="https://github.com/{{site.github_user}}">@{{site.github_user}}</a> on Github
   {% endif %}
   <script type="text/javascript">
     $.domReady(function(){
@@ -21,6 +26,9 @@
             user: '{{site.github_user}}',
             count: {{site.github_repo_count}},
             skip_forks: {{site.github_skip_forks}},
+            type: '{{site.github_type}}',
+            sort: '{{site.github_sort}}',
+            direction: '{{site.github_direction}}',
             target: '#gh_repos'
         });
     });
