@@ -1,10 +1,15 @@
 <section>
-  <h1>Recent Posts</h1>
+  <h1>最近のブログ投稿</h1>
   <ul id="recent_posts">
     {% for post in site.posts limit: site.recent_posts %}
       <li class="post">
+        <time datetime="{{ post.date | datetime | date_to_xmlschema }}" pubdate>
+          {{ post.date | date: "<span class='month'>%m月</span><span class='day'>%d日</span>"}}
+        </time>
         <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
       </li>
     {% endfor %}
   </ul>
+
+ <p><a href="/blog/archives">&laquo; 過去の記事</a></p>
 </section>

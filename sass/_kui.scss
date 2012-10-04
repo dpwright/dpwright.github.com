@@ -27,18 +27,24 @@ header[role="banner"] {
   a {
     text-decoration: none;
     &:hover{
-      text-decoration: underline;
-      background-color: yellow;
+      color: #da1071;
     }
   }
   hgroup{
     h1 {
+      font-family: "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
       margin: 0px;
       padding: 0px;
       font-size: 2.5em;
       font-weight: 100;
     }
-    h2 { display: none; }
+    h2 {
+      font-family: "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+      margin: 0px;
+      padding: 0px;
+      font-size: 1.0em;
+      font-weight: 100;
+    }
     margin: 0px;
     padding: 0px;
   }
@@ -105,13 +111,15 @@ header[role="banner"] {
   margin: 8px auto;
   max-width: #{$max-width};
   a{
-    color: #33c;
+    color: #da1071;
+    text-decoration: none;
   }
   a:visited{
-    color: #939;
+    color: #47a3ff;
   }
   a:hover{
-    background-color: yellow;
+    text-decoration: underline;
+;
   }
   dl{
     margin: 1em;
