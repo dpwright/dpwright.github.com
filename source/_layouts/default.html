@@ -1,14 +1,39 @@
 {% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
-{% include head.html %}
-<body {% if page.body_id %} id="{{ page.body_id }}" {% endif %} {% if page.sidebar == false %} class="no-sidebar" {% endif %} {% if page.sidebar == 'collapse' or site.sidebar == 'collapse' %} class="collapse-sidebar sidebar-footer" {% endif %}>
-  <header role="banner">{% include header.html %}</header>
-  <nav role="navigation">{% include navigation.html %}</nav>
-  <div id="main">
-    <div id="content">
-      {{ content | expand_urls: root_url }}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <!-- include head -->
+    {% include head.html %}
+    <!-- /include -->
+  </head>
+  <body>
+    <div id="wrapper">
+
+      <header role="banner" class="site_metas">
+	<!-- include header -->
+	{% include header.html %}
+	<!-- /include -->
+        <!-- include social_service_links -->
+	{% include social_service_links.html %}
+        <!-- /include -->
+      </header>
+
+      <div id="content">
+	<!-- content -->
+	{{ content | expand_urls: root_url }}
+	<!-- /content -->
+      </div>
+
+      <footer role="contentinfo">
+	<!-- include footer -->
+	{% include footer.html %}
+	<!-- /include -->
+      </footer>
+      
+      <!-- include after_footer -->
+      {% include after_footer.html %}
+      <!-- /include -->
+
     </div>
-  </div>
-  <footer role="contentinfo">{% include footer.html %}</footer>
-  {% include after_footer.html %}
-</body>
+  </body>
 </html>
