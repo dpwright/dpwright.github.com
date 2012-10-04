@@ -1,5 +1,7 @@
 /* -*- mode:css coding:utf-8 -*- */
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+
 $max-width: 900px;
 $base-font-color: #444;
 
@@ -14,6 +16,42 @@ body {
 
 h2, h3, h4, h5, h6 {
   font-family: "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+}
+
+vertical .latin:before,, .vertical-css3 .latin:before  {
+	content:"   ";
+}
+vertical .latin:after, .vertical-css3 .latin:after {
+	content:"   ";
+}
+.vertical .latin {
+	font-family:"Helvetica Neue","Helvetica",sans-serif;
+	text-transform:uppercase;
+	letter-spacing:0.3em;
+	word-wrap:break-word;
+	max-width:1.1em;
+	min-width:1.1em;
+	width:1.1em;
+}
+
+.vertical h2 {
+	letter-spacing:0.3em;
+	line-height: 97%;
+	word-wrap:break-word;
+	display:block;
+	margin:0px 7px;
+	text-align:center;
+	max-width:1.1em;
+	min-width:1.1em;
+	width:1.1em;
+
+	float:right;
+}
+
+.vertical a {
+	text-decoration:none;
+	color:#000;
+	font-weight:bold;
 }
 
 .site_metas {
@@ -32,15 +70,15 @@ header[role="banner"] {
   }
   hgroup{
     h1 {
-      font-family: "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+      font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
       margin: 0px;
       padding: 0px;
       font-size: 2.5em;
       font-weight: 100;
     }
     h2 {
-      font-family: "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
-      margin: 0px;
+      font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+      margin: -12px 60px;
       padding: 0px;
       font-size: 1.0em;
       font-weight: 100;
@@ -127,6 +165,10 @@ header[role="banner"] {
   dt{
     margin-top: .6em;
     font-style: italic;
+  }
+
+  li{
+    list-style-type: none;
   }
 }
 .entry > header{

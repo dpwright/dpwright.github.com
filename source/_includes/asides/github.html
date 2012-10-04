@@ -1,14 +1,14 @@
 {% comment %} -*- coding:utf-8 -*- {% endcomment %}
 {% if site.github_user %}
 <section>
-  <h2>
-    Git リポジトリ
-  </h2>
+  <div class="vertical">
+    <h2>Git リポジトリ</h2>
+  </div>
   <ul id="gh_repos">
     <li class="loading">読込中 ...</li>
   </ul>
   {% if site.github_show_profile_link %}
-  <a href="https://github.com/{{site.github_user}}">@{{site.github_user}}</a> on GitHub
+  <p align=right><a href="https://github.com/{{site.github_user}}">@{{site.github_user}}</a> on GitHub</p>
   {% endif %}
   <script type="text/javascript">
     $.domReady(function(){

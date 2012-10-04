@@ -4,7 +4,9 @@ title: "過去の記事"
 footer: false
 ---
 
-<h2>過去記事の一覧</h2>
+<div class="vertical">
+  <h2>過去記事の一覧</h2>
+</div>
 
 <div id="blog-archives">
 
@@ -29,7 +31,6 @@ footer: false
         <time datetime="{{ post.date | datetime | date_to_xmlschema }}" pubdate>
           {{ post.date | date: "<span class='month'>%m月</span><span class='day'>%d日</span>"}}
         </time>
-        &mdash;
         <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
       </li>
   

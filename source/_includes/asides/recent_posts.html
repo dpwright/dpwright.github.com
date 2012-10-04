@@ -1,5 +1,7 @@
 <section>
-  <h1>最近のブログ投稿</h1>
+  <div class="vertical">
+    <h2>最近のブログ投稿</h2>
+  </div>
   <ul id="recent_posts">
     {% for post in site.posts limit: site.recent_posts %}
       <li class="post">
@@ -11,5 +13,5 @@
     {% endfor %}
   </ul>
 
- <p><a href="/blog/archives">&laquo; 過去の記事</a></p>
+ <p align=right><a href="/blog/archives">&laquo; 過去の記事</a></p>
 </section>
