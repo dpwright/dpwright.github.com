@@ -2,6 +2,8 @@
 
 @import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
 
+@import "_mplus-1c-thin.scss";
+
 $max-width: 900px;
 $base-font-color: #444;
 
@@ -15,7 +17,7 @@ body {
 }
 
 h2, h3, h4, h5, h6 {
-  font-family: "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+  font-family: "mplus-1c-thin", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
 }
 
 vertical .latin:before,, .vertical-css3 .latin:before  {
@@ -25,7 +27,7 @@ vertical .latin:after, .vertical-css3 .latin:after {
 	content:"   ";
 }
 .vertical .latin {
-	font-family:"Helvetica Neue","Helvetica",sans-serif;
+	font-family: "mplus-1c-thin", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
 	text-transform:uppercase;
 	letter-spacing:0.3em;
 	word-wrap:break-word;
@@ -44,6 +46,7 @@ vertical .latin:after, .vertical-css3 .latin:after {
 	max-width:1.1em;
 	min-width:1.1em;
 	width:1.1em;
+	font-weight: normal;
 
 	float:right;
 }
