@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Wright Access]]></title>
-  <link href="http://test.dpwright.com/blog/atom.xml" rel="self"/>
-  <link href="http://test.dpwright.com/blog/"/>
-  <updated>2012-10-10T19:01:15+09:00</updated>
-  <id>http://test.dpwright.com/blog/</id>
+  <link href="http://www.dpwright.com//atom.xml" rel="self"/>
+  <link href="http://www.dpwright.com//"/>
+  <updated>2012-10-12T15:30:30+09:00</updated>
+  <id>http://www.dpwright.com//</id>
   <author>
     <name><![CDATA[Daniel P. Wright]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Git script to rebase all child branches following a command]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command/"/>
+    <link href="http://www.dpwright.com//blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command/"/>
     <updated>2012-09-25T10:27:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command</id>
+    <id>http://www.dpwright.com//blog/2012/09/25/git-script-to-rebase-all-child-branches-following-a-command</id>
     <content type="html"><![CDATA[<p>This script looks at the current status of the DAG to find the children of the
 current branch, runs an action, then rebases those children.  It is particularly
 useful for users of <code>git-svn</code>, who may find themselves having to rebase all
@@ -92,9 +92,9 @@ can type, for example, <code>git rar svn rebase</code>.</p>
   
   <entry>
     <title type="html"><![CDATA[Git alias to get a git commit sha1 from an SVN revision number in git-svn]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/"/>
+    <link href="http://www.dpwright.com//blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn/"/>
     <updated>2012-08-01T19:00:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn</id>
+    <id>http://www.dpwright.com//blog/2012/08/01/git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-git-svn</id>
     <content type="html"><![CDATA[<p>This little snippet is useful if you use git-svn &#8211; it gives you an alias to get
 a git commit ID from an SVN revision number. If you work with others who say
 things like, &#8220;I think this problem was introduced in revision 10342&#8221; it can come
@@ -111,9 +111,9 @@ in pretty handy! Copy and paste it into the <code>[alias]</code> section of your
   
   <entry>
     <title type="html"><![CDATA[Git alias to amend old commits]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/06/26/git-alias-to-amend-old-commits/"/>
+    <link href="http://www.dpwright.com//blog/2012/06/26/git-alias-to-amend-old-commits/"/>
     <updated>2012-06-26T19:50:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/06/26/git-alias-to-amend-old-commits</id>
+    <id>http://www.dpwright.com//blog/2012/06/26/git-alias-to-amend-old-commits</id>
     <content type="html"><![CDATA[<p><code>git commit --amend</code> is a useful little command for fixing mistakes in log
 messages just after you’ve made a commit, but sometimes you don’t realise your
 error until a few commits down the line, by which time it’s too late. You have
@@ -145,9 +145,9 @@ is the case pretty easily by inspecting the output of <code>git log --graph --on
   
   <entry>
     <title type="html"><![CDATA[Bash oneliner: watch a filesize]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/06/25/bash-oneliner-watch-a-filesize/"/>
+    <link href="http://www.dpwright.com//blog/2012/06/25/bash-oneliner-watch-a-filesize/"/>
     <updated>2012-06-25T11:16:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/06/25/bash-oneliner-watch-a-filesize</id>
+    <id>http://www.dpwright.com//blog/2012/06/25/bash-oneliner-watch-a-filesize</id>
     <content type="html"><![CDATA[<p>Sometimes, when running a long operation modifying a single file, I want to
 monitor its progress by watching that file&#8217;s size increase. Here&#8217;s a simple
 one-liner which will print the incrementing filesize until Ctrl-C is pressed:</p>
@@ -162,9 +162,9 @@ one-liner which will print the incrementing filesize until Ctrl-C is pressed:</p
   
   <entry>
     <title type="html"><![CDATA[Git alias to open all diffs in vim tabs]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs/"/>
+    <link href="http://www.dpwright.com//blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs/"/>
     <updated>2012-06-05T15:46:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs</id>
+    <id>http://www.dpwright.com//blog/2012/06/05/git-alias-to-open-all-diffs-in-vim-tabs</id>
     <content type="html"><![CDATA[<p>This is a handy little alias I&#8217;ve been using recently to open all unstaged diffs
 in a single instance of vim, one tab per file. Add the following to the
 <code>[alias]</code> section of your <code>~/.gitconfig</code>:</p>
@@ -191,9 +191,9 @@ little alias does the job nicely.</p>
   
   <entry>
     <title type="html"><![CDATA[SVN post-commit hook: email file owner]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/05/30/svn-post-commit-hook-email-file-owner/"/>
+    <link href="http://www.dpwright.com//blog/2012/05/30/svn-post-commit-hook-email-file-owner/"/>
     <updated>2012-05-30T14:36:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/05/30/svn-post-commit-hook-email-file-owner</id>
+    <id>http://www.dpwright.com//blog/2012/05/30/svn-post-commit-hook-email-file-owner</id>
     <content type="html"><![CDATA[<p>It&#8217;s a common enough situation: we want SVN to email a notification to
 developers when somebody modifies a file they are in control of. SVN post-commit
 hooks let us send an email when the file is modified; but how do we determine to
@@ -264,9 +264,9 @@ fi
   
   <entry>
     <title type="html"><![CDATA[File-specific merge resolution in git]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/05/11/file-specific-merge-resolution-in-git/"/>
+    <link href="http://www.dpwright.com//blog/2012/05/11/file-specific-merge-resolution-in-git/"/>
     <updated>2012-05-11T14:18:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/05/11/file-specific-merge-resolution-in-git</id>
+    <id>http://www.dpwright.com//blog/2012/05/11/file-specific-merge-resolution-in-git</id>
     <content type="html"><![CDATA[<p>I&#8217;ve been using git-svn for a while now so that I can take advantage of the
 power and convenience of git without having to bother everyone else on the
 project (who are all happily using SVN). It was a bit frustrating at first, but
@@ -357,9 +357,9 @@ it.)</p>
   
   <entry>
     <title type="html"><![CDATA[プログラマは詩人なのか、魔法使いなのか？]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/05/09/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%81%AF%E8%A9%A9%E4%BA%BA%E3%81%AA%E3%81%AE%E3%81%8B%E3%80%81%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AA%E3%81%AE%E3%81%8B%EF%BC%9F/"/>
+    <link href="http://www.dpwright.com//blog/2012/05/09/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%81%AF%E8%A9%A9%E4%BA%BA%E3%81%AA%E3%81%AE%E3%81%8B%E3%80%81%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AA%E3%81%AE%E3%81%8B%EF%BC%9F/"/>
     <updated>2012-05-09T20:18:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/05/09/プログラマは詩人なのか、魔法使いなのか？</id>
+    <id>http://www.dpwright.com//blog/2012/05/09/プログラマは詩人なのか、魔法使いなのか？</id>
     <content type="html"><![CDATA[<blockquote><p>プログラマは、詩人同様に、純粋な思考物からほんの少ししか離れていないところで 仕事をする。想像力を発揮することによって空中に城郭を築く。創造のメディアでも、 これほど柔軟で、こんなに容易に磨きをかけたり手直しできたり、壮大なコンセプト の構築をこれほどやすやすと実現できるものは、ほんのわずかしかない。</p><p>その上、プログラムというものは、詩人の言葉と違って、実現に動いて働き出す。 プログラム実体から独立した目に見える出力ももたらす。結果を印刷し、絵を描き、 音を出し、腕を動かすといったことを行う。神話や伝説の魔法は、いまや実現となった。 キーボードで呪文を正しく打ち込めば、ディスプレイに生命が吐き込まれ、これまでは 存在しなかったような、またあり得ないはずだったもの目の前に見せてくれる。</p><p>…この点においても、コンピュータは伝説の魔法に似ている。呪文の一字一句たりとも 正しくなければ、魔法は使えない。だが、人間はそんなふうに完璧であることに慣れてないし、 それが必要となるような分野もほとんどない。完璧という要件に適合することが、 プログラミングの学習において最も難しいことだと私は思う。</p><footer><strong>フレデリック・P・ブルックス Jr.</strong> <cite>人月の神話</cite></footer></blockquote>
 
 ]]></content>
@@ -367,9 +367,9 @@ it.)</p>
   
   <entry>
     <title type="html"><![CDATA[How to extract an intention-revealing name using Vim]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim/"/>
+    <link href="http://www.dpwright.com//blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim/"/>
     <updated>2012-05-03T17:14:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim</id>
+    <id>http://www.dpwright.com//blog/2012/05/03/how-to-extract-an-intention-revealing-name-using-vim</id>
     <content type="html"><![CDATA[<blockquote><p>This method has a <a href="http://c2.com/cgi/wiki?MagicNumber">magic number</a>:</p></blockquote>
 
 <pre><code>def wait_time
@@ -401,9 +401,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Programming as poetry and magic]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/04/27/programming-as-poetry-and-magic/"/>
+    <link href="http://www.dpwright.com//blog/2012/04/27/programming-as-poetry-and-magic/"/>
     <updated>2012-04-27T09:46:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/04/27/programming-as-poetry-and-magic</id>
+    <id>http://www.dpwright.com//blog/2012/04/27/programming-as-poetry-and-magic</id>
     <content type="html"><![CDATA[<blockquote><p>The programmer, like the poet, works only slightly removed from pure<br/>thought-stuff. He builds castles in the air, from air, creating by exertion of<br/>the imagination. Few media of creation are so flexible, so easy to polish and<br/>rework, so readily capable of realizing grand conceptual structures. Yet the<br/>program construct, unlike the poet&#8217;s words, is real in the sense that it moves<br/>and works, producing visible outputs separate from the construct itself. It<br/>prints results, draws pictures, produces sounds, moves arms. The magic of myth<br/>and legend has come true in our time. One types the correct incantation on a<br/>keyboard, and a display screen comes to life, showing things that never were nor<br/>could be. &#8230; The computer resembles the magic of legend in this respect, too.<br/>If one character, one pause, of the incantation is not strictly in proper<br/>form, the magic doesn&#8217;t work. Human beings are not accustomed to being perfect,<br/>and few areas of human activity demand it. Adjusting to the requirement for<br/>perfection is, I think, the most difficult part of learning to program.</p><footer><strong>Frederick P. Brooks</strong> <cite>The Mythical Man-Month</cite></footer></blockquote>
 
 ]]></content>
@@ -411,9 +411,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[Accessing networked Macs from FreeBSD]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/04/24/accessing-networked-macs-from-freebsd/"/>
+    <link href="http://www.dpwright.com//blog/2012/04/24/accessing-networked-macs-from-freebsd/"/>
     <updated>2012-04-24T10:27:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/04/24/accessing-networked-macs-from-freebsd</id>
+    <id>http://www.dpwright.com//blog/2012/04/24/accessing-networked-macs-from-freebsd</id>
     <content type="html"><![CDATA[<p>Macs on a network automatically find each other using <a href="http://en.wikipedia.org/wiki/Bonjour_(software)">Bonjour</a>, to avoid the
 need to add them to the hosts file.  If you&#8217;re trying to access a host that ends
 in &#8220;.local&#8221; and it&#8217;s not working, chances are you need to set up Zeroconf in
@@ -427,9 +427,9 @@ communicate with other computers on the local network from your FreeBSD box.</p>
   
   <entry>
     <title type="html"><![CDATA[Invoking ex commands on a subset of files]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files/"/>
+    <link href="http://www.dpwright.com//blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files/"/>
     <updated>2012-04-17T10:02:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files</id>
+    <id>http://www.dpwright.com//blog/2012/04/17/invoking-ex-commands-on-a-subset-of-files</id>
     <content type="html"><![CDATA[<p>I use <code>sed</code> a lot for modifications I need to make to a number of
 files, which is great, but as it happens relatively infrequently I need to
 remind myself how to do certain things as and when I come across them.</p>
@@ -467,9 +467,9 @@ files where this might come in ha</p>
   
   <entry>
     <title type="html"><![CDATA[Using Ruby to send mail through GMail's SMTP servers]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/04/16/using-ruby-to-send-mail-through-gmails-smtp-servers/"/>
+    <link href="http://www.dpwright.com//blog/2012/04/16/using-ruby-to-send-mail-through-gmails-smtp-servers/"/>
     <updated>2012-04-16T09:59:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/04/16/using-ruby-to-send-mail-through-gmails-smtp-servers</id>
+    <id>http://www.dpwright.com//blog/2012/04/16/using-ruby-to-send-mail-through-gmails-smtp-servers</id>
     <content type="html"><![CDATA[<p>A few days ago, I ran into a problem.  I have a script set up on my Dreamhost
 server which occasionally sends me notification emails.  It had been running
 fine for a couple of weeks, but suddenly they stopped coming through.  I checked
@@ -540,9 +540,9 @@ use your own.</p>
   
   <entry>
     <title type="html"><![CDATA[OGRE #include tree]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/04/10/ogre-include-tree/"/>
+    <link href="http://www.dpwright.com//blog/2012/04/10/ogre-include-tree/"/>
     <updated>2012-04-10T10:54:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/04/10/ogre-include-tree</id>
+    <id>http://www.dpwright.com//blog/2012/04/10/ogre-include-tree</id>
     <content type="html"><![CDATA[<p><img src="http://files.dpwright.com/ogre-includes.png" title="OGRE include tree" ></p>
 
 <p>My <a href="https://github.com/vitei/generate-include-graph.rb">include graph generator script</a> being run on ogre.h from the <a href="http://www.ogre3d.org/">OGRE</a>
@@ -561,9 +561,9 @@ libraries, that doesn&#8217;t help you much.</p>
   
   <entry>
     <title type="html"><![CDATA[Visualising #include trees]]></title>
-    <link href="http://test.dpwright.com/blog/blog/2012/04/10/visualising-include-trees/"/>
+    <link href="http://www.dpwright.com//blog/2012/04/10/visualising-include-trees/"/>
     <updated>2012-04-10T08:31:00+09:00</updated>
-    <id>http://test.dpwright.com/blog/blog/2012/04/10/visualising-include-trees</id>
+    <id>http://www.dpwright.com//blog/2012/04/10/visualising-include-trees</id>
     <content type="html"><![CDATA[<p><img src="http://files.dpwright.com/opengl-includes.png" title="OpenGL include tree" ></p>
 
 <p>Just put a new script up <a href="https://github.com/vitei/generate-include-graph.rb">on github</a> which generates graphs visualising
