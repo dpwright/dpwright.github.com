@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Wright Access - Git script to rebase all child branches following a command</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" />
+    </head>
+    <body>
+        <div id="header">
+             <h1 id="logo"><a href="../">Wright Access</a></h1>
+             <h2 id="sublogo">dpwright's notes on code, Japan, Japanese, and anything else</h2>
+            <div id="social">
+                <a class="icon" href="http://github.com/dpwright"><i class="icon-github"></i></a>
+                <a class="icon" href="http://twitter.com/danielpwright"><i class="icon-twitter"></i>en</a>
+                <a class="icon" href="http://twitter.com/tataminomusi"><i class="icon-twitter"></i>jp</a>
+                <a class="icon" href="mailto:dani@dpwright.com"><i class="icon-envelope"></i></a>
+             </div>
+            <div id="navigation">
+                <a href="../tags/code.html">Code</a>
+                <a href="../tags/git.html">Git</a>
+                <a href="../tags/vim.html">Vim</a>
+                <a class="jp" href="../tags/日本語.html">日本語</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Git script to rebase all child branches following a command</h1>
+
+            <div class="info">September 25, 2012</div>
+
+<p>This script looks at the current status of the DAG to find the children of the current branch, runs an action, then rebases those children. It is particularly useful for users of <code>git-svn</code>, who may find themselves having to rebase all topic branches (and sub-topics which build off those) every time they <code>git svn rebase</code> or <code>git svn dcommit</code>.</p>
+<p>For pure git projects, this is considered by many to be bad form, so use with discretion. People who like a linear history might like it.</p>
+<p>I expect the script, in its current state, will fail in cases where the rebase can’t be done automatically, but for simple day-to-day operations it makes <code>git-svn</code> that bit less painful to use :-)</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">#!/usr/bin/ruby</span>
+<span class="co">#GistID: 3779324</span>
+
+require <span class="st">'escape'</span>
+
+exit <span class="kw">if</span> <span class="dt">ARGV</span>.empty?
+
+current_branch = <span class="st">`git symbolic-ref -q HEAD`</span>.sub(<span class="ot">/^refs\/heads\//</span>, <span class="st">&quot;&quot;</span>).strip
+exit <span class="kw">if</span> current_branch.empty?
+
+<span class="kw">def</span> branch_output_to_array(output)
+	output.gsub(<span class="ot">/^[ *]*/</span>, <span class="st">&quot;&quot;</span>).split(<span class="st">&quot;\n&quot;</span>).collect{ |e| e.strip }
+<span class="kw">end</span>
+
+<span class="dt">IGNORED_BRANCHES</span> = branch_output_to_array(<span class="st">`git branch --no-color -r`</span>) &lt;&lt; <span class="st">&quot;HEAD&quot;</span>
+
+<span class="kw">def</span> branches_on(commit)
+	ignored = <span class="dt">IGNORED_BRANCHES</span> &lt;&lt; commit
+
+	log = <span class="st">`git log --pretty=%d --simplify-by-decoration </span><span class="ot">#{</span>commit<span class="ot">}</span><span class="st"> | head -n 1`</span>
+	branches = log.sub(<span class="ot">/^ \(([^)]+)\).*$/</span>, <span class="st">'\1'</span>).split(<span class="st">&quot;, &quot;</span>)
+	branches.collect{ |e| e.strip }.reject{ |b| ignored.include? b }
+<span class="kw">end</span>
+
+<span class="kw">def</span> children_of(branch)
+	c = branch_output_to_array(<span class="st">`git branch --no-color --contains </span><span class="ot">#{</span>branch<span class="ot">}</span><span class="st">`</span>)
+	c.reject!{ |b| b == branch }
+
+	grandchildren = c.collect{|c| children_of c}.flatten
+	c.reject{ |b| grandchildren.include? b }
+<span class="kw">end</span>
+
+<span class="kw">def</span> branch_tree_from(branch)
+	siblings = branches_on branch
+	children = children_of(branch).reject{|c| siblings.include? c}
+
+	tail = siblings.collect{|s| [s]} + children.collect{|c| branch_tree_from(c)}
+	tail.empty? ? [branch] : [branch, tail]
+<span class="kw">end</span>
+
+<span class="kw">def</span> rebase_all_children(tree)
+	parent = tree.shift
+	children = tree.shift
+	children.map <span class="kw">do</span> |e|
+		system <span class="st">&quot;git rebase </span><span class="ot">#{</span>parent<span class="ot">}</span><span class="st"> </span><span class="ot">#{</span>e.first<span class="ot">}</span><span class="st">&quot;</span>
+
+		<span class="kw">if</span> e.size &gt; <span class="dv">1</span>
+			rebase_all_children e
+		<span class="kw">end</span>
+	<span class="kw">end</span>
+<span class="kw">end</span>
+
+initial_tree = branch_tree_from current_branch
+
+<span class="kw">if</span> system <span class="st">&quot;git </span><span class="ot">#{</span><span class="dt">Escape</span>.shell_command(<span class="dt">ARGV</span>)<span class="ot">}</span><span class="st">&quot;</span>
+	rebase_all_children initial_tree
+	system <span class="st">&quot;git checkout </span><span class="ot">#{</span>current_branch<span class="ot">}</span><span class="st">&quot;</span>
+<span class="kw">end</span></code></pre>
+<p>I have an alias set up to invoke it with <code>git rar</code> (“Run and Rebase”), so that I can type, for example, <code>git rar svn rebase</code>.</p>
+
+<div class="tagsinfo">Tagged with: <a href="../tags/code.html">code</a>, <a href="../tags/alias.html">alias</a>, <a href="../tags/git.html">git</a>, <a href="../tags/git-svn.html">git-svn</a>, <a href="../tags/ruby.html">ruby</a>, <a href="../tags/scripts.html">scripts</a></div>
+
+        </div>
+        <div id="footer">
+            Copyright © 2013 Daniel P. Wright.
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>.
+        </div>
+    </body>
+</html>
