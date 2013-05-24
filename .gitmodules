@@ -1,3 +1,0 @@
-[submodule ".themes/kui"]
-	path = .themes/kui
-	url = git@github.com:dpwright/k-ui-octopress-theme.git
