@@ -1,16 +1,14 @@
 ---
-layout: post
 title: Git alias to open all diffs in vim tabs
 date: 2012-06-05 15:46
-comments: true
-tags: alias, git, vim
+tags: code, alias, git, vim
 ---
 
 This is a handy little alias I've been using recently to open all unstaged diffs
 in a single instance of vim, one tab per file. Add the following to the
 `[alias]` section of your `~/.gitconfig`:
 
-``` ini
+``` bash
 dt = "!f() { vim -p $(git diff --name-only) +\"tabdo Gdiff $@\" +tabfirst; }; f"
 ```
 

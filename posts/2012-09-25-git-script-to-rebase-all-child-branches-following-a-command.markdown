@@ -1,9 +1,7 @@
 ---
-layout: post
 title: Git script to rebase all child branches following a command
 date: 2012-09-25 10:27
-comments: true
-tags: alias, git, git-svn, ruby, scripts
+tags: code, alias, git, git-svn, ruby, scripts
 ---
 
 This script looks at the current status of the DAG to find the children of the

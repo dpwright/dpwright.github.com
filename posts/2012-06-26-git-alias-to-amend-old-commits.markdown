@@ -1,9 +1,7 @@
 ---
-layout: post
 title: Git alias to amend old commits
 date: 2012-06-26 19:50
-comments: true
-tags: alias, git
+tags: code, alias, git
 ---
 
 `git commit --amend` is a useful little command for fixing mistakes in log
@@ -19,7 +17,7 @@ above in a series of git commands strung together using `&amp;&amp;`.
 
 I decided to tidy it up a bit and put it into a git alias, thus:
 
-``` ini
+``` bash
 amend-commit = "!f() { START=`(git symbolic-ref -q HEAD || git rev-parse HEAD) | cut -d"/" -f 3`; git checkout -q $1 && git commit --amend && git rebase --onto HEAD $1 $START; }; f"
 ```
 

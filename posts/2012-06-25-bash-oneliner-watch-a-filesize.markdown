@@ -1,9 +1,7 @@
 ---
-layout: post
 title: Bash oneliner: watch a filesize
 date: 2012-06-25 11:16
-comments: true
-tags: bash, oneliners, shell
+tags: code, bash, oneliners, shell
 ---
 
 Sometimes, when running a long operation modifying a single file, I want to

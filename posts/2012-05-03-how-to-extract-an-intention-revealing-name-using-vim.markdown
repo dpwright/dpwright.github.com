@@ -1,9 +1,7 @@
 ---
-layout: post
 title: How to extract an intention-revealing name using Vim
 date: 2012-05-03 17:14
-comments: true
-tags: vim
+tags: code, vim
 ---
 
 > This method has a [magic number][1]:

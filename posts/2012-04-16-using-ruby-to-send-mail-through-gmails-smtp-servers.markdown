@@ -1,9 +1,7 @@
 ---
-layout: post
 title: Using Ruby to send mail through GMail's SMTP servers
 date: 2012-04-16 09:59
-comments: true
-tags: gmail, ruby, scripts, smtp
+tags: code, gmail, ruby, scripts, smtp
 ---
 A few days ago, I ran into a problem.  I have a script set up on my Dreamhost
 server which occasionally sends me notification emails.  It had been running

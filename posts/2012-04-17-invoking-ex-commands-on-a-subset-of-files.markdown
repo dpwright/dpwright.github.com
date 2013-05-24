@@ -1,9 +1,7 @@
 ---
-layout: post
 title: Invoking ex commands on a subset of files
 date: 2012-04-17 10:02
-comments: true
-tags: ex, sed, shell, vim
+tags: code, ex, sed, shell, vim
 ---
 
 I use `sed` a lot for modifications I need to make to a number of

@@ -1,9 +1,7 @@
 ---
-layout: post
 title: Programming as poetry and magic
 date: 2012-04-27 09:46
-comments: true
-tags: programming, quotation
+tags: code, quotation
 ---
 
 > The programmer, like the poet, works only slightly removed from pure

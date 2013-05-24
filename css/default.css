@@ -1,22 +1,65 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+
 body {
-    color: black;
+    background-color: #fafafa;
+    color: #333;
     font-size: 16px;
     margin: 0px auto 0px auto;
-    width: 600px;
+}
+
+h1, h2 {
+    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+    font-weight: 100;
+}
+
+h1 {
+    text-align: center;
+}
+
+a:hover {
+    color: #47a3ff;
+}
+
+pre {
+    overflow-x: auto;
 }
 
 div#header {
-    border-bottom: 2px solid black;
-    margin-bottom: 30px;
-    padding: 12px 0px 12px 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
-div#logo a {
-    color: black;
-    float: left;
-    font-size: 18px;
-    font-weight: bold;
+div#header a {
+    color: #333;
+}
+
+div#header a:hover {
+    color: #da1071;
+}
+
+h1#logo {
+    margin: 0px 12px;
+    padding: 0px;
+    position: absolute;
+    font-size: 2.5em;
+}
+
+a {
+    color: #da1071;
     text-decoration: none;
+}
+
+h2#sublogo {
+    font-size: 1.0em;
+    margin: 43px 73px;
+    padding: 0px;
+    position: absolute;
+}
+
+div#header #social {
+    position: absolute;
+    margin: 27px 289px;
+    text-align: right;
 }
 
 div#header #navigation {
@@ -24,21 +67,38 @@ div#header #navigation {
 }
 
 div#header #navigation a {
-    color: black;
+    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     font-size: 18px;
-    font-weight: bold;
-    margin-left: 12px;
+    margin: 20px 20px 0px 12px;
     text-decoration: none;
-    text-transform: uppercase;
+    text-transform: lowercase;
+    border-bottom: solid black 1px;
+    color: #333;
+}
+
+div#header #navigation a:hover {
+    color: #da1071;
+}
+
+div#header #navigation a.jp {
+    font-size: 0.85em;
+}
+
+div#content {
+    margin: 80px auto 0px auto;
+    max-width: 900px;
+}
+
+ul#postlist {
+    list-style-type: none;
 }
 
 div#footer {
-    border-top: solid 2px black;
     color: #555;
     font-size: 12px;
     margin-top: 30px;
     padding: 12px 0px 12px 0px;
-    text-align: right;
+    text-align: center;
 }
 
 h1 {
@@ -53,4 +113,10 @@ div.info {
     color: #555;
     font-size: 14px;
     font-style: italic;
+    text-align: center;
+}
+
+.postdate {
+    float: right;
+    text-align: right;
 }

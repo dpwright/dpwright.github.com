@@ -1,8 +1,6 @@
 ---
-layout: post
 title: プログラマは詩人なのか、魔法使いなのか？
 date: 2012-05-09 20:18
-comments: true
 tags: プログラミング , 引用文 , 日本語
 ---
 
