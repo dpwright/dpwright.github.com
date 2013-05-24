@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid (mappend)
+import           Data.Monoid (mappend, mconcat)
 import           Hakyll
 
 
@@ -15,19 +15,21 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
+    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
     match "posts/*" $ do
         route $ setExtension "html"
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
-            >>= loadAndApplyTemplate "templates/default.html" postCtx
+            >>= loadAndApplyTemplate "templates/post.html"    (postCtx tags)
+            >>= loadAndApplyTemplate "templates/default.html" (postCtx tags)
             >>= relativizeUrls
 
     create ["archive.html"] $ do
         route idRoute
         compile $ do
+            list <- postList tags "posts/*" recentFirst
             let archiveCtx =
-                    field "posts" (\_ -> postList recentFirst) `mappend`
+                    constField "posts" list                    `mappend`
                     constField "title" "Archives"              `mappend`
                     defaultContext
 
@@ -37,31 +39,50 @@ main = hakyll $ do
                 >>= relativizeUrls
 
 
+    tagsRules tags $ \tag pattern -> do
+        let title = "Posts tagged " ++ tag
+        route idRoute
+        compile $ do
+            list <- postList tags pattern recentFirst
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/archive.html"
+                        (constField "title" title `mappend`
+                         constField "posts" list  `mappend`
+                         defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html" defaultContext
+                >>= relativizeUrls
+
     match "index.html" $ do
         route idRoute
         compile $ do
-            let indexCtx = field "posts" $ \_ ->
-                                postList $ fmap (take 3) . recentFirst
+            list <- postList tags "posts/*" recentFirst
+            let indexCtx = constField "posts" list          `mappend`
+                    field "tags" (\_ -> renderTagList tags) `mappend`
+                    defaultContext
 
             getResourceBody
                 >>= applyAsTemplate indexCtx
-                >>= loadAndApplyTemplate "templates/default.html" postCtx
+                >>= loadAndApplyTemplate "templates/default.html" indexCtx
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
 
 
 --------------------------------------------------------------------------------
-postCtx :: Context String
-postCtx =
-    dateField "date" "%B %e, %Y" `mappend`
-    defaultContext
+postCtx :: Tags -> Context String
+postCtx tags = mconcat
+    [ modificationTimeField "mtime" "%U"
+    , dateField "date" "%B %e, %Y"
+    , tagsField "tags" tags
+    , defaultContext
+    ]
 
 
 --------------------------------------------------------------------------------
-postList :: ([Item String] -> Compiler [Item String]) -> Compiler String
-postList sortFilter = do
-    posts   <- sortFilter =<< loadAll "posts/*"
+postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
+         -> Compiler String
+postList tags pattern sortFilter = do
+    posts   <- sortFilter =<< loadAll pattern
     itemTpl <- loadBody "templates/post-item.html"
-    list    <- applyTemplateList itemTpl postCtx posts
+    list    <- applyTemplateList itemTpl (postCtx tags) posts
     return list
