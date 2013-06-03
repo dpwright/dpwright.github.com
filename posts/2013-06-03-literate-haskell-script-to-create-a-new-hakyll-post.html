@@ -128,9 +128,7 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 <p>The biggest thing that sticks out to me is my frequent use of <code>printf</code>, particularly when it comes to generating commands to pass to <code>system</code>. This feels a little like overkill, and I’m sure there must be a better way.</p>
 <p>Another problem is that punctuation in blog titles won’t be handled well. The filename generator simply makes everything lower-case and adds hyphens; it should perhaps strip out any characters which are not URL-friendly, too. The call to vim is worse – since it passes the header text as a command-line parameter, it must keep the title as-is, but will break if the title contains quotation marks. The only solution I can think of for this is to write the header text to a temporary file and then read it in from vim, but I’ll leave that as an exercise for the reader and just avoid using quotation marks in my blog posts for now ;-)</p>
 <h2 id="in-summary">In Summary</h2>
-<div class="figure">
-<img src="http://cdn.memegenerator.net/instances/400x/38355687.jpg" title="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" alt="yo-dawg" /><p class="caption">yo-dawg</p>
-</div>
+<p><img src="http://cdn.memegenerator.net/instances/400x/38355687.jpg" alt="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" /> </p>
 
 <div class="tagsinfo">Tagged with: <a href="../tags/code.html">code</a>, <a href="../tags/functional-programming.html">functional-programming</a>, <a href="../tags/haskell.html">haskell</a>, <a href="../tags/hakyll.html">hakyll</a></div>
 
