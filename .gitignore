@@ -3,3 +3,5 @@ _site
 site
 site.hi
 site.o
+obj
+bin
