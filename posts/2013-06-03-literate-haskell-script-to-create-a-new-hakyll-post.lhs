@@ -299,4 +299,11 @@ header text to a temporary file and then read it in from vim, but I'll leave
 that as an exercise for the reader and just avoid using quotation marks in my
 blog posts for now ;-)
 
+In Summary
+----------
+
+![Yo dawg I heard you like scripts and blogs so I put a script to make blogs
+inside a blog about the script to make blogs so you can blog about scripts while
+you script about blogs](http://cdn.memegenerator.net/instances/400x/38355687.jpg)\ 
+
 [blog-source]: https://github.com/dpwright/dpwright.github.com/edit/source/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs
