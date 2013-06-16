@@ -75,6 +75,13 @@ markers" (> symbols at the start of lines, like quoted messages in an email) are
 interpreted by the compiler as part of the source code; anything else is
 ignored.
 
+This will seem like a pointless reiteration for anyone familiar with the
+concept, but I'm just going to state it as a paragraph on its own for anyone not
+paying attention who hasn't quite twigged how cool this is:
+
+Having written this blog post as a literate Haskell script, whenever I want to
+write a new blog post, I literally *run this blog post*.
+
 The script
 ----------
 
@@ -207,7 +214,7 @@ not have been defined yet.
 
 Writing it this way feels strange at first, but it is closer to the way
 equations are usually expressed in mathematics so in that sense it feels
-natural.  The first paragraph following the code read like a description of the
+natural.  The first paragraph following the code reads like a description of the
 variables, whereas the imperative equivalent (first call `formatTime` and put
 the result in `date`, then lower-case the title...) reads like a series of
 instructions.
