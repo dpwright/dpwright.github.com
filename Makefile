@@ -5,14 +5,17 @@ UTILS=$(addprefix $(BIN_DIR)/,new-post)
 HC=ghc
 HCFLAGS=-odir $(WORK_DIR) -hidir $(WORK_DIR)
 
-.PHONY: all build utils
-all: site build utils
+.PHONY: all build check utils
+all: build
 
 site: site.hs
 	$(HC) --make $^
 
-build: site
+build: site utils
 	./site build
+
+check: build
+	./site check
 
 utils: $(UTILS)
 
