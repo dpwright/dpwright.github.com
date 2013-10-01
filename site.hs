@@ -84,5 +84,4 @@ postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
 postList tags pattern sortFilter = do
     posts   <- sortFilter =<< loadAll pattern
     itemTpl <- loadBody "templates/post-item.html"
-    list    <- applyTemplateList itemTpl (postCtx tags) posts
-    return list
+    applyTemplateList itemTpl (postCtx tags) posts
