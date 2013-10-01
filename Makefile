@@ -28,5 +28,5 @@ $(BIN_DIR)/new-post: posts/2013-06-03-literate-haskell-script-to-create-a-new-ha
 	@mkdir -p $(BIN_DIR)
 	$(HC) $(HCFLAGS) -o $@ $^
 
-$(BIN_DIR)/bl: posts/2013-10-01-cross-posting-between-hakyll-and-wordpress.lhs
+$(BIN_DIR)/bl: pending-posts/2013-10-01-cross-posting-between-hakyll-and-wordpress.lhs
 	$(HC) $(HCFLAGS) -o $@ $^
