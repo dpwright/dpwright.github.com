@@ -3,6 +3,7 @@
 import           Data.Monoid (mappend, mconcat)
 import           Hakyll
 
+import qualified Data.Map as M
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -66,14 +67,27 @@ main = hakyll $ do
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
+    match "templates/xp/*" $ compile templateCompiler
 
 
 --------------------------------------------------------------------------------
+getCrosspostHeader :: String -> Identifier -> Compiler String
+getCrosspostHeader key id' = getMetadata id' >>= toHeader . M.lookup key
+  where loadHeader = fmap itemBody . header
+        toHeader = maybe (return "") loadHeader
+        header name = makeItem "" >>= loadAndApplyTemplate (templatePath name) xpContext
+        templatePath name = fromFilePath $ "templates/xp/" ++ name ++ ".html"
+        xpContext = defaultContext
+
+crosspostField :: String -> Context a
+crosspostField key = field key $ getCrosspostHeader key . itemIdentifier
+
 postCtx :: Tags -> Context String
 postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
     , dateField "date" "%B %e, %Y"
     , tagsField "tags" tags
+    , crosspostField "xp"
     , defaultContext
     ]
 

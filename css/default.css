@@ -89,6 +89,15 @@ div#content {
     max-width: 900px;
 }
 
+div#crosspost {
+    background-color: #eaeaea;
+    margin: 20px 10%;
+    border-color: #333333;
+    border-style: dashed;
+    border-width: 2px;
+    text-align: center;
+}
+
 ul#postlist {
     list-style-type: none;
 }
