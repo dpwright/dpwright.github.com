@@ -1,19 +1,37 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+@import url(http://fonts.googleapis.com/css?family=Sorts+Mill+Goudy);
 
 body {
     background-color: #fafafa;
     color: #333;
-    font-size: 16px;
+    font-family: "Sorts Mill Goudy", "Garamond", serif;
+    font-size: 20px;
     margin: 0px auto 0px auto;
 }
 
+p {
+}
+
+p code {
+    font-size: 15px;
+}
+
 h1, h2 {
-    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     font-weight: 100;
 }
 
 h1 {
     text-align: center;
+    font-size: 36px;
+}
+
+h2 {
+    font-size: 26px;
+}
+
+a {
+    color: #da1071;
+    text-decoration: none;
 }
 
 a:hover {
@@ -25,6 +43,7 @@ pre {
 }
 
 div#header {
+    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     margin: 0px;
     padding: 0px;
 }
@@ -38,19 +57,16 @@ div#header a:hover {
 }
 
 h1#logo {
+    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     margin: 0px 12px;
     padding: 0px;
     position: absolute;
-    font-size: 2.5em;
-}
-
-a {
-    color: #da1071;
-    text-decoration: none;
+    font-size: 40px;
 }
 
 h2#sublogo {
-    font-size: 1.0em;
+    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+    font-size: 16px;
     margin: 43px 73px;
     padding: 0px;
     position: absolute;
@@ -58,8 +74,9 @@ h2#sublogo {
 
 div#header #social {
     position: absolute;
-    margin: 27px 289px;
+    margin: 22px 278px;
     text-align: right;
+    font-size: 16px:
 }
 
 div#header #navigation {
@@ -67,7 +84,6 @@ div#header #navigation {
 }
 
 div#header #navigation a {
-    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     font-size: 18px;
     margin: 20px 20px 0px 12px;
     text-decoration: none;
@@ -98,6 +114,11 @@ div#crosspost {
     text-align: center;
 }
 
+div#crosspost p {
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
 ul#postlist {
     list-style-type: none;
 }
@@ -110,18 +131,9 @@ div#footer {
     text-align: center;
 }
 
-h1 {
-    font-size: 24px;
-}
-
-h2 {
-    font-size: 20px;
-}
-
 div.info {
     color: #555;
-    font-size: 14px;
-    font-style: italic;
+    font-size: 16px;
     text-align: center;
 }
 
