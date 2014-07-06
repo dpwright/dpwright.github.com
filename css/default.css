@@ -148,3 +148,39 @@ div.tagsinfo {
     float: right;
     text-align: right;
 }
+
+/* iPhone */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px) {
+  h1#logo {
+    position: relative;
+    text-align: center;
+    margin: 0;
+  }
+
+  h2#sublogo {
+    position: relative;
+    text-align: center;
+    margin: 0;
+  }
+
+  div#header #social {
+    position: relative;
+    text-align: center;
+    margin: 0;
+  }
+
+  div#header #navigation {
+    text-align: center;
+  }
+
+  div#header #navigation a {
+    font-size: 18px;
+    margin: 20px 20px 0px 12px;
+    text-decoration: none;
+    text-transform: lowercase;
+    border-bottom: solid black 1px;
+    color: #333;
+  }
+}
