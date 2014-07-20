@@ -9,6 +9,11 @@ title: Writing a TCP server in Haskell using proxies and pipes
 
 <center>![Haskell Pipes](http://blog.vitei.com/wp-content/uploads/2013/08/haskell-pipes2.jpg)</center>
 
+<div id="sidenote">Since the release of [Pipes 4][pipes-4], this article is now
+rather out-of-date.  I leave it up here for posterity, but if you're new to
+Pipes you should probably just ignore it and find a more up-to-date
+tutorial.</div>
+
 Since my last post, I've really been enjoying Haskell, and in fact a lot of the
 functional ideas I had formerly been playing with in Clojure I am now exploring
 in Haskell instead.  I will go into more detail on the reasons for that in a
@@ -417,4 +422,5 @@ If you copy and paste this page into a file and run it with `runhaskell` you
 should be able to open another window and telnet into `localhost` on port 8000.
 Try typing some commands and see what happens!
 
+[pipes-4]: http://hackage.haskell.org/package/pipes-4.0.0
 [proxy-types]: http://hackage.haskell.org/packages/archive/pipes/3.3.0/doc/html/Control-Proxy-Tutorial.html#g:3

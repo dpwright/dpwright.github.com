@@ -105,6 +105,14 @@ div#content {
     max-width: 900px;
 }
 
+div#sidenote {
+    background-color: #eaeaea;
+    margin: 20px 10%;
+    border-color: #333333;
+    border-style: solid;
+    border-width: 1px;
+}
+
 div#crosspost {
     background-color: #eaeaea;
     margin: 20px 10%;
