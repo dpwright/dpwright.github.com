@@ -1,9 +1,9 @@
 BIN_DIR=bin
-WORK_DIR=obj/`arch`
+WORK_DIR=obj/`uname`
 UTILS=$(addprefix $(BIN_DIR)/,new-post bl)
 
 HC=ghc
-HCFLAGS=-odir $(WORK_DIR) -hidir $(WORK_DIR)
+HCFLAGS=-odir $(WORK_DIR) -hidir $(WORK_DIR) -hide-package monads-tf
 
 CROSSPOSTS=$(shell grep -l "^xp:" posts/*)
 
