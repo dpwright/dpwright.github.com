@@ -11,7 +11,8 @@ import qualified Data.Set as S
 customCompiler = pandocCompilerWith readerOptions writerOptions
   where readerOptions = def { readerSmart = True }
         writerOptions = def
-                      { writerExtensions     = writerExts
+                      { writerHTMLMathMethod = MathJax ""
+                      , writerExtensions     = writerExts
                       }
         writerExts    = writerExtensions def `S.union` S.fromList
                       [ Ext_literate_haskell
