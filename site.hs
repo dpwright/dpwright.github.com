@@ -1,9 +1,21 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend, mconcat)
+import           Text.Pandoc.Options
 import           Hakyll
 
 import qualified Data.Map as M
+import qualified Data.Set as S
+
+--------------------------------------------------------------------------------
+customCompiler = pandocCompilerWith readerOptions writerOptions
+  where readerOptions = def { readerSmart = True }
+        writerOptions = def
+                      { writerExtensions     = writerExts
+                      }
+        writerExts    = writerExtensions def `S.union` S.fromList
+                      [ Ext_literate_haskell
+                      ]
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -20,7 +32,7 @@ main = hakyll $ do
 
     match "posts/*" $ do
         route $ setExtension "html"
-        compile $ pandocCompiler
+        compile $ customCompiler
             >>= loadAndApplyTemplate "templates/post.html"    (postCtx tags)
             >>= loadAndApplyTemplate "templates/default.html" (postCtx tags)
             >>= relativizeUrls
