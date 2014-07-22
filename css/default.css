@@ -132,8 +132,8 @@ div#content {
     max-width: 900px;
 }
 
-ul#postlist {
-    list-style-type: none;
+table#postlist {
+    width: 100%;
 }
 
 div#footer {
@@ -157,9 +157,9 @@ div.tagsinfo {
     text-align: right;
 }
 
-.postdate {
-    float: right;
+td.postdate {
     text-align: right;
+    vertical-align: middle;
 }
 
 span.math {
