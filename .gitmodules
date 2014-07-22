@@ -1,0 +1,3 @@
+[submodule "static/gits-guts"]
+	path = static/gits-guts
+	url = https://github.com/dpwright/gits-guts
