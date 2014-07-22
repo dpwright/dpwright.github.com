@@ -12,6 +12,7 @@ customCompiler = pandocCompilerWith readerOptions writerOptions
   where readerOptions = def { readerSmart = True }
         writerOptions = def
                       { writerHTMLMathMethod = MathJax ""
+                      , writerHighlight      = True
                       , writerExtensions     = writerExts
                       }
         writerExts    = writerExtensions def `S.union` S.fromList
