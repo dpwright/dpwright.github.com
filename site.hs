@@ -99,7 +99,7 @@ crosspostField key = field key $ getCrosspostHeader key . itemIdentifier
 postCtx :: Tags -> Context String
 postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
-    , dateField "date" "%B %e, %Y"
+    , dateField "date" "%e %B, %Y"
     , tagsField "tags" tags
     , crosspostField "xp"
     , defaultContext
