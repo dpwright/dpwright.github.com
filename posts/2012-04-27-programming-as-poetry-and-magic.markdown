@@ -18,5 +18,5 @@ tags: code, quotation
 > form, the magic doesn't work. Human beings are not accustomed to being perfect,
 > and few areas of human activity demand it. Adjusting to the requirement for
 > perfection is, I think, the most difficult part of learning to program.
-> 
-> Frederick P. Brooks, The Mythical Man-Month
+
+<div class="quote-attribution">-- Frederick P. Brooks, <cite>The Mythical Man-Month</cite></div>

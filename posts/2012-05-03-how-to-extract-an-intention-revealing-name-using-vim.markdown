@@ -28,8 +28,8 @@ tags: code, vim
 >      @env[QUEUE_WAIT_HEADER].to_i / milliseconds_per_second
 >    end
 > ```
->
-> thoughtbot, [How to extract an intention-revealing name using Vim][3]
+
+<div class="quote-attribution">-- thoughtbot, <cite>[How to extract an intention-revealing name using Vim][3]</cite></div>
 
 Nice vim tip for getting rid of magic numbers in code.
 
