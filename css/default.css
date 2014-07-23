@@ -76,6 +76,12 @@ div#header {
     font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     margin: 0px;
     padding: 0px;
+    position: relative;
+    top: -10px;
+}
+
+div#logo {
+    position: relative;
 }
 
 div#header a {
@@ -86,52 +92,67 @@ div#header a:hover {
     color: #da1071;
 }
 
-h1#logo {
+h1#logomain {
     font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
-    margin: 0px 12px;
-    padding: 0px;
     position: absolute;
+    margin: 0px 0px;
+    padding: 0px;
+    text-align: left;
     font-size: 40px;
 }
 
 h2#sublogo {
     font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     font-size: 16px;
-    margin: 43px 73px;
-    padding: 0px;
+    top: 30px;
+    left: 63px;
     position: absolute;
+    padding: 0px;
 }
 
 div#header #social {
     position: absolute;
-    margin: 22px 272px;
-    text-align: right;
+    top: 22px;
+    left: 265px;
+    text-align: left;
     font-size: 16px:
 }
 
 div#header #navigation {
-    text-align: right;
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    vertical-align: middle;
 }
 
 div#header #navigation a {
-    font-size: 18px;
-    margin: 20px 20px 0px 12px;
+    font-size: 40px;
+    margin: 20px 10px 0px 12px;
     text-decoration: none;
     text-transform: lowercase;
-    border-bottom: solid black 1px;
     color: #333;
+}
+
+div#header #navigation a#vim-icon {
+    font-family: monospace;
+}
+
+div#header #navigation a#jp-icon {
+    font-size: 36px;
 }
 
 div#header #navigation a:hover {
     color: #da1071;
 }
 
-div#header #navigation a.jp {
-    font-size: 0.85em;
+div#header #navigation #jp-icon a {
+    font-size: 35px;
 }
 
 div#content {
-    margin: 80px auto 0px auto;
+    position: relative;
+    top: 80px;
+    margin: 20px auto 0px auto;
     padding: 10px;
     max-width: 900px;
 }
@@ -141,6 +162,8 @@ table#postlist {
 }
 
 div#footer {
+    position: relative;
+    top: 70px;
     color: #555;
     font-size: 12px;
     margin-top: 30px;
@@ -174,17 +197,23 @@ span.math {
 @media only screen
 and (min-device-width : 320px)
 and (max-device-width : 568px) {
-  h1#logo {
+  h1#logomain {
     font-size: 60px;
   }
 
   h2#sublogo {
     font-size: 24px;
-    margin: 63px 100px;
+    top: 40px;
+    left: 90px;
   }
 
   div#header #social {
-    margin: 22px 390px;
     font-size: 32px;
+    top: 25px;
+    left: 380px;
+  }
+
+  div#header #navigation {
+    top: 15px;
   }
 }
