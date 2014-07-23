@@ -28,7 +28,7 @@ blockquote p {
     margin: 0.5em 0px;
 }
 
-div#sidenote {
+div.sidenote {
     background: #fbdaf0;
     border-left: 10px solid #da1071;
     margin: 1.5em 10px;

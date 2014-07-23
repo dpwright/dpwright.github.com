@@ -9,7 +9,7 @@ title: Writing a TCP server in Haskell using proxies and pipes
 
 <center>![Haskell Pipes](http://blog.vitei.com/wp-content/uploads/2013/08/haskell-pipes2.jpg)</center>
 
-<div id="sidenote">Since the release of [Pipes 4][pipes-4], this article is now
+<div class="sidenote">Since the release of [Pipes 4][pipes-4], this article is now
 rather out-of-date.  I leave it up here for posterity, but if you're new to
 Pipes you should probably just ignore it and find a more up-to-date
 tutorial.</div>
