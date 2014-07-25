@@ -1,0 +1,43 @@
+name:                wright-access
+version:             0.1.0.0
+synopsis:            Personal website and blog
+homepage:            dpwright.com
+author:              Daniel P. Wright
+maintainer:          dani@dpwright.com
+copyright:           (c) 2012-2014 Daniel P. Wright
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable site
+  main-is:             2014-07-25-making-this-website-self-hosting-with-hakyll.lhs
+  build-depends:       base >=4.6 && <4.7,
+                       hakyll     == 4.5.1.0,
+                       pandoc     == 1.12.*,
+                       containers == 0.5.*
+  hs-source-dirs:      pending-posts
+  default-language:    Haskell2010
+
+executable new-post
+  main-is:             2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs
+  build-depends:       base >=4.6 && <4.7,
+                       old-locale == 1.0.*,
+                       process    == 1.1.*,
+                       time       == 1.4.*
+  hs-source-dirs:      posts
+  default-language:    Haskell2010
+
+executable bl
+  main-is:             2013-10-01-cross-posting-between-hakyll-and-wordpress.lhs
+  build-depends:       base >=4.6 && <4.7,
+                       BlogLiterately == 0.7.*,
+                       cmdargs        == 0.10.*,
+                       directory      == 1.2.*,
+                       lens           == 4.1.*,
+                       mtl            == 2.1.*,
+                       pandoc-types   == 1.12.*,
+                       silently       == 1.2.*,
+                       temporary      == 1.2.*,
+                       split          == 0.2.*,
+                       utf8-string    == 0.3.*
+  hs-source-dirs:      pending-posts
+  default-language:    Haskell2010

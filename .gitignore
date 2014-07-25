@@ -1,7 +1,3 @@
 _cache
 _site
-site
-site.hi
-site.o
-obj
-bin
+dist
