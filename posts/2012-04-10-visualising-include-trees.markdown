@@ -1,7 +1,7 @@
 ---
 title: Visualising #include trees
 date: 2012-04-10 08:31
-tags: code, c, c++, graphs, ruby, scripts, visualisation
+tags: c, c++, graphs, ruby, scripts, visualisation
 ---
 
 ![OpenGL include tree](http://files.dpwright.com/opengl-includes.png)\ 

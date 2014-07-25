@@ -1,7 +1,7 @@
 ---
 title: OGRE #include tree
 date: 2012-04-10 10:54
-tags: code, c++, graphs, ogre, visualisation
+tags: c++, graphs, ogre, visualisation
 ---
 
 ![OGRE include tree](http://files.dpwright.com/ogre-includes.png)\ 

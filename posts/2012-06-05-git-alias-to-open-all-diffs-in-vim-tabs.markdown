@@ -1,7 +1,7 @@
 ---
 title: Git alias to open all diffs in vim tabs
 date: 2012-06-05 15:46
-tags: code, alias, git, vim
+tags: alias, git, vim
 ---
 
 This is a handy little alias I've been using recently to open all unstaged diffs

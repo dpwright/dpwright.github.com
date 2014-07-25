@@ -1,6 +1,6 @@
 ---
 date: 2013-10-01 10:41:25
-tags: code, haskell, functional-programming, hakyll, wordpress
+tags: haskell, functional-programming, hakyll, wordpress
 title: Cross-posting between Hakyll and Wordpress
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Accessing networked Macs from FreeBSD
 date: 2012-04-24 10:27
-tags: code, .local , avahi , bonjour , freebsd , mac , networking , zeroconf
+tags: .local , avahi , bonjour , freebsd , mac , networking , zeroconf
 ---
 
 Macs on a network automatically find each other using [Bonjour][1], to avoid the

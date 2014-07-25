@@ -1,7 +1,7 @@
 ---
 title: SVN post-commit hook: email file owner
 date: 2012-05-30 14:36
-tags: code, bash, scripts, subversion
+tags: bash, scripts, subversion
 ---
 
 It's a common enough situation: we want SVN to email a notification to

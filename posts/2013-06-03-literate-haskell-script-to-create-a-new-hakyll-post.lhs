@@ -1,6 +1,6 @@
 ---
 date: 2013-06-03 08:30
-tags: literate-programs, code, functional-programming, haskell, hakyll
+tags: literate-programs, functional-programming, haskell, hakyll
 title: (Literate) Haskell script to create a new Hakyll post
 ---
 

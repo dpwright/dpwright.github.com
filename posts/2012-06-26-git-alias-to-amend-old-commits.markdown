@@ -1,7 +1,7 @@
 ---
 title: Git alias to amend old commits
 date: 2012-06-26 19:50
-tags: code, alias, git
+tags: alias, git
 ---
 
 `git commit --amend` is a useful little command for fixing mistakes in log

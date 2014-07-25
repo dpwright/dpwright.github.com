@@ -1,7 +1,7 @@
 ---
 title: File-specific merge resolution in git
 date: 2012-05-11 14:18
-tags: code, git, subversion, version control
+tags: git, subversion, version control
 ---
 
 I've been using git-svn for a while now so that I can take advantage of the
