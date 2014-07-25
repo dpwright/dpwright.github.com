@@ -1,6 +1,6 @@
 ---
 date: 2013-08-21 08:51:58
-tags: code, haskell, functional-programming
+tags: literate-programs, code, haskell, functional-programming
 xp: vitei
 xpid: 147
 xplastupdate: 2013-08-22 10:41
