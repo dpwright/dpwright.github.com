@@ -111,24 +111,20 @@ Index pages
 >     itemTpl <- loadBody "templates/post-item.html"
 >     applyTemplateList itemTpl (postCtx tags) posts
 >
+> indexCompiler :: Tags -> Pattern -> Compiler (Item String)
+> indexCompiler tags pattern = do
+>     ctx <- indexCtx tags <$> postList tags pattern recentFirst
+>     makeItem "" >>= loadAndApplyTemplate "templates/archive.html" ctx
+>                 >>= loadAndApplyTemplate "templates/default.html" ctx
+>                 >>= relativizeUrls
+>
 > tagIndex :: Tags -> Rules ()
 > tagIndex tags = tagsRules tags $ \tag pattern -> do
 >     route idRoute
->     compile $ do
->         ctx <- indexCtx tags <$> postList tags pattern recentFirst
->         makeItem ""
->             >>= loadAndApplyTemplate "templates/archive.html" ctx
->             >>= loadAndApplyTemplate "templates/default.html" ctx
->             >>= relativizeUrls
+>     compile $ indexCompiler tags pattern
 >
 > index :: Tags -> Rules ()
-> index tags = create ["index.html"] $ do
->     compile $ do
->         ctx <- indexCtx tags <$> postList tags "posts/*" recentFirst
->         makeItem ""
->             >>= loadAndApplyTemplate "templates/archive.html" ctx
->             >>= loadAndApplyTemplate "templates/default.html" ctx
->             >>= relativizeUrls
+> index tags = create ["index.html"] . compile $ indexCompiler tags "posts/*"
 
 Cross-posting
 -------------
