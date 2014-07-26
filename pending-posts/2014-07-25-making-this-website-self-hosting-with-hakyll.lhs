@@ -12,7 +12,7 @@ Preliminaries
 > module Main where
 >
 > import           Data.Monoid         ((<>))
-> import           Control.Applicative (liftA2)
+> import           Control.Applicative (liftA2, (<$>))
 > import           Text.Pandoc.Options (ReaderOptions(..), WriterOptions (..),
 >                                       Extension (..), HTMLMathMethod(..), def)
 
@@ -87,13 +87,6 @@ Posts
 >             <> crosspostField "xp"
 >             <> defaultContext
 >
-> postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
->          -> Compiler String
-> postList tags pattern sortFilter = do
->     posts   <- sortFilter =<< loadAll pattern
->     itemTpl <- loadBody "templates/post-item.html"
->     applyTemplateList itemTpl (postCtx tags) posts
->
 
 > posts :: Tags -> Rules ()
 > posts tags = match "posts/*" $ do
@@ -106,31 +99,36 @@ Posts
 Index pages
 -----------
 
-> tagIndex, index :: Tags -> Rules ()
+> indexCtx :: Tags -> String -> Context String
+> indexCtx tags list = constField "posts" list
+>                   <> field "tags" (\_ -> renderTagList tags)
+>                   <> defaultContext
+>
+> postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
+>          -> Compiler String
+> postList tags pattern sortFilter = do
+>     posts   <- sortFilter =<< loadAll pattern
+>     itemTpl <- loadBody "templates/post-item.html"
+>     applyTemplateList itemTpl (postCtx tags) posts
+>
+> tagIndex :: Tags -> Rules ()
 > tagIndex tags = tagsRules tags $ \tag pattern -> do
->     let title = "Posts tagged " ++ tag
 >     route idRoute
 >     compile $ do
->         list <- postList tags pattern recentFirst
+>         ctx <- indexCtx tags <$> postList tags pattern recentFirst
 >         makeItem ""
->             >>= loadAndApplyTemplate "templates/archive.html"
->                 (constField "title" title <>
->                  constField "posts" list  <>
->                  defaultContext)
->             >>= loadAndApplyTemplate "templates/default.html" defaultContext
+>             >>= loadAndApplyTemplate "templates/archive.html" ctx
+>             >>= loadAndApplyTemplate "templates/default.html" ctx
 >             >>= relativizeUrls
 >
+> index :: Tags -> Rules ()
 > index tags = match "index.html" $ do
 >     route idRoute
 >     compile $ do
->         list <- postList tags "posts/*" recentFirst
->         let indexCtx = constField "posts" list
->                     <> field "tags" (\_ -> renderTagList tags)
->                     <> defaultContext
->
+>         ctx <- indexCtx tags <$> postList tags "posts/*" recentFirst
 >         getResourceBody
->             >>= applyAsTemplate indexCtx
->             >>= loadAndApplyTemplate "templates/default.html" indexCtx
+>             >>= applyAsTemplate ctx
+>             >>= loadAndApplyTemplate "templates/default.html" ctx
 >             >>= relativizeUrls
 
 Cross-posting
