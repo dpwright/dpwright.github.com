@@ -122,12 +122,11 @@ Index pages
 >             >>= relativizeUrls
 >
 > index :: Tags -> Rules ()
-> index tags = match "index.html" $ do
->     route idRoute
+> index tags = create ["index.html"] $ do
 >     compile $ do
 >         ctx <- indexCtx tags <$> postList tags "posts/*" recentFirst
->         getResourceBody
->             >>= applyAsTemplate ctx
+>         makeItem ""
+>             >>= loadAndApplyTemplate "templates/archive.html" ctx
 >             >>= loadAndApplyTemplate "templates/default.html" ctx
 >             >>= relativizeUrls
 
