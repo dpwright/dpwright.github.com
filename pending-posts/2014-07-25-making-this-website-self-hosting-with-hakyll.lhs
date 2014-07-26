@@ -55,7 +55,7 @@ Site builder
 > generateTags = buildTags "posts/*" $ fromCapture "tags/*.html"
 
 > taggedRules :: Tags -> Rules ()
-> taggedRules = posts & archive & tagIndex & index
+> taggedRules = posts & tagIndex & index
 >   where (&) = liftA2 (>>)
 
 Some simple rules
@@ -106,20 +106,7 @@ Posts
 Index pages
 -----------
 
-> archive, tagIndex, index :: Tags -> Rules ()
-> archive tags = create ["archive.html"] $ do
->     route idRoute
->     compile $ do
->         list <- postList tags "posts/*" recentFirst
->         let archiveCtx = constField "posts" list
->                       <> constField "title" "Archives"
->                       <> defaultContext
->
->         makeItem ""
->             >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
->             >>= loadAndApplyTemplate "templates/default.html" archiveCtx
->             >>= relativizeUrls
->
+> tagIndex, index :: Tags -> Rules ()
 > tagIndex tags = tagsRules tags $ \tag pattern -> do
 >     let title = "Posts tagged " ++ tag
 >     route idRoute
