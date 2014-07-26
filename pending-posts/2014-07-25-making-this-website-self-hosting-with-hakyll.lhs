@@ -12,11 +12,14 @@ Preliminaries
 > module Main where
 >
 > import           Data.Monoid         ((<>))
-> import           Text.Pandoc.Options
-> import           Hakyll
->
+> import           Control.Applicative (liftA2)
+> import           Text.Pandoc.Options (ReaderOptions(..), WriterOptions (..),
+>                                       Extension (..), HTMLMathMethod(..), def)
+
 > import qualified Data.Map as M
 > import qualified Data.Set as S
+
+> import           Hakyll
 
 Compiler Settings
 -----------------
@@ -38,20 +41,27 @@ Site builder
 
 > main :: IO ()
 > main = hakyll $ do
+>     simpleRules
+>     generateTags >>= taggedRules
+
+> simpleRules :: Rules ()
+> simpleRules = do
 >     templates
 >     images
 >     static
 >     css
->     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
->     posts    tags
->     archive  tags
->     tagIndex tags
->     index    tags
+
+> generateTags :: Rules Tags
+> generateTags = buildTags "posts/*" $ fromCapture "tags/*.html"
+
+> taggedRules :: Tags -> Rules ()
+> taggedRules = posts & archive & tagIndex & index
+>   where (&) = liftA2 (>>)
 
 Some simple rules
 -----------------
 
-> templates, images, static, css :: Rules ()
+> templates, images, css, static :: Rules ()
 >
 > templates = match "templates/**" $ compile templateCompiler
 >
@@ -59,18 +69,16 @@ Some simple rules
 >     route   idRoute
 >     compile copyFileCompiler
 >
-> static = match "static/**" $ do
->     route $ gsubRoute "static/" (const "")
->     compile copyFileCompiler
->
 > css = match "css/*" $ do
 >     route   idRoute
 >     compile compressCssCompiler
+>
+> static = match "static/**" $ do
+>     route $ gsubRoute "static/" (const "")
+>     compile copyFileCompiler
 
 Posts
 -----
-
-> posts, archive, tagIndex, index :: Tags -> Rules ()
 
 > postCtx :: Tags -> Context String
 > postCtx tags = modificationTimeField "mtime" "%U"
@@ -86,6 +94,8 @@ Posts
 >     itemTpl <- loadBody "templates/post-item.html"
 >     applyTemplateList itemTpl (postCtx tags) posts
 >
+
+> posts :: Tags -> Rules ()
 > posts tags = match "posts/*" $ do
 >     route $ setExtension "html"
 >     compile $ customCompiler
@@ -96,6 +106,7 @@ Posts
 Index pages
 -----------
 
+> archive, tagIndex, index :: Tags -> Rules ()
 > archive tags = create ["archive.html"] $ do
 >     route idRoute
 >     compile $ do
