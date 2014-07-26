@@ -11,7 +11,7 @@ Preliminaries
 >
 > module Main where
 >
-> import           Data.Monoid (mappend, mconcat)
+> import           Data.Monoid         ((<>))
 > import           Text.Pandoc.Options
 > import           Hakyll
 >
@@ -73,13 +73,11 @@ Posts
 > posts, archive, tagIndex, index :: Tags -> Rules ()
 
 > postCtx :: Tags -> Context String
-> postCtx tags = mconcat
->     [ modificationTimeField "mtime" "%U"
->     , dateField "date" "%e %B, %Y"
->     , tagsField "tags" tags
->     , crosspostField "xp"
->     , defaultContext
->     ]
+> postCtx tags = modificationTimeField "mtime" "%U"
+>             <> dateField "date" "%e %B, %Y"
+>             <> tagsField "tags" tags
+>             <> crosspostField "xp"
+>             <> defaultContext
 >
 > postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
 >          -> Compiler String
@@ -102,10 +100,9 @@ Index pages
 >     route idRoute
 >     compile $ do
 >         list <- postList tags "posts/*" recentFirst
->         let archiveCtx =
->                 constField "posts" list                    `mappend`
->                 constField "title" "Archives"              `mappend`
->                 defaultContext
+>         let archiveCtx = constField "posts" list
+>                       <> constField "title" "Archives"
+>                       <> defaultContext
 >
 >         makeItem ""
 >             >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
@@ -119,8 +116,8 @@ Index pages
 >         list <- postList tags pattern recentFirst
 >         makeItem ""
 >             >>= loadAndApplyTemplate "templates/archive.html"
->                 (constField "title" title `mappend`
->                  constField "posts" list  `mappend`
+>                 (constField "title" title <>
+>                  constField "posts" list  <>
 >                  defaultContext)
 >             >>= loadAndApplyTemplate "templates/default.html" defaultContext
 >             >>= relativizeUrls
@@ -129,9 +126,9 @@ Index pages
 >     route idRoute
 >     compile $ do
 >         list <- postList tags "posts/*" recentFirst
->         let indexCtx = constField "posts" list          `mappend`
->                 field "tags" (\_ -> renderTagList tags) `mappend`
->                 defaultContext
+>         let indexCtx = constField "posts" list
+>                     <> field "tags" (\_ -> renderTagList tags)
+>                     <> defaultContext
 >
 >         getResourceBody
 >             >>= applyAsTemplate indexCtx
