@@ -109,6 +109,10 @@ Index pages
 > indexCtx tags list = constField "posts" list
 >                   <> defaultContext
 >
+> itemCtx :: Tags -> Context String
+> itemCtx tags = dateField "date" "%e %B, %Y"
+>             <> defaultContext
+
 > postList :: Tags
 >          -> Pattern
 >          -> ([Item String] -> Compiler [Item String])
@@ -116,7 +120,7 @@ Index pages
 > postList tags pattern sortFilter = do
 >   posts   <- sortFilter =<< loadAll pattern
 >   itemTpl <- loadBody "templates/post-item.html"
->   applyTemplateList itemTpl (postCtx tags) posts
+>   applyTemplateList itemTpl (itemCtx tags) posts
 >
 > indexCompiler :: Tags -> Pattern -> Compiler (Item String)
 > indexCompiler tags pattern = do
