@@ -26,15 +26,15 @@ Site builder
 
 > main :: IO ()
 > main = hakyll $ do
->     simpleRules
->     generateTags >>= taggedRules
+>   simpleRules
+>   generateTags >>= taggedRules
 
 > simpleRules :: Rules ()
 > simpleRules = do
->     templates
->     images
->     static
->     css
+>   templates
+>   images
+>   static
+>   css
 
 > generateTags :: Rules Tags
 > generateTags = buildTags "posts/*" $ fromCapture "tags/*.html"
@@ -51,16 +51,16 @@ Some simple rules
 > templates = match "templates/**" $ compile templateCompiler
 >
 > images = match "images/*" $ do
->     route   idRoute
->     compile copyFileCompiler
+>   route   idRoute
+>   compile copyFileCompiler
 >
 > css = match "css/*" $ do
->     route   idRoute
->     compile compressCssCompiler
+>   route   idRoute
+>   compile compressCssCompiler
 >
 > static = match "static/**" $ do
->     route $ gsubRoute "static/" (const "")
->     compile copyFileCompiler
+>   route $ gsubRoute "static/" (const "")
+>   compile copyFileCompiler
 
 Compiler Settings
 -----------------
@@ -100,8 +100,8 @@ Posts
 
 > posts :: Tags -> Rules ()
 > posts tags = match "posts/*" $ do
->     route $ setExtension "html"
->     compile $ postCompiler tags
+>   route $ setExtension "html"
+>   compile $ postCompiler tags
 
 Index pages
 -----------
@@ -115,21 +115,21 @@ Index pages
 >          -> ([Item String] -> Compiler [Item String])
 >          -> Compiler String
 > postList tags pattern sortFilter = do
->     posts   <- sortFilter =<< loadAll pattern
->     itemTpl <- loadBody "templates/post-item.html"
->     applyTemplateList itemTpl (postCtx tags) posts
+>   posts   <- sortFilter =<< loadAll pattern
+>   itemTpl <- loadBody "templates/post-item.html"
+>   applyTemplateList itemTpl (postCtx tags) posts
 >
 > indexCompiler :: Tags -> Pattern -> Compiler (Item String)
 > indexCompiler tags pattern = do
->     ctx <- indexCtx tags <$> postList tags pattern recentFirst
->     makeItem "" >>= loadAndApplyTemplate "templates/archive.html" ctx
->                 >>= loadAndApplyTemplate "templates/default.html" ctx
->                 >>= relativizeUrls
+>   ctx <- indexCtx tags <$> postList tags pattern recentFirst
+>   makeItem "" >>= loadAndApplyTemplate "templates/archive.html" ctx
+>               >>= loadAndApplyTemplate "templates/default.html" ctx
+>               >>= relativizeUrls
 >
 > tagIndex :: Tags -> Rules ()
 > tagIndex tags = tagsRules tags $ \tag pattern -> do
->     route idRoute
->     compile $ indexCompiler tags pattern
+>   route idRoute
+>   compile $ indexCompiler tags pattern
 >
 > index :: Tags -> Rules ()
 > index tags = create ["index.html"] . compile $ indexCompiler tags "posts/*"
@@ -138,12 +138,13 @@ Cross-posting
 -------------
 
 > getCrosspostHeader :: String -> Identifier -> Compiler String
-> getCrosspostHeader key id' = getMetadata id' >>= toHeader . M.lookup key
->   where loadHeader = fmap itemBody . header
->         toHeader = maybe (return "") loadHeader
->         header name = makeItem "" >>= loadAndApplyTemplate (templatePath name) xpContext
+> getCrosspostHeader key n = getMetadata n >>= toHeader . M.lookup key
+>   where loadHeader        = fmap itemBody . header
+>         toHeader          = maybe (return "") loadHeader
+>         header name       = makeItem ""
+>                         >>= loadAndApplyTemplate (templatePath name) xpContext
 >         templatePath name = fromFilePath $ "templates/xp/" ++ name ++ ".html"
->         xpContext = defaultContext
+>         xpContext         = defaultContext
 >
 > crosspostField :: String -> Context a
 > crosspostField key = field key $ getCrosspostHeader key . itemIdentifier
