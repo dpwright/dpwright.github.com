@@ -70,7 +70,6 @@ Compiler Settings
 > customCompiler = pandocCompilerWith readerOptions writerOptions
 >   where readerOptions = def
 >                       { readerSmart          = True
->                       , readerExtensions     = extensions
 >                       }
 >         writerOptions = def
 >                       { writerHTMLMathMethod = MathJax ""
