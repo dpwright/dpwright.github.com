@@ -105,7 +105,6 @@ Index pages
 
 > indexCtx :: Tags -> String -> Context String
 > indexCtx tags list = constField "posts" list
->                   <> field "tags" (\_ -> renderTagList tags)
 >                   <> defaultContext
 >
 > postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
