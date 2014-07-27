@@ -105,10 +105,6 @@ Posts
 Index pages
 -----------
 
-> indexCtx :: Tags -> String -> Context String
-> indexCtx tags list = constField "posts" list
->                   <> defaultContext
->
 > itemCtx :: Tags -> Context String
 > itemCtx tags = dateField "date" "%e %B, %Y"
 >             <> defaultContext
@@ -122,9 +118,12 @@ Index pages
 >   itemTpl <- loadBody "templates/post-item.html"
 >   applyTemplateList itemTpl (itemCtx tags) posts
 >
-> indexCompiler :: Tags -> Pattern -> Compiler (Item String)
-> indexCompiler tags pattern = do
->   ctx <- indexCtx tags <$> postList tags pattern recentFirst
+> indexCtx :: Context String -> Tags -> String -> Context String
+> indexCtx base tags list = constField "posts" list <> base
+>
+> indexCompiler :: Tags -> Pattern -> Context String -> Compiler (Item String)
+> indexCompiler tags pattern baseCtx = do
+>   ctx <- indexCtx baseCtx tags <$> postList tags pattern recentFirst
 >   makeItem "" >>= loadAndApplyTemplate "templates/archive.html" ctx
 >               >>= loadAndApplyTemplate "templates/default.html" ctx
 >               >>= relativizeUrls
@@ -132,12 +131,13 @@ Index pages
 > tagIndex :: Tags -> Rules ()
 > tagIndex tags = tagsRules tags $ \tag pattern -> do
 >   route idRoute
->   compile $ indexCompiler tags pattern
+>   compile $ indexCompiler tags pattern defaultContext
 >
 > index :: Tags -> Rules ()
 > index tags = create ["index.html"] $ do
 >   route idRoute
->   compile $ indexCompiler tags "posts/*"
+>   compile $ indexCompiler tags "posts/*" baseContext
+>   where baseContext = constField "title" "" <> defaultContext
 
 Atom feed
 ---------
