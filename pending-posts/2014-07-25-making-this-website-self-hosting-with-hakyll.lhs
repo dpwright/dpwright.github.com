@@ -14,7 +14,8 @@ Preliminaries
 > import           Data.Monoid         ((<>))
 > import           Control.Applicative (liftA2, (<$>))
 > import           Text.Pandoc.Options (ReaderOptions(..), WriterOptions (..),
->                                       Extension (..), HTMLMathMethod(..), def)
+>                                       Extension (..), HTMLMathMethod(..),
+>                                       pandocExtensions, def)
 
 > import qualified Data.Map as M
 > import qualified Data.Set as S
