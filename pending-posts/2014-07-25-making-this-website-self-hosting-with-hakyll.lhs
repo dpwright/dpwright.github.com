@@ -41,7 +41,7 @@ Site builder
 > generateTags = buildTags "posts/*" $ fromCapture "tags/*.html"
 
 > taggedRules :: Tags -> Rules ()
-> taggedRules = posts & tagIndex & index
+> taggedRules = posts & tagIndex & index & feed
 >   where (&) = liftA2 (>>)
 
 Some simple rules
@@ -93,6 +93,7 @@ Posts
 > postCompiler :: Tags -> Compiler (Item String)
 > postCompiler tags = customCompiler
 >                 >>= loadAndApplyTemplate "templates/post.html"    ctx
+>                 >>= saveSnapshot "content"
 >                 >>= loadAndApplyTemplate "templates/default.html" ctx
 >                 >>= relativizeUrls
 >   where ctx = postCtx tags
@@ -132,6 +133,27 @@ Index pages
 >
 > index :: Tags -> Rules ()
 > index tags = create ["index.html"] . compile $ indexCompiler tags "posts/*"
+
+Atom feed
+---------
+
+> feedConfig :: FeedConfiguration
+> feedConfig = FeedConfiguration
+>            { feedTitle       = "Wright Access"
+>            , feedDescription = "dpwright's notes on code, Japan, Japanese, and anything else"
+>            , feedAuthorName  = "Daniel P. Wright"
+>            , feedAuthorEmail = "dani@dpwright.com"
+>            , feedRoot        = "http://dpwright.com"
+>            }
+
+> feed :: Tags -> Rules ()
+> feed tags = create ["atom.xml"] $ do
+>   route idRoute
+>   compile $ do
+>     let feedCtx = postCtx tags
+>                <> bodyField "description"
+>     posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*" "content"
+>     renderAtom feedConfig feedCtx posts
 
 Cross-posting
 -------------

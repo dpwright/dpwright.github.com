@@ -113,7 +113,7 @@ h2#sublogo {
 div#header #social {
     position: absolute;
     top: 22px;
-    left: 265px;
+    left: 241px;
     text-align: left;
     font-size: 16px:
 }
@@ -210,7 +210,7 @@ and (max-device-width : 568px) {
   div#header #social {
     font-size: 32px;
     top: 25px;
-    left: 380px;
+    left: 344px;
   }
 
   div#header #navigation {
