@@ -107,7 +107,9 @@ Index pages
 > indexCtx tags list = constField "posts" list
 >                   <> defaultContext
 >
-> postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
+> postList :: Tags
+>          -> Pattern
+>          -> ([Item String] -> Compiler [Item String])
 >          -> Compiler String
 > postList tags pattern sortFilter = do
 >     posts   <- sortFilter =<< loadAll pattern
