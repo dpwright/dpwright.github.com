@@ -85,12 +85,10 @@ Posts
 -----
 
 > postCtx :: Tags -> Context String
-> postCtx tags = modificationTimeField "mtime" "%U"
->             <> dateField "date" "%e %B, %Y"
+> postCtx tags = dateField "date" "%e %B, %Y"
 >             <> tagsField "tags" tags
 >             <> crosspostField "xp"
 >             <> defaultContext
->
 
 > postCompiler :: Tags -> Compiler (Item String)
 > postCompiler tags = customCompiler
