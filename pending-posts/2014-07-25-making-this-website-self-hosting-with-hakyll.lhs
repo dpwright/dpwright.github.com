@@ -131,7 +131,9 @@ Index pages
 >   compile $ indexCompiler tags pattern
 >
 > index :: Tags -> Rules ()
-> index tags = create ["index.html"] . compile $ indexCompiler tags "posts/*"
+> index tags = create ["index.html"] $ do
+>   route idRoute
+>   compile $ indexCompiler tags "posts/*"
 
 Atom feed
 ---------
