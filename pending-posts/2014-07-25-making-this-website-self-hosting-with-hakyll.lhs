@@ -88,13 +88,17 @@ Posts
 >             <> defaultContext
 >
 
+> postCompiler :: Tags -> Compiler (Item String)
+> postCompiler tags = customCompiler
+>                 >>= loadAndApplyTemplate "templates/post.html"    ctx
+>                 >>= loadAndApplyTemplate "templates/default.html" ctx
+>                 >>= relativizeUrls
+>   where ctx = postCtx tags
+
 > posts :: Tags -> Rules ()
 > posts tags = match "posts/*" $ do
 >     route $ setExtension "html"
->     compile $ customCompiler
->         >>= loadAndApplyTemplate "templates/post.html"    (postCtx tags)
->         >>= loadAndApplyTemplate "templates/default.html" (postCtx tags)
->         >>= relativizeUrls
+>     compile $ postCompiler tags
 
 Index pages
 -----------
