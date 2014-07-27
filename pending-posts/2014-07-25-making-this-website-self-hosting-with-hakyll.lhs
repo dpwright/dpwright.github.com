@@ -21,21 +21,6 @@ Preliminaries
 
 > import           Hakyll
 
-Compiler Settings
------------------
-
-> customCompiler :: Compiler (Item String)
-> customCompiler = pandocCompilerWith readerOptions writerOptions
->   where readerOptions = def { readerSmart = True }
->         writerOptions = def
->                       { writerHTMLMathMethod = MathJax ""
->                       , writerHighlight      = True
->                       , writerExtensions     = writerExts
->                       }
->         writerExts    = writerExtensions def `S.union` S.fromList
->                       [ Ext_literate_haskell
->                       ]
-
 Site builder
 ------------
 
@@ -76,6 +61,24 @@ Some simple rules
 > static = match "static/**" $ do
 >     route $ gsubRoute "static/" (const "")
 >     compile copyFileCompiler
+
+Compiler Settings
+-----------------
+
+> customCompiler :: Compiler (Item String)
+> customCompiler = pandocCompilerWith readerOptions writerOptions
+>   where readerOptions = def
+>                       { readerSmart          = True
+>                       , readerExtensions     = extensions
+>                       }
+>         writerOptions = def
+>                       { writerHTMLMathMethod = MathJax ""
+>                       , writerHighlight      = True
+>                       , writerExtensions     = extensions
+>                       }
+>         extensions    = pandocExtensions `S.union` S.fromList
+>                       [ Ext_literate_haskell
+>                       ]
 
 Posts
 -----
