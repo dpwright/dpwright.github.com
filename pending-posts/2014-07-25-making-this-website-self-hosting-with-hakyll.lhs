@@ -12,7 +12,18 @@ Preliminaries
 > module Main where
 >
 > import           Data.Monoid         ((<>))
-> import           Control.Applicative (liftA2, (<$>))
+> import           Data.Maybe          (fromMaybe)
+> import           Data.List           (intercalate)
+> import           Data.Char           (toLower, isAlphaNum)
+
+> import           Control.Applicative (liftA2, (<$>), (<*>))
+> import           Control.Monad       (msum)
+
+> import           System.FilePath     (replaceBaseName)
+> import           System.Locale       (defaultTimeLocale)
+> import           Data.Time.Clock     (UTCTime (..))
+> import           Data.Time.Format    (formatTime, parseTime)
+
 > import           Text.Pandoc.Options (ReaderOptions(..), WriterOptions (..),
 >                                       Extension (..), HTMLMathMethod(..),
 >                                       pandocExtensions, def)
@@ -99,8 +110,34 @@ Posts
 
 > posts :: Tags -> Rules ()
 > posts tags = match "posts/*" $ do
->   route $ setExtension "html"
+>   route $ metadataRoute dateAndTitle `composeRoutes` setExtension ".html"
 >   compile $ postCompiler tags
+
+> dateAndTitle :: Metadata -> Routes
+> dateAndTitle meta = fromMaybe idRoute $
+>   constructName <$> field "title" <*> field "date"
+>   where constructName t d = setBaseName $ date d ++ "-" ++ title t
+>         field  = (`M.lookup` meta)
+>         date   = formatTime defaultTimeLocale "%Y-%m-%d" . readTime
+>         title  = map toLower . intercalate "-" . map (filter isAlphaNum) . words
+
+> readTime :: String -> UTCTime
+> readTime t = fromMaybe empty' . msum $ attempts
+>   where attempts = [parseTime defaultTimeLocale fmt t | fmt <- formats]
+>         empty'   = error $ "Could not parse date field: " ++ t
+>         formats  = [ "%a, %d %b %Y %H:%M:%S %Z"
+>                    , "%Y-%m-%dT%H:%M:%S%Z"
+>                    , "%Y-%m-%d %H:%M:%S%Z"
+>                    , "%Y-%m-%d %H:%M"
+>                    , "%Y-%m-%d"
+>                    , "%B %e, %Y %l:%M %p"
+>                    , "%B %e, %Y"
+>                    , "%b %d, %Y"
+>                    ]
+
+
+> setBaseName :: String -> Routes
+> setBaseName basename = customRoute $ (`replaceBaseName` basename) . toFilePath
 
 Index pages
 -----------

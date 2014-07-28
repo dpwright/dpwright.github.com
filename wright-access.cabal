@@ -11,9 +11,12 @@ cabal-version:       >=1.10
 executable site
   main-is:             2014-07-25-making-this-website-self-hosting-with-hakyll.lhs
   build-depends:       base >=4.6 && <4.7,
+                       containers == 0.5.*,
+                       filepath   == 1.3.*,
                        hakyll     == 4.5.1.0,
+                       old-locale == 1.0.*,
                        pandoc     == 1.12.*,
-                       containers == 0.5.*
+                       time       == 1.4.*
   hs-source-dirs:      pending-posts
   default-language:    Haskell2010
 
