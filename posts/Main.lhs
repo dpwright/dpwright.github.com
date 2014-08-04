@@ -19,7 +19,7 @@ generating static websites.  I will write this series assuming basic Haskell
 knowledge; you should be familiar with standard typeclasses like `Monoid` and
 `Applicative`.  Specific knowledge of Hakyll is not required, and if an idiom
 feels at all obscure I will attempt to explain it as I go.  If there's anything
-you don't get, you can always drop me a tweet [@danielpwright][@danielpwright]!
+you don't get, you can always drop me a tweet @[danielpwright][danielpwright]!
 
 This post will just cover the basics -- for details of the generation of actual
 posts, the index pages, and so on, check back for future posts!  I will update
@@ -56,7 +56,7 @@ actual functionality.
 Some simple rules
 -----------------
 
-The main entry point to Hakyll takes a set of `[Rules][hakyll-rules]` and
+The main entry point to Hakyll takes a set of [`Rules`][hakyllrules] and
 returns an `IO` action which generates the site.  `Rules` themselves form a
 monad, so assuming we have some simple rules:
 
@@ -83,7 +83,7 @@ other pages using that template.
 
 > templates = match "templates/**" $ compile templateCompiler
 
-Hakyll provides a `[Pattern][hakyll-pattern]` type which, conveniently,
+Hakyll provides a [`Pattern`][hakyllpattern] type which, conveniently,
 implements `IsString` so our `OverloadedStrings` pragma takes care of the
 conversion for us.  The `**` pattern searches in that directory and all
 subdirectories.
@@ -196,7 +196,7 @@ configuration to actually create the posts themselves!
 
 [gensite]:        /tags/generating%20this%20website.html
 [hakyll]:         http://jaspervdj.be/hakyll
-[@danielpwright]: http://twitter.com/danielpwright
-[hakyll-rules]:   http://jaspervdj.be/hakyll/reference/Hakyll-Core-Rules.html#t:Rules
-[hakyll-pattern]: http://jaspervdj.be/hakyll/reference/Hakyll-Core-Identifier-Pattern.html#t:Pattern
+[danielpwright]:  http://twitter.com/danielpwright
+[hakyllrules]:    http://jaspervdj.be/hakyll/reference/Hakyll-Core-Rules.html#t:Rules
+[hakyllpattern]:  http://jaspervdj.be/hakyll/reference/Hakyll-Core-Identifier-Pattern.html#t:Pattern
 [gits-guts]:      /gits-guts
