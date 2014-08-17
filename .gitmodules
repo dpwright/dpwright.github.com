@@ -1,3 +1,6 @@
 [submodule "static/gits-guts"]
 	path = static/gits-guts
 	url = https://github.com/dpwright/gits-guts
+[submodule "static/slides/reveal.js"]
+	path = static/slides/reveal.js
+	url = https://github.com/hakimel/reveal.js.git
