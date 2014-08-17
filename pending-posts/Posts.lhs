@@ -33,17 +33,19 @@ title: Generating this website part 2: Posts
 
 > customCompiler :: Compiler (Item String)
 > customCompiler = pandocCompilerWith readerOptions writerOptions
->   where readerOptions = def
->                       { readerSmart          = True
->                       }
->         writerOptions = def
->                       { writerHTMLMathMethod = MathJax ""
->                       , writerHighlight      = True
->                       , writerExtensions     = extensions
->                       }
->         extensions    = pandocExtensions `S.union` S.fromList
->                       [ Ext_literate_haskell
->                       ]
+
+> readerOptions :: ReaderOptions
+> readerOptions = def { readerSmart = True }
+
+> writerOptions :: WriterOptions
+> writerOptions = def
+>               { writerHTMLMathMethod = MathJax ""
+>               , writerHighlight      = True
+>               , writerExtensions     = extensions
+>               }
+>   where extensions = pandocExtensions `S.union` S.fromList
+>                    [ Ext_literate_haskell
+>                    ]
 
 > postCtx :: Tags -> Context String
 > postCtx tags = dateField "date" "%e %B, %Y"
