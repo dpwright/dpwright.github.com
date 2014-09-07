@@ -4,6 +4,11 @@ tags: hakyll, literate-programs, generating this website
 title: Generating this website part 2: Posts
 ---
 
+<div class="sidenote">
+This is part two of the "generating this website" series.  To read the rest of
+the series, go to the series index [here][generating-this-website]
+</div>
+
 > {-# LANGUAGE OverloadedStrings #-}
 >
 > module Posts where
