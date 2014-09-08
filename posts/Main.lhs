@@ -52,6 +52,7 @@ actual functionality.
 > import Posts
 > import Indexing
 > import Feed
+> import Slides
 
 Some simple rules
 -----------------
@@ -71,9 +72,10 @@ We can put them together by simply listing them using `do`-notation.
 >   static
 >   css
 >   index
+>   slideshows
 
-<div class="sidenote">Note: the `index` rule above will be defined in a future
-blog post</div>
+<div class="sidenote">Note: the `index`  and `slideshows` rules above will be
+defined in future blog posts</div>
 
 The rules themselves govern the compilation and generation of files.  Perhaps
 the simplest of these is `templates`, which compiles all files found in the
