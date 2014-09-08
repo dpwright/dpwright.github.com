@@ -45,3 +45,10 @@ executable bl
                        utf8-string    == 0.3.*
   hs-source-dirs:      pending-posts
   default-language:    Haskell2010
+
+executable equationalReasoningExamples
+  main-is:             2014-09-06-equational-reasoning.lhs
+  build-depends:       base >=4.6 && <4.7,
+                       mtl == 2.1.*
+  hs-source-dirs:      slides
+  default-language:    Haskell2010
