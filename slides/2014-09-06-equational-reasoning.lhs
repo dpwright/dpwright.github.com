@@ -27,7 +27,7 @@ subtitle: 最適化と証明
 
 . . .
 
-### どの言語に向いてる？
+<h3>どの言語に向いてる？</h3>
 
 - 💖 Haskell 💕
 - 依存型言語：Agda, Idris, Coq...
@@ -45,7 +45,7 @@ subtitle: 最適化と証明
 - シンタックス
 </div>
 
-### どのレベル？
+<h3>どのレベル？</h3>
 
 文芸的プログラミング
 --------------------
@@ -63,7 +63,7 @@ Haskellの基本関数を再定義するつもりなんで、とりあえず隠�
 
 . . .
 
-### は、いったい何ですか？！
+<h3>は、いったい何ですか？！</h3>
 
 例　変数置換 
 ------------
@@ -141,7 +141,7 @@ $$
 数学はもうええ。。。 {.titlepage}
 -------------------
 
-### コードを見せよ！
+<h3>コードを見せよ！</h3>
 
 簡単な例
 --------
@@ -434,7 +434,7 @@ replicateM_ n x = sequence_ (replicate n x)
 
 . . .
 
-### `replicate`の「分配法則」
+<h3>`replicate`の「分配法則」</h3>
 
 ```haskell
 replicate 0       x = []                             -- 和
@@ -452,7 +452,7 @@ replicate (m * n) x = concatMap (replicate m) (replicate n x)
 ```
 </div>
 
-### `sequence_`の「順序化」
+<h3>`sequence_`の「順序化」</h3>
 
 ```haskell
 sequence_ []          = return ()                    -- 連結　→　順序制御
@@ -470,7 +470,7 @@ sequence_ (concatMap f (g x)) = sequence_ (f (sequence_ (g x)))
 ```
 </div>
 
-### `replicateM_`の「分配法則」の証明
+<h3>`replicateM_`の「分配法則」の証明</h3>
 
 ```haskell
 replicateM_ 0       x = sequence_ (replicate 0 x)
@@ -530,7 +530,7 @@ sequence_ . (f <=< g) = (sequence_ . f) . (sequence_ . g)
 </div>
 
 <div class="notes">
-### `replicate`の証明
+<h3>`replicate`の証明</h3>
 
 この証明は <http://www.haskellforall.com/2013/12/equational-reasoning.html> による
 
@@ -612,7 +612,7 @@ replicate (m * n) x = replicate (m * (1 + n')) x                  -- 推定： n
                     = concatMap (replicate m) (replicate n x)     -- replicateの定義（逆）
 ```
 
-### `sequence_`の証明
+<h3>`sequence_`の証明</h3>
 
 証明したいこと
 
@@ -719,12 +719,12 @@ map f (x:xs) = f x : map f xs
 正確さを証明できること {.titlepage}
 ----------------------
 
-### あるいは、ある法則に従っていることを証明できること
+<h3>あるいは、ある法則に従っていることを証明できること</h3>
 
 最適化をできること {.titlepage}
 ------------------
 
-### ＝最適化されたバージョンは元のバージョンに等しいと証明すること
+<h3>＝最適化されたバージョンは元のバージョンに等しいと証明すること</h3>
 
 <div class="notes">
 証明できたら、コンパイル時に自動的に最適化を行える！
@@ -733,12 +733,12 @@ map f (x:xs) = f x : map f xs
 ドキュメンテーション {.titlepage}
 --------------------
 
-### Hackageではよく使われている
+<h3>Hackageではよく使われている</h3>
 
 難しいコンセプトを理解すること {.titlepage}
 ------------------------------
 
-### 分からないモナドがあったら等式推論をやってみ！
+<h3>分からないモナドがあったら等式推論をやってみ！</h3>
 
 なれたら実は楽しい！ {.titlepage}
 --------------------
@@ -771,7 +771,7 @@ map f (x:xs) = f x : map f xs
 
 . . .
 
-### ありがとうございました
+<h3>ありがとうございました</h3>
 
 <div class="notes">
 例　Stateモナド
