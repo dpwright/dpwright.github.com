@@ -190,7 +190,7 @@ then, to be able to save out a copy at the point where that is all we have and
 re-use it later, rather than having to recompile the whole thing again when
 generating feeds.
 
-Finally, our `Rules` tell Hakyll where to get posts from, how to compiler them,
+Finally, our `Rules` tell Hakyll where to get posts from, how to compile them,
 and where to put them.
 
 > posts :: Tags -> Rules ()
@@ -216,7 +216,7 @@ filename and as such it can just change the extension and have done with it.
 Because we might be naming files after the modules they define (in the case of
 Literate Haskell files), a post such as this one would end up with a URL looking
 like <http://dpwright.com/posts/Posts.html>, which would be very odd.  Even
-without this, it's quite easy to write a post which accidentally has a subtley
+without this, it's quite easy to write a post which accidentally has a subtly
 different title to its filename, which would be confusing.
 
 Because of this, we'd much rather pull the `date` and `title` fields out of the
@@ -255,11 +255,12 @@ There's a lot going on in this definition so we'll go through it carefully.
   `title` and `date` fields, and if either of them fail it will return
   `Nothing`, otherwise it will pass them both to `constructName`.
     - If you are familiar with applicative style this will have been immediately
-      obvious.  If not, it is worh reading through the previous bullet-point and
-      associated code a few times until you get a feeling for what's happening.
-      We've reduced what would have been a lot of sanity checking and nested
-      `if` statements into a single line of code which, when you are used to
-      this style, reads extremely clearly.  It's a very powerful technique.
+      obvious.  If not, it is worth reading through the previous bullet-point
+      and associated code a few times until you get a feeling for what's
+      happening.  We've reduced what would have been a lot of sanity checking
+      and nested `if` statements into a single line of code which, when you are
+      used to this style, reads extremely clearly.  It's a very powerful
+      technique.
 - Moving onto the local definitions: `getField` is simply a shortcut for calling
   `Map`'s `lookup` function in order to get the respective fields out of the
   passed `Metadata`.
