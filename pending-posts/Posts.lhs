@@ -341,6 +341,33 @@ using Haskell's native `replaceBaseName` functionality.
 > setBaseName :: String -> Routes
 > setBaseName basename = customRoute $ (`replaceBaseName` basename) . toFilePath
 
+Pages
+-----
+
+Another form of content on this blog is that of "pages", which are basically
+posts except that they don't have a date or tags associated with them and they
+are not indexed or included in feeds.  As a result they are super-simple -- we
+don't need to save a snapshot, or to parse the date or change the filename.
+Instead I can just compile it with a template designed for the purpose and set
+the extension.  We'll use the same `customCompiler` as posts for consistency,
+but we'll just pass the `defaultContext` as we don't need any of the extra
+metadata posts use.
+
+> pageCompiler :: Compiler (Item String)
+> pageCompiler = customCompiler
+>            >>= loadAndApplyTemplate "templates/page.html"    defaultContext
+>            >>= loadAndApplyTemplate "templates/default.html" defaultContext
+>            >>= relativizeUrls
+
+The rules for pages are equally simple -- just grab anything from the `pages`
+folder, compile it using the `pageCompiler` and set its extension to `html`.
+This is expressed below.
+
+> pages :: Rules ()
+> pages = match "pages/*" $ do
+>   route $ setExtension "html"
+>   compile pageCompiler
+
 Conclusion
 ----------
 

@@ -75,6 +75,7 @@ We can put them together by simply listing them using `do`-notation.
 >   templates
 >   images
 >   static
+>   pages
 >   css
 >   index
 >   slideshows
