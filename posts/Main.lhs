@@ -4,6 +4,11 @@ tags: literate-programs, hakyll, generating this website
 title: Generating this website part 1: Introduction
 ---
 
+<div class="sidenote">
+This is part one of the "generating this website" series.  To read the rest of
+the series, go to the series index [here][gensite]
+</div>
+
 I've recently migrated this website to a new server, and while I was at it I
 thought I'd have another shot at giving it a reboot and actually keeping it
 up-to-date this time.  I'm much more experienced in both Haskell and literate
