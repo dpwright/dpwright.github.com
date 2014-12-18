@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Wright Access - 引用文</title>
+        <title>Wright Access - How to extract an intention-revealing name using Vim</title>
         <link rel="stylesheet" type="text/css" href="../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -33,15 +33,33 @@
         </div>
 
         <div id="content">
-            <h1 class="title">引用文</h1>
+            <h1 class="title">How to extract an intention-revealing name using Vim</h1>
 
-            <table id="postlist">
-        <tr>
-        <td><a href="../posts/2012-05-09-%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%81%AF%E8%A9%A9%E4%BA%BA%E3%81%AA%E3%81%AE%E3%81%8B%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AA%E3%81%AE%E3%81%8B.html">プログラマは詩人なのか、魔法使いなのか？</a></td>
-        <td class="postdate"> 9 May, 2012</td>
-    </tr>
+            <div class="info"> 3 May, 2012</div>
 
-</table>
+
+
+<blockquote>
+<p>This method has a <a href="http://c2.com/cgi/wiki?MagicNumber">magic number</a>:</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time
+     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / <span class="dv">1000</span>
+   <span class="kw">end</span></code></pre>
+<p>Let’s extract that to an <a href="http://c2.com/cgi/wiki?IdentifiersRevealIntent">intention-revealing name</a>. We’ll type</p>
+<pre class="vim"><code>   /1000&lt;Enter&gt;                           # Find the number we want to extract
+   cwmilliseconds_per_second&lt;Esc&gt;         # Replace the number with a variable name
+   O&lt;Ctrl+A&gt; = &lt;Esc&gt;p                     # Assign the replaced number to the variable</code></pre>
+<p>The result:</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time
+     milliseconds_per_second = <span class="dv">1000</span>
+     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / milliseconds_per_second
+   <span class="kw">end</span></code></pre>
+</blockquote>
+<div class="quote-attribution">
+– thoughtbot, <cite><a href="http://robots.thoughtbot.com/post/22258289125/how-to-extract-an-intention-revealing-name-using-vim">How to extract an intention-revealing name using Vim</a></cite>
+</div>
+<p>Nice vim tip for getting rid of magic numbers in code.</p>
+
+<div class="tagsinfo">Tagged with: <a href="../tags/vim.html">vim</a></div>
 
         </div>
         <div id="footer">

@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Wright Access</title>
+    <link href="http://dpwright.com/atom.xml" rel="self" />
+    <link href="http://dpwright.com" />
+    <id>http://dpwright.com/atom.xml</id>
+    <author>
+        <name>Daniel P. Wright</name>
+        <email>dani@dpwright.com</email>
+    </author>
+    <updated>2014-09-29T09:57:39Z</updated>
+    <entry>
+    <title>Generating this website part 2: Posts</title>
+    <link href="http://dpwright.com/posts/2014-09-29-generating-this-website-part-2-posts.html" />
+    <id>http://dpwright.com/posts/2014-09-29-generating-this-website-part-2-posts.html</id>
+    <published>2014-09-29T09:57:39Z</published>
+    <updated>2014-09-29T09:57:39Z</updated>
+    <summary type="html"><![CDATA[<div class="info">29 September, 2014</div>
+
+
+
+<div class="sidenote">
+This is part two of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website.html">here</a>
+</div>
+<p>OK, time to dive into arguably the most important part of the website generator – generating the posts themselves! Really, this is what it all comes down to; any other features like tags, rss feeds, crossposting and so on are just window dressing. Generating posts is not actually that hard, but you’ll find it’s one of the most often-tweaked part of your Hakyll setup as most changes you want to make affect posts in some way. Let’s get started!</p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>We start with our usual <code>OverloadedStrings</code> definition and <code>Hakyll</code> import. Because we’re developing a module now, rather than the main entry point of our program, we also need a module header. This was missing from the last post but will be present in all the remaining modules in this series.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span>
+<span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Posts</span> <span class="kw">where</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre>
+<p>Note that since the module is called <code>Posts</code>, the file itself must also be called <code>Posts.hs</code>, or rather <code>Posts.lhs</code> as it is a literate Haskell document. This has a bit of a knock-on effect, as Hakyll’s default behaviour is to expect that all files will follow a <code>date-title</code> convention for their filenames, so already we will have to do some extra work to get it to draw that information from the Pandoc header instead of the filename.</p>
+<p>The following imports give us some extra helper functions which we’ll use throughout our program. These functions (particularly the operators) are so common I almost wish they were part of the standard prelude, but they aren’t so we’ll have to live with a longish import list. I won’t go into too much detail here but as I’ve used explicit imports you can see exactly which functions I’m importing from where.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Monoid</span>         ((&lt;&gt;))
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Maybe</span>          (fromMaybe)
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>           (intercalate)
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span>           (toLower, isAlphaNum)
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> ((&lt;$&gt;), (&lt;*&gt;))
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Monad</span>       (msum)</code></pre>
+<p>I’m going to be making use of a few system/date related functions to handle the date specified in the header and rename the file appropriately.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.FilePath</span>     (replaceBaseName)
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span>       (defaultTimeLocale)
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Clock</span>     (<span class="dt">UTCTime</span> (..))
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Format</span>    (formatTime, parseTime)</code></pre>
+<p>The <code>Map</code> and <code>Set</code> data structures export function names that clash with those from the standard prelude for working with lists, so I’ll import those qualified here. In fact, I only make use of one function from each (<code>lookup</code> and <code>union</code> respectively), so I could have just imported those functions and had done with it, but it’s common form to import data structures like this qualified, so I’m in the habit of it. It’s also nice to be able to look at code called <code>M.lookup</code> and know straight away that it’s looking up the value in a map and not an association list.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span>
+<span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Set</span> <span class="kw">as</span> <span class="dt">S</span></code></pre>
+<p>Finally some more specific imports. I’ll be overriding some of Pandoc’s default options so I’ll need to bring those into scope. As well as that, I’m going to import the <code>Crossposting</code> module which we’ll cover later in the series.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Options</span> (<span class="dt">ReaderOptions</span>(..), <span class="dt">WriterOptions</span> (..),
+<span class="ot">&gt;</span>                             <span class="dt">Extension</span> (<span class="fu">..</span>), <span class="dt">HTMLMathMethod</span>(<span class="fu">..</span>), def)
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Crossposting</span></code></pre>
+<p>After all that, we can actually get on with writing some code! If you’re new to Haskell, don’t worry too much about all these imports – in general you just add them as you come across functionality you need to use which is defined in another module, so you don’t really need to think too much about them ahead of time. Because Haskell encourages breaking things down into small, reusable components, import lists can get quite long. This is a good thing!</p>
+<h2 id="pandoc-options">Pandoc options</h2>
+<p>To begin with, I’m going to define the custom version of the Pandoc compiler we’ll use to generate the posts. Hakyll comes with some reasonable defaults, but I’d like to tweak it a little to allow support for features specific to my needs here – in particular, I want support for:</p>
+<ul>
+<li>Literate Haskell (or you wouldn’t be reading this!)</li>
+<li>MathJax</li>
+<li>Syntax Highlighting</li>
+<li>Smart Parsing (conversion of <code>--</code> to –, and so forth)</li>
+</ul>
+<p>The compiler itself is just a standard compiler with different reader and writer options:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; customCompiler ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)
+<span class="ot">&gt;</span> customCompiler <span class="fu">=</span> pandocCompilerWith readerOptions writerOptions</code></pre>
+<p>Those options are defined in terms of Pandoc’s defaults, provided by the <code>Default</code> typeclass, which allows you to specify a default definition <code>def</code> for any type. First we tell the reader to add <code>readerSmart</code> to its options:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readerOptions ::</span> <span class="dt">ReaderOptions</span>
+<span class="ot">&gt;</span> readerOptions <span class="fu">=</span> def { readerSmart <span class="fu">=</span> <span class="dt">True</span> }</code></pre>
+<p>The writer options are manipulated in a similar way, adding MathJax support, syntax highlighting, and literate Haskell.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; writerOptions ::</span> <span class="dt">WriterOptions</span>
+<span class="ot">&gt;</span> writerOptions <span class="fu">=</span> def
+<span class="ot">&gt;</span>               { writerHTMLMathMethod <span class="fu">=</span> <span class="dt">MathJax</span> <span class="st">&quot;&quot;</span>
+<span class="ot">&gt;</span>               , writerHighlight      <span class="fu">=</span> <span class="dt">True</span>
+<span class="ot">&gt;</span>               , writerExtensions     <span class="fu">=</span> extensions
+<span class="ot">&gt;</span>               }
+<span class="ot">&gt;</span>   <span class="kw">where</span> extensions <span class="fu">=</span> writerExtensions def <span class="ot">`S.union`</span> S.fromList
+<span class="ot">&gt;</span>                    [ <span class="dt">Ext_literate_haskell</span>
+<span class="ot">&gt;</span>                    ]</code></pre>
+<p>The <code>MathJax</code> constructor takes a string to supply the URL to <code>mathjax.js</code>, so that it can embed it in the output HTML, however in this case Hakyll overrides Pandoc’s default HTML output to insert our templates, and it is there that we import <code>mathjax.js</code>, so we can just pass the empty string here.</p>
+<p>Defining <code>extensions</code> as a union of the default extensions with a single-member set may seem like overkill, and for only one item it is, but doing it this way means that if I ever want to add an extension I can just add it to the list.</p>
+<h2 id="generating-posts">Generating posts</h2>
+<p>Here begins a pattern that you will see a lot of. In Hakyll, the way you generate anything is by defining a <code>Compiler</code>. Usually, that <code>Compiler</code> is paired with a <code>Context</code> which provides all the variables you may want to make use of in your template. Finally, we tie that <code>Compiler</code> to a specific set of inputs using <code>Rules</code>, which we covered in the previous post. Often, people write all their <code>Rules</code> inline in one big <code>main</code> function, but to make breaking the configuration over a number of blog posts easier, I’ve elected to define each set of <code>Rules</code> as an independent function which I call from <code>main</code> in the first post.</p>
+<p>First, then, the <code>Context</code>, which simply extracts data from the metadata header at the top of the file.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; postCtx ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> <span class="dt">String</span>
+<span class="ot">&gt;</span> postCtx tags <span class="fu">=</span> dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span>
+<span class="ot">&gt;</span>             <span class="fu">&lt;&gt;</span> tagsField <span class="st">&quot;tags&quot;</span> tags
+<span class="ot">&gt;</span>             <span class="fu">&lt;&gt;</span> crosspostField <span class="st">&quot;xp&quot;</span>
+<span class="ot">&gt;</span>             <span class="fu">&lt;&gt;</span> defaultContext</code></pre>
+<p>As well as the <code>defaultContext</code>, which gives us some common fields such as <code>title</code>, we make use of the <code>date</code>, <code>tags</code>, and <code>xp</code> fields. The first two ought to be fairly self-explanatory – the date is displayed at the top of this page and the tags are listed at the bottom.</p>
+<p><code>crosspostField</code> will be defined in a later post in this series. It is there for the case where a post on this blog is also posted on another blog – usually I’ve written it for the other blog but received permission to reproduce it here. In that case, I want to include a header at the top of the file giving a link to the original blog post.</p>
+<div id="sidenote">
+I also make use of Hakyll to allow me to write the post here in markdown and have it automatically uploaded to both my blog and the one where I’m guesting – at least if the latter is a Wordpress blog and I have posting rights there. But we’ll talk about that later.
+</div>
+<p>The <code>Compiler</code> follows standard conventions: run the Pandoc compiler (in this case our <code>customCompiler</code> defined above), apply templates, and fix up the URLs.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; postCompiler ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)
+<span class="ot">&gt;</span> postCompiler tags <span class="fu">=</span> customCompiler
+<span class="ot">&gt;</span>                 <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/post.html&quot;</span>    ctx
+<span class="ot">&gt;</span>                 <span class="fu">&gt;&gt;=</span> saveSnapshot <span class="st">&quot;content&quot;</span>
+<span class="ot">&gt;</span>                 <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> ctx
+<span class="ot">&gt;</span>                 <span class="fu">&gt;&gt;=</span> relativizeUrls
+<span class="ot">&gt;</span>   <span class="kw">where</span> ctx <span class="fu">=</span> postCtx tags</code></pre>
+<p>Hang on, what’s that <code>saveSnapshot</code> in the middle there? I never mentioned that! Well, that allows us to save a snapshot of our page <em>as it currently stands</em> at that point in the compilation. This is handy, because we’ll want to include the content of the post in RSS feeds and the like, but at that point we only want the content, not the header, footer, and navigation. It is useful, then, to be able to save out a copy at the point where that is all we have and re-use it later, rather than having to recompile the whole thing again when generating feeds.</p>
+<p>Finally, our <code>Rules</code> tell Hakyll where to get posts from, how to compile them, and where to put them.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; posts ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()
+<span class="ot">&gt;</span> posts tags <span class="fu">=</span> match (<span class="st">&quot;posts/*&quot;</span> <span class="fu">.||.</span> <span class="st">&quot;pending-posts/*&quot;</span>) <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   route <span class="fu">$</span> metadataRoute dateAndTitle <span class="ot">`composeRoutes`</span> setExtension <span class="st">&quot;.html&quot;</span>
+<span class="ot">&gt;</span>   compile <span class="fu">$</span> postCompiler tags</code></pre>
+<p>This is mostly pretty simple. You can see we generate posts from both the <code>posts</code> and <code>pending-posts</code> directories (the latter are generated, but not included in the index, so I can preview them because I know the URL but they’re not “published” as such). We use the <code>date</code> and <code>title</code> metadata fields to generate a filename and then change its extension to <code>.html</code>. Finally we compiler it with the <code>postCompiler</code> we defined above.</p>
+<p>There’s just one snag… that <code>dateAndTitle</code> function passed to <code>metadataRoute</code> doesn’t actually exist! We’re going to have to write it.</p>
+<h2 id="extracting-the-date-and-title-from-metadata">Extracting the date and title from metadata</h2>
+<p>As mentioned, Hakyll by default expects the date and title to be included in the filename and as such it can just change the extension and have done with it. Because we might be naming files after the modules they define (in the case of Literate Haskell files), a post such as this one would end up with a URL looking like <a href="http://dpwright.com/posts/Posts.html">http://dpwright.com/posts/Posts.html</a>, which would be very odd. Even without this, it’s quite easy to write a post which accidentally has a subtly different title to its filename, which would be confusing.</p>
+<p>Because of this, we’d much rather pull the <code>date</code> and <code>title</code> fields out of the post’s metadata, which ensures consistency and reduces repetition. Unfortunately, Hakyll provides no clear way to do this natively, so we have to make use of its generic functionality for routing based on metadata. We do this using the <code>metadataRoute</code> function, above, which takes as its parameter a function taking a posts <code>Metadata</code> and returning the <code>Routes</code> associated with that metadata, and returns <code>Routes</code> which can be used by the <code>Rules</code> to which is it passed. Its type signature looks like this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">metadataRoute ::</span> (<span class="dt">Metadata</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span>) <span class="ot">-&gt;</span> <span class="dt">Routes</span></code></pre>
+<p>The function we passed to <code>metadataRoute</code> above was <code>dateAndTitle</code>, which we’ll define here.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; dateAndTitle ::</span> <span class="dt">Metadata</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span>
+<span class="ot">&gt;</span> dateAndTitle meta <span class="fu">=</span> fromMaybe idRoute <span class="fu">$</span>
+<span class="ot">&gt;</span>   constructName <span class="fu">&lt;$&gt;</span> getField <span class="st">&quot;title&quot;</span> <span class="fu">&lt;*&gt;</span> getField <span class="st">&quot;date&quot;</span>
+<span class="ot">&gt;</span>   <span class="kw">where</span> getField  <span class="fu">=</span> (<span class="ot">`M.lookup`</span> meta)
+<span class="ot">&gt;</span>         constructName t d <span class="fu">=</span> setBaseName <span class="fu">$</span> date d <span class="fu">++</span> <span class="st">&quot;-&quot;</span> <span class="fu">++</span> title t
+<span class="ot">&gt;</span>         date  <span class="fu">=</span> formatTime defaultTimeLocale <span class="st">&quot;%Y-%m-%d&quot;</span> <span class="fu">.</span> readTime
+<span class="ot">&gt;</span>         title <span class="fu">=</span> map toLower <span class="fu">.</span> intercalate <span class="st">&quot;-&quot;</span> <span class="fu">.</span> map (filter isAlphaNum) <span class="fu">.</span> words</code></pre>
+<p>There’s a lot going on in this definition so we’ll go through it carefully.</p>
+<ul>
+<li>We begin with a call to <code>fromMaybe</code> passing <code>idRoute</code> as the fallback. This means that what follows might fail, and should it fail we’ll just use the filename as-is (falling back on Hakyll’s default behaviour).</li>
+<li><code>constructName</code> is called in applicative style, passing two calls to <code>getField</code> (defined locally). We know that <code>Maybe</code> forms an <code>Applicative</code>, and that we are expecting a <code>Maybe</code> here as the second parameter to <code>fromMaybe</code>. So we can infer what will happen here: it will try to get the <code>title</code> and <code>date</code> fields, and if either of them fail it will return <code>Nothing</code>, otherwise it will pass them both to <code>constructName</code>.
+<ul>
+<li>If you are familiar with applicative style this will have been immediately obvious. If not, it is worth reading through the previous bullet-point and associated code a few times until you get a feeling for what’s happening. We’ve reduced what would have been a lot of sanity checking and nested <code>if</code> statements into a single line of code which, when you are used to this style, reads extremely clearly. It’s a very powerful technique.</li>
+</ul></li>
+<li>Moving onto the local definitions: <code>getField</code> is simply a shortcut for calling <code>Map</code>’s <code>lookup</code> function in order to get the respective fields out of the passed <code>Metadata</code>.</li>
+<li><code>constructName</code> takes the title and the date as parameters, calls the <code>date</code> and <code>title</code> functions in order to turn them into strings, and then sticks them together with a <code>-</code>. Finally it calls <code>setBaseName</code> (defined below), which works similarly to Hakyll’s native <code>setExtension</code> except that, obviously, it sets the basename.</li>
+<li><code>date</code> normalises the <code>date</code> field to the simple <code>YYYY-mm-dd</code> format we want to use for our filenames. This means you can write the date in any of Hakyll’s supported date formats and the filename will turn out OK.</li>
+<li><code>title</code> splits the title up into words, filters out any strange symbols using <code>isAlphaNum</code> (which, thankfully, is Unicode-friendly so that Japanese titles aren’t considered “strange symbols”), and then joins those words back up with <code>-</code> dashes so that we don’t have to worry about <code>%20</code>s appearing all over our URLs. Finally, it makes the whole thing lower-case.</li>
+</ul>
+<p>Function definitions like the one above are part of the reason I love Haskell and others might hate it. There’s so much functionality packed into so little code there, you do have to slow down a little bit and read it carefully to follow it, at least until you are used to code written in the style used (in this case, some applicative style and a little bit of point-free notation thrown in for good measure). Add to this the expressivity of Haskell which allows for a number of different styles, so that even once you’ve got used to the style used here you may open another codebase and find that the style employed there is completely different! There is a not-unreasonable argument that this is problematic; that encouraging a very particular style at the language level (as Python does, for example) makes it a lot easier to read unfamiliar code.</p>
+<p>I am sympathetic to this argument up to a point. It does make sense, especially if you are dealing with large numbers of programmers relatively inexperienced in the language (thus not exposed to the various styles of programming available), who regularly have to jump into different codebases (thus run into these different styles frequently). However, I do think the benefits outweight the disadvantages. Firstly, inexperienced programmers are likely to be limited to relatively isolated areas of the code, so they will have time to get used to whatever style is employed there before moving on and learning some new style along with the next codebase. Secondly, <em>once you have learnt</em> the style, it is actually dramatically <em>faster</em> to read succinct code like this than trudging through reams of <code>if</code> statements and manual <code>for</code>-style loops. It’s also harder to make mistakes, as the code fits more closely with the thing it’s trying to do.</p>
+<p>So there is a learning curve, and learning curves cost time and money when training programmers. But when the initial hump is traversed<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, the increase in productivity is well worth the effort.</p>
+<p>OK, after that little detour, let’s get back to it! The <code>dateAndTitle</code> function above made use of two helper functions which haven’t actually been defined. The first is <code>readTime</code>, which we use to normalise the date format. It takes a date string and converts it to a <code>UTCTime</code> which we can manipulate.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readTime ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">UTCTime</span>
+<span class="ot">&gt;</span> readTime t <span class="fu">=</span> fromMaybe empty&#39; <span class="fu">.</span> msum <span class="fu">$</span> attempts
+<span class="ot">&gt;</span>   <span class="kw">where</span> attempts <span class="fu">=</span> [parseTime defaultTimeLocale fmt t <span class="fu">|</span> fmt <span class="ot">&lt;-</span> formats]
+<span class="ot">&gt;</span>         empty&#39;   <span class="fu">=</span> error <span class="fu">$</span> <span class="st">&quot;Could not parse date field: &quot;</span> <span class="fu">++</span> t
+<span class="ot">&gt;</span>         formats  <span class="fu">=</span> [ <span class="st">&quot;%a, %d %b %Y %H:%M:%S %Z&quot;</span>
+<span class="ot">&gt;</span>                    , <span class="st">&quot;%Y-%m-%dT%H:%M:%S%Z&quot;</span>
+<span class="ot">&gt;</span>                    , <span class="st">&quot;%Y-%m-%d %H:%M:%S%Z&quot;</span>
+<span class="ot">&gt;</span>                    , <span class="st">&quot;%Y-%m-%d %H:%M&quot;</span>
+<span class="ot">&gt;</span>                    , <span class="st">&quot;%Y-%m-%d&quot;</span>
+<span class="ot">&gt;</span>                    , <span class="st">&quot;%B %e, %Y %l:%M %p&quot;</span>
+<span class="ot">&gt;</span>                    , <span class="st">&quot;%B %e, %Y&quot;</span>
+<span class="ot">&gt;</span>                    , <span class="st">&quot;%b %d, %Y&quot;</span>
+<span class="ot">&gt;</span>                    ]</code></pre>
+<p>The basic idea for the implementation is taken from Hakyll itself, from its <code>getItemUTC</code> which is defined in <a href="https://hackage.haskell.org/package/hakyll-4.2.2.0/docs/src/Hakyll-Web-Template-Context.html"><code>Hakyll.Web.Template.Context</code></a>. Unfortunately, the type signature for that function is quite a lot more complicated than we need, so I’ve extracted the parts we need into a simple <code>String -&gt; UTCTime</code> function here. If the date doesn’t match any of the supported formats <code>readTime</code> will simply crash with an error – not the best error handling but since we’re always going to be running this interactively it doesn’t really matter.</p>
+<p><code>setBaseName</code> turns a string into a <code>FilePath</code>, which it can then manipulate using Haskell’s native <code>replaceBaseName</code> functionality.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; setBaseName ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span>
+<span class="ot">&gt;</span> setBaseName basename <span class="fu">=</span> customRoute <span class="fu">$</span> (<span class="ot">`replaceBaseName`</span> basename) <span class="fu">.</span> toFilePath</code></pre>
+<h2 id="pages">Pages</h2>
+<p>Another form of content on this blog is that of “pages”, which are basically posts except that they don’t have a date or tags associated with them and they are not indexed or included in feeds. As a result they are super-simple – we don’t need to save a snapshot, or to parse the date or change the filename. Instead I can just compile it with a template designed for the purpose and set the extension. We’ll use the same <code>customCompiler</code> as posts for consistency, but we’ll just pass the <code>defaultContext</code> as we don’t need any of the extra metadata posts use.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pageCompiler ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)
+<span class="ot">&gt;</span> pageCompiler <span class="fu">=</span> customCompiler
+<span class="ot">&gt;</span>            <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/page.html&quot;</span>    defaultContext
+<span class="ot">&gt;</span>            <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> defaultContext
+<span class="ot">&gt;</span>            <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre>
+<p>The rules for pages are equally simple – just grab anything from the <code>pages</code> folder, compile it using the <code>pageCompiler</code> and set its extension to <code>html</code>. This is expressed below.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pages ::</span> <span class="dt">Rules</span> ()
+<span class="ot">&gt;</span> pages <span class="fu">=</span> match <span class="st">&quot;pages/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   route <span class="fu">$</span> setExtension <span class="st">&quot;html&quot;</span>
+<span class="ot">&gt;</span>   compile pageCompiler</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>That’s about it for compiling posts! This is <em>almost</em> all you need to get a Hakyll site up and running – the only problem is since we still don’t have post indexing you have to know the URL of the post you want to read before you read it! This is about as complicated as it gets with Hakyll though – if you’ve followed this post, the rest should be easy! We’ll cover indexing next, after which we’ll go about adding special features one at a time.</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Anybody who’s read code using the <code>Lens</code> library will get the joke.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/generating%20this%20website.html">generating this website</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>Generating this website part 1: Introduction</title>
+    <link href="http://dpwright.com/posts/2014-08-04-generating-this-website-part-1-introduction.html" />
+    <id>http://dpwright.com/posts/2014-08-04-generating-this-website-part-1-introduction.html</id>
+    <published>2014-08-04T08:38:23Z</published>
+    <updated>2014-08-04T08:38:23Z</updated>
+    <summary type="html"><![CDATA[<div class="info"> 4 August, 2014</div>
+
+
+
+<div class="sidenote">
+This is part one of the “generating this website” series. To read the rest of the series, go to the series index <a href="/tags/generating%20this%20website.html">here</a>
+</div>
+<p>I’ve recently migrated this website to a new server, and while I was at it I thought I’d have another shot at giving it a reboot and actually keeping it up-to-date this time. I’m much more experienced in both Haskell and literate programming than I was when last I updated it, so when I was modifying my configuration it suddenly occurred to me that since this site is generated using Haskell, and since Haskell supports literate programming natively, I could very easily make the site “self-hosting” by writing up the configuration itself as a series of blog posts!</p>
+<p>Thus begins this series, unimaginatively named <a href="/tags/generating%20this%20website.html">Generating this Website</a>. To recap, the site is generated using <a href="http://jaspervdj.be/hakyll">Hakyll</a>, a Haskell library for generating static websites. I will write this series assuming basic Haskell knowledge; you should be familiar with standard typeclasses like <code>Monoid</code> and <code>Applicative</code>. Specific knowledge of Hakyll is not required, and if an idiom feels at all obscure I will attempt to explain it as I go. If there’s anything you don’t get, you can always drop me a tweet @<a href="http://twitter.com/danielpwright">danielpwright</a>!</p>
+<p>This post will just cover the basics – for details of the generation of actual posts, the index pages, and so on, check back for future posts! I will update this post with links as I write them.</p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>To begin with, a couple of lines which will grow familiar as this series progresses:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre>
+<p>The <code>OverloadedStrings</code> LANGUAGE pragma is especially convenient and to be honest I wish it was just defined by default, since I end up including it in nearly any file I write. You can set this in the <code>cabal</code> file for your project, but if I’m going to make use of LANGUAGE pragmas I’d rather be explicit so I’ll just include them in every file. After that, of course, is the Hakyll import. I’m importing this unqualified in order to make use of the EDSL Hakyll supplies.</p>
+<p>I’m also going to import <code>liftA2</code> from <code>Control.Applicative</code> here. I use this as a convenience later.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> (liftA2)</code></pre>
+<p>Finally, I’ll import the other posts in this series. These supply much of the actual functionality.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Indexing</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Feed</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Slides</span></code></pre>
+<h2 id="some-simple-rules">Some simple rules</h2>
+<p>The main entry point to Hakyll takes a set of <a href="http://jaspervdj.be/hakyll/reference/Hakyll-Core-Rules.html#t:Rules"><code>Rules</code></a> and returns an <code>IO</code> action which generates the site. <code>Rules</code> themselves form a monad, so assuming we have some simple rules:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> templates, images, css,<span class="ot"> static ::</span> <span class="dt">Rules</span> ()</code></pre>
+<p>We can put them together by simply listing them using <code>do</code>-notation.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; simpleRules ::</span> <span class="dt">Rules</span> ()
+<span class="ot">&gt;</span> simpleRules <span class="fu">=</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   templates
+<span class="ot">&gt;</span>   images
+<span class="ot">&gt;</span>   static
+<span class="ot">&gt;</span>   pages
+<span class="ot">&gt;</span>   css
+<span class="ot">&gt;</span>   index
+<span class="ot">&gt;</span>   slideshows</code></pre>
+<div class="sidenote">
+Note: the <code>index</code> and <code>slideshows</code> rules above will be defined in future blog posts
+</div>
+<p>The rules themselves govern the compilation and generation of files. Perhaps the simplest of these is <code>templates</code>, which compiles all files found in the <code>templates</code> directory and any subdirectories, but doesn’t actually need to output those files anywhere – instead it keeps the compiled versions around for other pages using that template.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> templates <span class="fu">=</span> match <span class="st">&quot;templates/**&quot;</span> <span class="fu">$</span> compile templateCompiler</code></pre>
+<p>Hakyll provides a <a href="http://jaspervdj.be/hakyll/reference/Hakyll-Core-Identifier-Pattern.html#t:Pattern"><code>Pattern</code></a> type which, conveniently, implements <code>IsString</code> so our <code>OverloadedStrings</code> pragma takes care of the conversion for us. The <code>**</code> pattern searches in that directory and all subdirectories.</p>
+<p>Next up come the images. These are also very simple – simply take the full path of the images, and copy them to the same place in the output directory.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> images <span class="fu">=</span> match <span class="st">&quot;images/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   route   idRoute
+<span class="ot">&gt;</span>   compile copyFileCompiler</code></pre>
+<p>The <code>route</code> rule defines the output filename. <code>idRoute</code>, as the name implies, sets the output filename to match the input filename. Any rule which generates output requires a <code>route</code> – any rule without a <code>route</code> will be run, but won’t generate any output (like the <code>templates</code> rule above).</p>
+<p>For CSS files, Hakyll provides a compressor to speed download times.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> css <span class="fu">=</span> match <span class="st">&quot;css/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   route   idRoute
+<span class="ot">&gt;</span>   compile compressCssCompiler</code></pre>
+<p>Of course, the <code>copyFileCompiler</code> would work just as well, but we might as well compress the CSS while we’re at it.</p>
+<p>Occasionally, I just want to put some static files up that don’t fit the structure of the rest of the blog. This is particularly useful when I want to upload slides from a talk I’ve given, for example the <a href="/gits-guts">git talk</a> I gave a couple of months ago. The talk itself is maintained in a different repository, so it’s convenient if I can just include that as a submodule and have its files copied automatically. I do this by storing all such content in the <code>static</code> directory, and then copying it when generating the site, stripping the initial <code>static/</code> from the output path.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> static <span class="fu">=</span> match <span class="st">&quot;static/**&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   route <span class="fu">$</span> gsubRoute <span class="st">&quot;static/&quot;</span> (const <span class="st">&quot;&quot;</span>)
+<span class="ot">&gt;</span>   compile copyFileCompiler</code></pre>
+<p><code>gsubRoute</code> is actually quite powerful, allowing us to change our substitution based on the matched input, but in this case we just want to substitute for the empty string every time, so we use <code>const</code> to drop the argument.</p>
+<h2 id="tags-and-the-rules-which-require-them">Tags, and the <code>Rules</code> which require them</h2>
+<p>The remaining rules are complicated by the fact that they need access to the tags for various reasons – the tag index pages obviously need to list all posts matching a certain tag, while the posts themselves and the Atom feed list the tags for a particular post at the bottom of the post.</p>
+<p>In order to do this, we first need to generate the tags for the site, and then we need to pass these into those <code>Rules</code> that make use of them. Generating the tags is quite easy:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; generateTags ::</span> <span class="dt">Rules</span> <span class="dt">Tags</span>
+<span class="ot">&gt;</span> generateTags <span class="fu">=</span> buildTags <span class="st">&quot;posts/*&quot;</span> <span class="fu">$</span> fromCapture <span class="st">&quot;tags/*.html&quot;</span></code></pre>
+<p>Here I use <code>buildTags</code> to get the tags from all files in the <code>posts</code> directory. The default method of tagging posts is just to include a <code>tags</code> field in the post’s metadata, but if I wanted to do it some other way I could use <code>buildTagsWith</code> instead.</p>
+<p><code>fromCapture</code> acts sort of like a <code>Pattern</code> in reverse; it fills in the capture (The <code>*</code> in <code>tags/*.html</code> in this case) with a given string. We use that to say, “for every tag read from the posts’ metadata, create an index page at ‘tags/TAGNAME.html’”.</p>
+<p>Having generated the tags, we need to pass them into any rules that need them. We could use <code>do</code>-notation as we did for <code>simpleRules</code> and simply pass the <code>tags</code> parameter to each entry, but here I’m going to use a little <code>Applicative</code> trick which allows me to keep the function point-free, and I think makes it read a little more declaratively.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; taggedRules ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()
+<span class="ot">&gt;</span> taggedRules <span class="fu">=</span> posts <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> tagCloud <span class="fu">&amp;</span> feed
+<span class="ot">&gt;</span>   <span class="kw">where</span> (<span class="fu">&amp;</span>) <span class="fu">=</span> liftA2 (<span class="fu">&gt;&gt;</span>)</code></pre>
+<p>This trick exploits the fact that <code>(-&gt;)</code>, the type of functions, implements <code>Applicative</code> (in fact being applicative is rather their <em>raison d’être</em> when you think about it), so if we lift the Monadic <code>(&gt;&gt;)</code> operator to act on <em>applications of functions returning a Monad</em> instead of just Monads, we can pass the parameter to the function in once and it will be distributed to each of those functions. In other words:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">posts tags <span class="fu">&gt;&gt;</span> tagIndex tags <span class="fu">&gt;&gt;</span> feed tags ≡ (posts <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> feed) tags
+  <span class="kw">where</span> (<span class="fu">&amp;</span>) <span class="fu">=</span> liftA2 (<span class="fu">&gt;&gt;</span>)</code></pre>
+<p>Because of Haskell’s function currying and η-reduction, we can then drop the <code>tags</code> parameter and the brackets entirely and we’re left with the definition for <code>taggedRules</code> above.</p>
+<h2 id="putting-it-all-together">Putting it all together</h2>
+<p>Finally we define the entry point to the application. This simply calls Hakyll’s own <code>hakyll</code> function, passing in the rules defined above. First we call the simple, self-standing rules, then we generate the tags and pass them to the tagged rules.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()
+<span class="ot">&gt;</span> main <span class="fu">=</span> hakyll <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   simpleRules
+<span class="ot">&gt;</span>   generateTags <span class="fu">&gt;&gt;=</span> taggedRules</code></pre>
+<p>This concludes the introduction to Hakyll and the entry point for the generation code for this website. Stay tuned for the next entry, where we’ll add the configuration to actually create the posts themselves!</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/generating%20this%20website.html">generating this website</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>Git's Guts: gitの内側を探検しましょう！</title>
+    <link href="http://dpwright.com/posts/2014-07-22-gits-guts-git%E3%81%AE%E5%86%85%E5%81%B4%E3%82%92%E6%8E%A2%E6%A4%9C%E3%81%97%E3%81%BE%E3%81%97%E3%82%87%E3%81%86.html" />
+    <id>http://dpwright.com/posts/2014-07-22-gits-guts-git%E3%81%AE%E5%86%85%E5%81%B4%E3%82%92%E6%8E%A2%E6%A4%9C%E3%81%97%E3%81%BE%E3%81%97%E3%82%87%E3%81%86.html</id>
+    <published>2014-07-22T02:32:05Z</published>
+    <updated>2014-07-22T02:32:05Z</updated>
+    <summary type="html"><![CDATA[<div class="info">22 July, 2014</div>
+
+
+
+<p>この前５月に京都の「<a href="http://vshtc.doorkeeper.jp/events/11099">今日から始めるGit &amp; GitHub入門（リバイバル＋α）</a>」イベントに登壇しました。うちのトークはちょっと高級向きで心配してたが、gitの経験者もいたし、初心者でも「わき分からんかったけどおもろい」と言ってくれたからよかったです。</p>
+<p>大分遅くなってしまったが、<a href="http://dpwright.com/gits-guts">スライドをアップしました</a>。スライドで「ｐ」を押せばノートが出てきます（ちょっと適当に書いたけど何となく言ったことが分かります）。</p>
+<p>（絵を描くことはすごい下手なんで、図表は同僚の大久保佳尚さんに描いて頂きました。感謝します！）</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/git.html">git</a>, <a href="/tags/talks.html">talks</a>, <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E.html">日本語</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>TaPL Exercise 2.2.6</title>
+    <link href="http://dpwright.com/posts/2014-07-06-tapl-exercise-226.html" />
+    <id>http://dpwright.com/posts/2014-07-06-tapl-exercise-226.html</id>
+    <published>2014-07-06T06:55:53Z</published>
+    <updated>2014-07-06T06:55:53Z</updated>
+    <summary type="html"><![CDATA[<div class="info"> 6 July, 2014</div>
+
+
+
+<blockquote>
+<p>Suppose we are given a relation <span class="math">\(R\)</span> on a set <span class="math">\(S\)</span>. Define the relation <span class="math">\(R^{\prime}\)</span> as follows:</p>
+<p><span class="math">\[
+R^{\prime} = R \cup \left\{ (s, s) | s \in S \right\}
+\]</span></p>
+<p>That is, <span class="math">\(R^{\prime}\)</span> contains all the pairs in <span class="math">\(R\)</span> plus all pairs of the form <span class="math">\((s, s)\)</span>. Show that <span class="math">\(R^{\prime}\)</span> is the reflexive closure of <span class="math">\(R\)</span>.</p>
+</blockquote>
+<p>The reflexive closure is defined as the smallest reflexive relation that contains <span class="math">\(R\)</span>. So I need to prove:</p>
+<ol style="list-style-type: decimal">
+<li>That the relation <span class="math">\(R^{\prime}\)</span> contains <span class="math">\(R\)</span>;</li>
+<li>That it is reflexive;</li>
+<li>That it is the smallest relation satisfying the above two properties.</li>
+</ol>
+<p>The first property is given in the definition of <span class="math">\(R^{\prime}\)</span>; <span class="math">\(R^{\prime}\)</span> is formed by the union of <span class="math">\(R\)</span> and some other relation, so it must contain <span class="math">\(R\)</span>.</p>
+<p>To understand the second property we must consider what is meant by the term <em>reflexive</em>; luckily this is given to us by definition 2.2.1 in the text:</p>
+<blockquote>
+<p>A binary relation <span class="math">\(R\)</span> on a set <span class="math">\(S\)</span> is <em>reflexive</em> if <span class="math">\(R\)</span> relates every element of <span class="math">\(S\)</span> to itself – that is, <span class="math">\(s R s\)</span> (or <span class="math">\((s, s) \in R\)</span>) for all <span class="math">\(s \in S\)</span>.</p>
+</blockquote>
+<p>So, for <span class="math">\(R^{\prime}\)</span> to be reflexive, the following must hold:</p>
+<p><span class="math">\[
+\forall s \in S: (s, s) \in R
+\]</span></p>
+<p>or in other words, it must contain the relations:</p>
+<p><span class="math">\[
+\left\{ (s, s) | s \in S \right\}
+\]</span></p>
+<p>which, as fortune would have it, is <em>also</em> given in the definition of <span class="math">\(R^{\prime}\)</span>, so the second property turns out to be as trivially true as the first.</p>
+<p>That leaves only one thing left to prove, which is that <span class="math">\(R^{\prime}\)</span> is the smallest relation satisfying the above two properties. Well, let’s consider a relation <span class="math">\(R^{\prime\prime}\)</span> that satisfies the first two properties but is smaller than <span class="math">\(R^{\prime}\)</span>. In order for <span class="math">\(R^{\prime\prime}\)</span> to be smaller than <span class="math">\(R^{\prime}\)</span>, there must be some <span class="math">\(x\)</span> where <span class="math">\(x \in R^{\prime}\)</span> and <span class="math">\(x \not \in R^{\prime\prime}\)</span>. But, in order to satisfy the first two properties, for every <span class="math">\(x\)</span> in <span class="math">\(R^{\prime\prime}\)</span>, either <span class="math">\(x \in R\)</span> or <span class="math">\(x \in \left\{ (s, s) | s \in S \right\}\)</span>. Since <span class="math">\(R^{\prime}\)</span> is the union of these two sets by definition, there can be no <span class="math">\(x \not \in R^{\prime}\)</span> which is in either set, thus there can be no <span class="math">\(R^{\prime\prime}\)</span> smaller than <span class="math">\(R^{\prime}\)</span> which is a reflexive relation containing <span class="math">\(R\)</span>.</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/maths.html">maths</a>, <a href="/tags/pl.html">pl</a>, <a href="/tags/TaPL.html">TaPL</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>Writing a TCP server in Haskell using proxies and pipes</title>
+    <link href="http://dpwright.com/posts/2013-08-21-writing-a-tcp-server-in-haskell-using-proxies-and-pipes.html" />
+    <id>http://dpwright.com/posts/2013-08-21-writing-a-tcp-server-in-haskell-using-proxies-and-pipes.html</id>
+    <published>2013-08-21T08:51:58Z</published>
+    <updated>2013-08-21T08:51:58Z</updated>
+    <summary type="html"><![CDATA[<div class="info">21 August, 2013</div>
+
+<div id="crosspost">
+<p>This is a cross-post of an article originally written for the <a
+	href="http://blog.vitei.com/">Vitei Backroom Blog</a>.<br/>
+Read the original article <a href="http://blog.vitei.com/?p=147">here</a>.</p>
+</div>
+
+
+<center>
+<img src="http://blog.vitei.com/wp-content/uploads/2013/08/haskell-pipes2.jpg" alt="Haskell Pipes" />
+</center>
+
+<div class="sidenote">
+Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pipes 4</a>, this article is now rather out-of-date. I leave it up here for posterity, but if you’re new to Pipes you should probably just ignore it and find a more up-to-date tutorial.
+</div>
+
+<p>Since my last post, I’ve really been enjoying Haskell, and in fact a lot of the functional ideas I had formerly been playing with in Clojure I am now exploring in Haskell instead. I will go into more detail on the reasons for that in a future post – for now I just wanted to share a neat bit of code I wrote the other day that I think really demonstrates the kind of concise, readable code Haskell enables.</p>
+<div>
+
+</div>
+<!--more-->
+
+<h2 id="problem-description">Problem description</h2>
+<p>This is a really simple, common requirement: the application requires a TCP server to take requests and perform whatever it is the application does, after which it will respond with some sort of output. Everyone’s had to do it at some point, and there’s a range of ways to implement it – from the hack-it-in-quick interface to some simple utility to the robustness of, say, a web server.</p>
+<p>My requirements were fairly rudimentary, and so this implementation is a pretty simple one. Still, maybe it’ll be a useful starting-point for anyone who wants to get a server up and running quickly.</p>
+<p>The input to the server is a series of single-line commands separated by Windows-style <code>\r\n</code> newlines. In response to each of these commands, the server will respond with potentially multiple lines, completed by the special terminator string: <code>\r\nEND\r\n\r\n</code>.</p>
+<h2 id="setting-up">Setting up</h2>
+<p>This server is built around the <code>pipes</code> package, a very nicely-designed framework which allow you to stream data through some sort of pipeline. The <code>pipes-network</code> package, originally written by Paolo Capriotti and now maintained by Renzo Carbonara, provides some useful <code>Producer</code> and <code>Pipe</code> functions which read from and write to a TCP socket respectively, so a lot of the work has already been done for us. Before we start, we will need to install the <code>pipes-network</code> package:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cabal</span> install pipes-network</code></pre>
+<p><code>pipes-network</code> delivers and expects to receive its data in <code>ByteString</code> form, rather than a plain <code>String</code>. I wanted to work with <code>Text</code> in my own code. This mix of three different string types can get quite confusing, and I really don’t want to clutter up my code with lots of conversions of literal strings, so let’s make use of the <code>OverloadedStrings</code> LANGUAGE pragma to perform those conversions for us:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre>
+<p>This won’t help us when it comes to converting the actual strings we’re working with, but at least it’ll make literal strings in the code look a bit tidier.</p>
+<p>Finally, let’s import the modules we need:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Network</span>
+<span class="ot">&gt;</span> 
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Proxy</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Proxy.TCP</span>
+<span class="ot">&gt;</span> 
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Monad</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Maybe</span>
+<span class="ot">&gt;</span> 
+<span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Text.Encoding</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Text.Encoding.Error</span></code></pre>
+<p>These should mostly be fairly self-explanatory. We are dealing with network code, so the <code>Network</code> module provides some types (such as <code>Socket</code>) which are going to be useful to us. <code>Control.Proxy</code> and <code>Control.Proxy.TCP</code> are provided by the aforementioned <code>pipes</code> and <code>pipes-network</code> modules respectively. <code>Control.Monad</code> and <code>Data.List</code> provide various useful utilities. Finally, the last three imports handle our various string formats. For my purposes, I am assuming all interaction with the server will be in UTF-8, and I make use of <code>Data.Text.Encoding</code> to convert to and from <code>ByteString</code>.</p>
+<h2 id="structure-and-types">Structure and Types</h2>
+<p>OK, so now we’re set up, how is the server going to work, and how is the rest of our program going to interface with it? I wanted the server to be as simple as possible, and really I just wanted to set it running and then just forget about it, and let the rest of my program handle commands as they come in. I decided I would accept two functions from my program, one to interpret incoming text (guaranteed to be a single line) and turn it into some command format the program understood, and another to read in these commands and perform some action, returning any output from running that action.</p>
+<p>The interpreter is a simple, pure function, which simply maps <code>Text</code> to some command type <code>c</code> (defined by the program):</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">Interpreter</span> c <span class="fu">=</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> c</code></pre>
+<p>The handler is slightly more involved. Firstly, I didn’t want it to have to worry about the terminator string, so I would have the server add those itself. This posed a problem though: since the output could potentially be multiple lines, and the action could take a long time to complete, I wanted to stream it out to the socket as it came in, not all in one chunk at the end. But in order to do this, I would have to know whether or not to add the terminator string for a particular piece of output, as it should only be added at the very end. My handler, then, would need to output some information about whether or not it was complete, along with whatever text it needed to deliver so far. This can be accomplished with the following type:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Output</span> t <span class="fu">=</span> <span class="dt">Still</span> t
+<span class="ot">&gt;</span>               <span class="fu">|</span> <span class="dt">Done</span> t
+<span class="ot">&gt;</span>               <span class="kw">deriving</span> (<span class="dt">Show</span>)</code></pre>
+<p>Onto the handler itself then! This is the first instance of one of the types defined by the <code>pipes</code> library, a <code>Pipe</code>. A <code>Pipe</code> is a generalization of the <code>Proxy</code> typeclass defined by the library, which defines a set of types which can send and/or receive data up or downstream. The library defines various instances of these. They are explained in excellent detail in the <a href="http://hackage.haskell.org/packages/archive/pipes/3.3.0/doc/html/Control-Proxy-Tutorial.html#g:3">Control.Proxy Tutorial</a>, but in summary:</p>
+<ul>
+<li>A <code>Producer</code> generates values to be streamed <em>downstream</em></li>
+<li>A <code>Consumer</code> reads values from <em>upstream</em></li>
+<li>A <code>Pipe</code> reads values <em>upstream</em> and then sends values <em>downstream</em> (think of it like a UNIX pipe, where “upstream” is equivalent to reading from <code>STDIN</code> and “downstream” is equivalent to writing to <code>STDOUT</code>)</li>
+<li>A <code>Client</code> can send and receive values <em>upstream</em></li>
+<li>A <code>Server</code> can send and receive values <em>downstream</em></li>
+<li>A <code>Proxy</code> can both send and receive values in either direction</li>
+<li>Finally, a <code>Session</code> is formed by composing <code>Producers</code>, <code>Pipes</code>, and <code>Consumers</code>, or by composing <code>Clients</code>, <code>Proxies</code>, and <code>Servers</code>. A <code>Session</code> is a closed system; it has no upstream or downstream interface.</li>
+</ul>
+<p>Our command handler, then, is expected to read in commands from the interpreter <em>upstream</em> and send its output to the socket <em>downstream</em> – look at the list above again and it should be quite obvious that it is a <code>Pipe</code>! Thus, our <code>Handler</code> definition:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">Handler</span> c <span class="fu">=</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> <span class="dt">ProxyFast</span> c (<span class="dt">Output</span> <span class="dt">T.Text</span>) <span class="dt">IO</span> ()</code></pre>
+<p>As we can see, <code>Handler</code> is a function which returns a <code>Pipe</code> from some command type <code>c</code> (as output by the <code>Interpreter</code>), to a <code>Text</code> value wrapped in our <code>Output</code> type. It exists in the <code>IO</code> monad as it will need to perform an action. Finally, it receives and outputs <code>()</code> – these values are used for requests from downstream and requests sent upstream, neither of which are supported by <code>Pipe</code>.</p>
+<p>There’s one annoyance here which I haven’t managed to solve – I am specifying the proxy <code>ProxyFast</code> rather than just accepting any type of class <code>Proxy</code>. I tried doing the latter, but I couldn’t get it to typecheck correctly – I think because my use of <code>runProxy</code> later forces the server to run under <code>ProxyFast</code>, so if a user tried to pass in a handler of type <code>ProxyCorrect</code>, it wouldn’t be compatible. This seems quite reasonable, but it is nevertheless annoying that this information about which proxy implementation I am using must leak out of the module. The solution is probably to have my handler not implemented as a proxy, but instead provide it with some interface to which it can send incremental output (perhaps a <code>TChan</code>). This would mean the client program need not deal with proxies or the <code>pipes</code> library at all! It complicates the code somewhat, though, so for now I will use the above interface.</p>
+<h2 id="main-server-backend">Main Server Backend</h2>
+<p>Now our types are in place, we’re almost there! Let’s make a simple function to start our server up and set it running first, which I’ll call <code>run</code>:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; run ::</span> <span class="dt">Interpreter</span> c <span class="ot">-&gt;</span> <span class="dt">Handler</span> c <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+<span class="ot">&gt;</span> run interpreter handler port <span class="fu">=</span> serve <span class="dt">HostAny</span> port go
+<span class="ot">&gt;</span>   <span class="kw">where</span> go (socket,_) <span class="fu">=</span> runProxy <span class="fu">$</span> server interpreter handler socket</code></pre>
+<p><code>run</code> is our interface to the rest of the program – we start the server up with this function, passing in our interpreter and handler functions, as well as the port we want to run on. It uses <code>pipes-network</code> to start up the server and then run our <code>Proxy</code> for each incoming connection, passing the functions through as well as the socket to communicate on.</p>
+<p><code>runProxy</code> expects a function taking <code>()</code> and returning the proxy we want to run. In addition to this, we want to feed the <code>Interpreter</code>, <code>Handler</code>, and active <code>Socket</code> to the proxy to work with. The type signature for our <code>server</code> function, therefore, must be:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; server ::</span> <span class="dt">Interpreter</span> c <span class="ot">-&gt;</span> <span class="dt">Handler</span> c <span class="ot">-&gt;</span> <span class="dt">Socket</span> <span class="ot">-&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Session</span> <span class="dt">ProxyFast</span> <span class="dt">IO</span> ()</code></pre>
+<p>One thing I love about Haskell is how easy it is to work top-down; you can start with a rough outline of what you want to get done and then fill in the blanks later. Here is the implementation of <code>server</code>, which can be expressed as a composition of proxies representing each part of the process:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> server i h s <span class="fu">=</span> readSocket <span class="fu">&gt;-&gt;</span> interpret <span class="fu">&gt;-&gt;</span> handle <span class="fu">&gt;-&gt;</span> writeSocket</code></pre>
+<p>This is the sort of expressive power the <code>pipes</code> library gives us – it almost reads like an ASCII diagram describing the required server behaviour! It only remains for us to “fill in the blanks” by defining each of these functions. We can do this in a <code>where</code> clause, and for the most part, each part of the session is itself a composition of simple proxies. I’m going to work from the outside in, beginning with the administrivia of reading data in from the socket and writing results back out to it, and then dealing with the actual interpretation and handling of data at the end. We’ll begin with reading in data from the socket:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span>
+<span class="ot">&gt;</span>     readSocket <span class="fu">=</span> socketReadS <span class="dv">4096</span> s <span class="fu">&gt;-&gt;</span> decode <span class="fu">&gt;-&gt;</span> split <span class="st">&quot;\r\n&quot;</span>
+<span class="ot">&gt;</span>     decode <span class="fu">=</span> mapD <span class="fu">$</span> decodeUtf8With lenientDecode</code></pre>
+<p><code>readSocket</code> reads data in from the socket using a <code>Producer</code> defined by the <code>pipes-network</code> library. The number <code>4096</code> is just that recommended for general purposes by the library – it might need tweaking depending on your needs. <code>decode</code> reads in raw <code>ByteStrings</code> and converts them to UTF-8 encoded <code>Text</code> data. <code>mapD</code> is a utility function provided by <code>pipes</code> which will take a pure function and generate a <code>Pipe</code> which pipes everything it receives from upstream through the function and sends the results downstream. Finally <code>split</code> is a <code>Pipe</code> which buffers up text it receives from upstream until it reaches a certain delimiter, at which point it sends the text up to and including the delimiter downstream – its definition appears later.</p>
+<p>Writing the data back out is pretty similar – we receive UTF-8 <code>Text</code> and we want to encode it as a <code>ByteString</code> before sending it out through the socket. This time, though, we don’t care about buffering – we can just send text out as it comes in – so we can omit the call to <code>split</code>:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     writeSocket <span class="fu">=</span> mapD encodeUtf8 <span class="fu">&gt;-&gt;</span> socketWriteD s <span class="fu">&gt;-&gt;</span> done</code></pre>
+<p>The reason for the <code>done</code> at the end there is that it turns out that <code>socketWriteD</code> pipes any data it writes to the socket downstream, to ease composition. In order to close off our session, we need a <code>Consumer</code> which will sit there forever, taking data from upstream and ignoring it. Strictly speaking this isn’t necessary, but it allows us to treat our server as a <code>Session</code> rather than a <code>Producer</code>. Its definition is as follows:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     done () <span class="fu">=</span> forever <span class="fu">$</span> request () <span class="fu">&gt;&gt;</span> return ()</code></pre>
+<p>We should now have UTF-8 encoded <code>Text</code> data being pumped out, line-by-line, to the interpreter, and we are expecting to get <code>Text</code> data back out from the <code>handle</code> function to send on down the pipe. Time to call back out to our application’s interpreter and handler.</p>
+<p>Remember we defined the interpreter as a pure function taking in <code>Text</code> and spitting out <code>Commands</code>? <code>interpret</code>, then, merely needs to convert this pure function into a <code>Pipe</code>, using <code>mapD</code> again:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     interpret <span class="fu">=</span> mapD i</code></pre>
+<p>The handler has the small extra complication of needing to append our terminator string whenever the application tells us it is <code>Done</code>. We can do this by composing the handler function (which is already a pipe) with a small utility function:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     terminator <span class="fu">=</span> <span class="st">&quot;\r\nEND\r\n\r\n&quot;</span>
+<span class="ot">&gt;</span>     handle <span class="fu">=</span> h <span class="fu">&gt;-&gt;</span> mapD handleOutput
+<span class="ot">&gt;</span>     handleOutput (<span class="dt">Still</span> t) <span class="fu">=</span> t
+<span class="ot">&gt;</span>     handleOutput (<span class="dt">Done</span> t) <span class="fu">=</span> t <span class="ot">`T.append`</span> terminator</code></pre>
+<p>That’s it! That’s basically all we need to define a simple, streams-based server. Now all our application needs to do is define an <code>Interpreter</code> and a <code>Handler</code>, and we’re on our merry way! Well… almost. We still haven’t defined the <code>split</code> function.</p>
+<h2 id="buffering-text">Buffering Text</h2>
+<p>Our <code>readSocket</code> proxy runs its output through a proxy called <code>split</code> at the end, in order to buffer up the text it receives and send it out broken apart by newlines. I was surprised not to find something like this defined in <code>pipes-network</code> already – perhaps it is there and I missed it. At any rate, I wrote a definition of it here – the only <code>Pipe</code> in the server code which is not simply a composition of other proxies. I am pretty certain there must be a better way to do this, and it’s probably a DDOS risk (you could stream it a huge line without any linefeeds and it would keep buffering until it ran out of memory), but it served my purposes. Comments on better ways to achieve this would be much appreciated!</p>
+<p><code>split</code> takes the delimiter to split on and returns a <code>Pipe</code> function, which runs a loop passing in the current state of the buffer as its parameter. It starts, of course, with the empty buffer:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; split ::</span> <span class="dt">Proxy</span> p <span class="ot">=&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> p <span class="dt">T.Text</span> <span class="dt">T.Text</span> <span class="dt">IO</span> ()
+<span class="ot">&gt;</span> split d () <span class="fu">=</span> runIdentityP <span class="fu">$</span> loop T.empty</code></pre>
+<p><code>runIdentityP</code> there is provided by <code>pipes</code> and helps Haskell infer the types better.</p>
+<p>The loop itself begins by requesting the latest data from upstream, and appending it to our existing buffer:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span>
+<span class="ot">&gt;</span>     loop r <span class="fu">=</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>       a <span class="ot">&lt;-</span> request ()
+<span class="ot">&gt;</span>       <span class="kw">let</span> a&#39; <span class="fu">=</span> r <span class="ot">`T.append`</span> a</code></pre>
+<p>We then check whether the delimiter can be found in the newly received text, and if it can we split the entire buffer on the delimiter, send the first part (up to the first delimiter) downstream, and pass the remainder back to the next iteration of the loop. If the delimiter can’t be found, we just loop again with the updated contents of the buffer:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">if</span> d <span class="ot">`T.isInfixOf`</span> a
+<span class="ot">&gt;</span>         <span class="kw">then</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>           <span class="kw">let</span> l <span class="fu">=</span> T.splitOn d a&#39;
+<span class="ot">&gt;</span>           forM_ (init l) respond
+<span class="ot">&gt;</span>           loop <span class="fu">$</span> last l
+<span class="ot">&gt;</span>         <span class="kw">else</span> loop a&#39;</code></pre>
+<p>This implementation is OK and it does the job, but I am not totally happy with it. Apart from the obvious issue that it could buffer the text forever, it just doesn’t “look nice”. My experience with functional programming so far has taught me that if things don’t look nice, they probably aren’t – there is usually a more elegant, functional way to do them. I may revisit it in future.</p>
+<h2 id="interacting-with-our-server">Interacting with our server</h2>
+<p>In a couple of compact functions, we have a fully-working TCP server! Let’s write the application-side code to make use of it. Since this is a single blog post, we’ll just write the application code inline – of course usually you’d put the server stuff in a module and import it into your application. Consider this the cut-off point – everything before this paragraph belongs in a module; everything after it is application code and can go in your <code>Main</code> module or anywhere else.</p>
+<p>Our application will need to work with some sort of command type – this defines all the actions that our handler knows how to take. Let’s keep it simple and support just three commands: “add”, “echo” and “quit”. If the server receives anything else it should respond with “Unrecognised command”.</p>
+<p>“add” will take as its input a list of integers and return the result of adding them together as its output. “echo” will simply echo the text back out. “quit” will disconnect the client. These commands can be defined as follows:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Command</span> <span class="fu">=</span> <span class="dt">Add</span> [<span class="dt">Integer</span>]
+<span class="ot">&gt;</span>              <span class="fu">|</span> <span class="dt">Echo</span> <span class="dt">T.Text</span>
+<span class="ot">&gt;</span>              <span class="fu">|</span> <span class="dt">Quit</span>
+<span class="ot">&gt;</span>              <span class="fu">|</span> <span class="dt">Unknown</span> <span class="dt">T.Text</span></code></pre>
+<p>Firstly we’ll write our interpreter. Of course there’s all sorts of things you could do here – parsing text is one of Haskell’s great strengths! But all I really want is to put the command, followed by a space, followed by its parameters, separated by spaces. A proper interpreter would need to handle syntax/type errors and the like, but for the sake of simplicity I will assume only valid input can be received:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; interpreter ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">Command</span>
+<span class="ot">&gt;</span> interpreter <span class="fu">=</span> interpret <span class="fu">.</span> T.words
+<span class="ot">&gt;</span>   <span class="kw">where</span>
+<span class="ot">&gt;</span>     interpret (<span class="st">&quot;add&quot;</span><span class="fu">:</span>xs) <span class="fu">=</span> <span class="dt">Add</span> <span class="fu">$</span> map (safeRead <span class="dv">0</span>) xs
+<span class="ot">&gt;</span>     interpret (<span class="st">&quot;echo&quot;</span><span class="fu">:</span>text) <span class="fu">=</span> <span class="dt">Echo</span> <span class="fu">$</span> T.unwords text
+<span class="ot">&gt;</span>     interpret (<span class="st">&quot;quit&quot;</span><span class="fu">:</span>[]) <span class="fu">=</span> <span class="dt">Quit</span>
+<span class="ot">&gt;</span>     interpret other <span class="fu">=</span> <span class="dt">Unknown</span> <span class="fu">$</span> T.unwords other</code></pre>
+<p>The inclusion of <code>[]</code> at the end of the deconstruction of “quit” means that strings such as “quit with extra text at the end” will return “Unrecognised command” rather than quitting.</p>
+<p><code>safeRead</code> is our nod toward handling unexpected input. Usually, if <code>read</code> receives a string that can’t be parsed as the type we’re looking for (<code>Integer</code> in our case), it will throw an exception. What we’re going to do here is just ignore it by returning the default value of <code>0</code>. Its implementation is as follows:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     safeRead defval x <span class="fu">=</span> maybe defval id (readMaybe x)
+<span class="ot">&gt;</span>     readMaybe <span class="fu">=</span> fmap fst <span class="fu">.</span> listToMaybe <span class="fu">.</span> reads <span class="fu">.</span> T.unpack</code></pre>
+<p>Note that <code>readMaybe</code> is actually included as part of <code>Text.Read</code> in GHC versions 7.6 and above, so its definition may not be required. I include it here to support older versions of the compiler.</p>
+<p>Next up is our command handler. In order to have access to the <code>respond</code> function to pipe output downstream, we have to implement this as a <code>Pipe</code>. For those commands which simply take a simple input and return a simple response, though, it would be nicer to define them as a simpler mapping of the form:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; command ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Command</span> <span class="ot">-&gt;</span> m <span class="dt">T.Text</span></code></pre>
+<p>In fact, neither of our currently-defined commands require access to any monad, but we will define <code>command</code> in those terms since in the real world it’s very likely that we <em>will</em> want access to <code>IO</code> or <code>STM</code> or something similar in order to communicate requests to other parts of the application.</p>
+<p>Let’s define our currently supported commands in terms of this simpler interface:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> command (<span class="dt">Echo</span> t) <span class="fu">=</span> return t
+<span class="ot">&gt;</span> command (<span class="dt">Add</span> xs) <span class="fu">=</span> return <span class="fu">$</span> (T.pack <span class="fu">.</span> show) <span class="fu">$</span> foldl&#39; (<span class="fu">+</span>) <span class="dv">0</span> xs
+<span class="ot">&gt;</span> command (<span class="dt">Unknown</span> cmd) <span class="fu">=</span> return <span class="fu">$</span> <span class="st">&quot;Unrecognised command: &quot;</span> <span class="ot">`T.append`</span> cmd</code></pre>
+<p>Our handler itself, then, will be a dispatcher, which can send commands to the appropriate handler if one exists, or pass them off to this simple handler otherwise:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; commandDispatcher ::</span> <span class="dt">Proxy</span> p <span class="ot">=&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> p <span class="dt">Command</span> (<span class="dt">Output</span> <span class="dt">T.Text</span>) <span class="dt">IO</span> ()
+<span class="ot">&gt;</span> commandDispatcher () <span class="fu">=</span> runIdentityP loop <span class="kw">where</span>
+<span class="ot">&gt;</span>   loop <span class="fu">=</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>     cmd <span class="ot">&lt;-</span> request ()
+<span class="ot">&gt;</span>     <span class="kw">case</span> cmd <span class="kw">of</span>
+<span class="ot">&gt;</span>       <span class="dt">Quit</span> <span class="ot">-&gt;</span> respond (<span class="dt">Done</span> <span class="st">&quot;GOODBYE&quot;</span>) <span class="fu">&gt;&gt;</span> return ()
+<span class="ot">&gt;</span>       _    <span class="ot">-&gt;</span> executeSimple cmd <span class="fu">&gt;&gt;</span> loop
+<span class="ot">&gt;</span>   executeSimple cmd <span class="fu">=</span> (lift <span class="fu">.</span> command) cmd <span class="fu">&gt;&gt;=</span> respond <span class="fu">.</span> <span class="dt">Done</span></code></pre>
+<p>This function loops until it receives the <code>Quit</code> command, at which point it breaks out of the loop which causes the entire <code>Session</code> to be dismantled, disconnecting the client.</p>
+<p>Finally, we add a <code>main</code> function to set it all in motion on port “8000”. The call to <code>withSocketsDo</code> is required on Windows, and is a no-op on other systems, so it’s good form to use it whenever we’re dealing with network code:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()
+<span class="ot">&gt;</span> main <span class="fu">=</span> withSocketsDo <span class="fu">$</span> run interpreter commandDispatcher <span class="st">&quot;8000&quot;</span></code></pre>
+<p>If you copy and paste this page into a file and run it with <code>runhaskell</code> you should be able to open another window and telnet into <code>localhost</code> on port 8000. Try typing some commands and see what happens!</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/haskell.html">haskell</a>, <a href="/tags/functional-programming.html">functional-programming</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>(Literate) Haskell script to create a new Hakyll post</title>
+    <link href="http://dpwright.com/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.html" />
+    <id>http://dpwright.com/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.html</id>
+    <published>2013-06-03T00:00:00Z</published>
+    <updated>2013-06-03T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="info"> 3 June, 2013</div>
+
+
+
+<p>This is my first post after quite a long absence. A lot has happened:</p>
+<ul>
+<li>I got married.</li>
+<li>I’ve spent a lot of time with functional programming languages, particularly <a href="http://clojure.org">Clojure</a>, which I used to create the website we used to manage the aforementioned wedding.</li>
+<li>I’ve switched this blog from <a href="http://jekyllrb.com">Jekyll</a> to <a href="http://jaspervdj.be/hakyll">Hakyll</a> (And thus its configuration from Ruby to Haskell).</li>
+</ul>
+<p>It is about this last point that I intend to write now. I will spare you the usual introduction about what Haskell is, as there are plenty of resources from which you could glean that. I will talk a little bit about why I decided to make the switch though, before walking through a little helper utility which I hope will come in handy.</p>
+<h2 id="from-jekyll-to-hakyll">From Jekyll to Hakyll</h2>
+<p>Although I had enjoyed setting up and using Jekyll, I was starting to get a little fed up of it – through no fault of its own, really. In the interests of getting up and running quickly, I used <a href="http://octopress.org">Octopress</a> to get started, downloaded a <a href="https://github.com/kui/k-ui-octopress-theme">nice, minimal theme</a> by <a href="http://k-ui.jp">k-ui</a> (from which my current theme still draws influence), and started tweaking it to fit my needs.</p>
+<p>The problem was, I had downloaded this big system that did everything for me, and I soon came across problems I didn’t know how to solve. Probably if I’d taken more time with Jekyll I could have figured it out, but I ended up neglecting the site for quite a while to work on the wedding site, and by the time I got back to it I was looking for something new.</p>
+<p>I considered writing my own, probably in Clojure, but then I came across Hakyll and thought it would give me the excuse I’ve been looking for to give Haskell a try. It offers less “out of the box” than Octopress did (not sure about Jekyll), so I have to set up quite a lot of the basic stuff myself, which means that I come out understanding it much better. Well, that’s the idea, anyway.</p>
+<p>One of the things I did like about Octopress, though, was that it came with some useful shortcuts. I don’t really want to have to look up the date and write it out every time I write a new post; I’d rather just say “new post”, give it a title, and start writing. As far as I can tell, Hakyll doesn’t provide this functionality – nor should it, necessarily; its job is to compile my site.</p>
+<p>So I thought this would be an opportunity to have a go at writing a simple utility in Haskell that isn’t just a glorified configuration file. Really this sort of thing would usually be the job of a shell script, so it may be somewhat outside of Haskell’s usual problem domain, but I figured I’d give it a go.</p>
+<h2 id="literate-haskell">Literate Haskell</h2>
+<p>This is one feature of Haskell that is pretty interesting: there is language support for writing “literate” Haskell files; that is, files which read like documentation with the occasional code snippet, but those code snippets can be compiled.</p>
+<p>This way of writing code has become fairly popular recently, with Literate Python and Literate Coffeescript among others, but Haskell supports it natively. The idea has some heritage; Miranda, an earlier functional language from which Haskell draws a lot of ideas, supports it, and the idea was first implemented by Donald Knuth in the form of WEB/CWEB.</p>
+<p>Intrigued by the idea, I decided to write the “new post” script in a literate style, and the result is this blog post! You can copy and paste this page directly (either from the html or the markdown source), and the compiler will ignore the blog post and compile the included code. Lines beginning with “bird markers” (&gt; symbols at the start of lines, like quoted messages in an email) are interpreted by the compiler as part of the source code; anything else is ignored.</p>
+<p>This will seem like a pointless reiteration for anyone familiar with the concept, but I’m just going to state it as a paragraph on its own for anyone not paying attention who hasn’t quite twigged how cool this is:</p>
+<p>Having written this blog post as a literate Haskell script, whenever I want to write a new blog post, I literally <em>run this blog post</em>.</p>
+<h2 id="the-script">The script</h2>
+<p>Haskell’s literate programming system doesn’t allow code to be written out-of-order, so I will go through this step-by-step. Bear in mind that this is my first piece of “proper” Haskell code; it might be really bad! If you are a beginner like me you should probably try to find some more informed sources before you copy any of this stuff. If you know what you’re doing and you spot any silly mistakes / poor style, please let me know, or even submit a pull request on github and show me what’s wrong with it! I am writing this post to learn, not to teach.</p>
+<p>With that caveat out the way, first I’ll import the necessary modules.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Environment</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Format</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.LocalTime</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Printf</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Cmd</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Exit</span></code></pre>
+<p>We need <code>System.Environment</code> for getArgs, which returns us a list of command-line arguments. The <code>Data.Char</code> and <code>Data.List</code> libraries will come in handy when we want to manipulate strings and lists, as we will need to do to generate titles appropriately. The <code>System.Locale</code>, <code>Data.Time.Format</code> and <code>Data.Time.LocalTime</code> modules are required for dealing with dates and times. Finally I use <code>Text.Printf</code> to generate the command I’m going to run to write the actual post, and <code>System.Cmd</code> and <code>System.Exit</code> to run it.</p>
+<p>The interface I’m aiming for is simple: simply type the name of the script, followed by the title of the blog post. The one slightly tricky thing is that I’d like to be able to write the title either quoted or unquoted, so the following to examples should be the same:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">new-post</span> An example blog post
+$ <span class="kw">new-post</span> <span class="st">&quot;An example blog post&quot;</span></code></pre>
+<p>In order to do this, we’re going to “normalise” the arguments, so that whatever the input we’re working with a list of words, broken up by spaces. Haskell provides a couple of helper functions for this: <code>words</code> takes a string and splits it up by spaces (so that you get a list of words out, hence the name), and <code>unwords</code> does the opposite – it joins a list of strings together, putting spaces between each one. To perform the normalisation, we can simply run <code>words</code> followed by <code>unwords</code>:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> normaliseArgs <span class="fu">=</span> words <span class="fu">.</span> unwords</code></pre>
+<p>The way this function works is quite clever. Mathematically speaking, functions can be <a href="http://en.wikipedia.org/wiki/Function_composition">composed</a> to create new functions which are equivalent to running the second function on the output of the first. Haskell supports this property directly using the <code>.</code> syntax. Here we define <code>normaliseArgs</code> as the <em>composition</em> of <code>words</code> and <code>unwords</code>. Interestingly, doing it this way we don’t have to worry about the inputs and outputs of the function: we simply declaratively state the relationship between the functions.</p>
+<p>It is generally seen as good form to explicitly state the input and output types for top-level function definitions, however I have chosen not to here, because it feels natural that they should match those of <code>words</code> and <code>unwords</code>. Experienced Haskellers will be able to tell me if I’m in the wrong.</p>
+<p>Having explained the <code>normaliseArgs</code> function, we can look at the implementation of the script itself. The <code>main</code> function gives an overview of how the script will work:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()
+<span class="ot">&gt;</span> main <span class="fu">=</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   args <span class="ot">&lt;-</span> getArgs
+<span class="ot">&gt;</span>   time <span class="ot">&lt;-</span> getZonedTime
+<span class="ot">&gt;</span>   <span class="kw">let</span> normalisedArgs <span class="fu">=</span> normaliseArgs args
+<span class="ot">&gt;</span>   <span class="kw">let</span> header         <span class="fu">=</span> makeHeader normalisedArgs time
+<span class="ot">&gt;</span>   <span class="kw">let</span> filename       <span class="fu">=</span> makeFilename normalisedArgs time <span class="st">&quot;.md&quot;</span>
+<span class="ot">&gt;</span>   launchVim filename header
+<span class="ot">&gt;</span>   <span class="co">-- or, if you don&#39;t use vim: launchEditor filename header</span>
+<span class="ot">&gt;</span>   return ()</code></pre>
+<p>All in all, it’s a very basic script. We read the arguments and the time from the <code>IO</code> monad, generate our header and filename, and then launch our editor of choice with the header text already prepared.</p>
+<p>That <code>return</code> at the end is a bit of a <em>faux amis</em>. Our <code>main</code> function is defined as returning <code>IO ()</code>, but the command we use to launch our editor will return an <code>ExitCode</code>. <code>return</code> simply lets us set the return value for the <code>do</code> block – it does <em>not</em> exit early as one might expect.</p>
+<p>Let’s start by generating the filename. The filename will be the date, followed by the title (all in lower-case and with hyphens replacing spaces), and finally the file extension. These files all belong in the <code>posts/</code> directory.</p>
+<p>In most languages, I would start by creating local variables containing the formatted date and title and work from there, but here I’m going to take advantage of Haskell’s <code>where</code> form to write in a more declarative style. We start by declaring the type information:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeFilename ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<p>So <code>makeFilename</code> is a function which takes in an array of strings, the current time, and a file extension, and returns a string – the filename. Let’s assume for the moment that we’ve already dealt with the nitty gritty of actually generating the string we want to use for our filename. The thing we’d want to return in that case is a concatenation of that filename base with the folder it’s meant to be in, <code>posts</code>, and the file extension. Something like this:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> makeFilename args t ext <span class="fu">=</span> concat [<span class="st">&quot;posts/&quot;</span>, filename_base, ext]</code></pre>
+<p>Seems simple enough, but what is that <code>filename_base</code>? Well, let’s define that right now, using the <code>where</code> form:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span>
+<span class="ot">&gt;</span>     filename_base <span class="fu">=</span> intercalate <span class="st">&quot;-&quot;</span> [date, title]
+<span class="ot">&gt;</span>     date          <span class="fu">=</span> formatTime defaultTimeLocale <span class="st">&quot;%Y-%m-%d&quot;</span> t
+<span class="ot">&gt;</span>     title         <span class="fu">=</span> map toLower joinedArgs
+<span class="ot">&gt;</span>     joinedArgs    <span class="fu">=</span> intercalate <span class="st">&quot;-&quot;</span> args</code></pre>
+<p><code>filename_base</code> is the string formed by putting “-” between <code>date</code> and <code>title</code>, where <code>date</code> is the date as formatted by <code>formatTime</code>, and <code>title</code> is the arguments joined together and made lower-case.</p>
+<p>You’ll notice that these variables are declared in pretty much the opposite order to that which you’d use in most languages. In fact, the order doesn’t matter: I could shuffle those lines around and it would still work. In a sense it’s less that you’re “putting a value into a variable” and more that you’re defining what that variable <em>is</em>, in terms of other variables which may or may not have been defined yet.</p>
+<p>Writing it this way feels strange at first, but it is closer to the way equations are usually expressed in mathematics so in that sense it feels natural. The first paragraph following the code reads like a description of the variables, whereas the imperative equivalent (first call <code>formatTime</code> and put the result in <code>date</code>, then lower-case the title…) reads like a series of instructions.</p>
+<p>Haskell also provides the <code>let</code> form which allows you to define variables before you use them. Deciding when it would be appropriate to use <code>where</code> and when to use <code>let</code> is something that I hope will become easier with experience; for now I just use what I feel like (which generally means I tend to favour <code>where</code> since it’s new and shiny!)</p>
+<p>Blog posts have a standard header which lists the date and time they were created, the tags associated with that post, and the title. Since both the date and the title are formatted differently in the header to the filename I don’t feel the need to move the generation of those strings into their own function; instead we’ll just create them locally inside the <code>makeHeader</code> function as we did for <code>makeFilename</code>:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeHeader ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+<span class="ot">&gt;</span> makeHeader args t <span class="fu">=</span> printf headerFormat date title
+<span class="ot">&gt;</span>   <span class="kw">where</span>
+<span class="ot">&gt;</span>     headerFormat  <span class="fu">=</span> <span class="st">&quot;---\ndate: %s\ntags: \ntitle: %s\n---\n\n&quot;</span>
+<span class="ot">&gt;</span>     title         <span class="fu">=</span> unwords args
+<span class="ot">&gt;</span>     date          <span class="fu">=</span> formatTime defaultTimeLocale <span class="st">&quot;%Y-%m-%d %H:%M:%S&quot;</span> t</code></pre>
+<p>I’m using <code>printf</code> to do my string formatting largely because I’m familiar with it from C. There are other modules, such as <code>Text.Format</code>, which may be more appropriate, but for now I’m happy using this and it seems to do the job.</p>
+<p><code>unwords</code> makes a fresh appearance here to join the arguments back up and form the title. It is perhaps wasteful to do this again after having done it as part of <code>normaliseArgs</code>, but not having to keep hold of various forms of the arguments and the title does keep the code quite simple and easy to read.</p>
+<p>Lastly, we need to launch our editor! You may have noticed in the <code>main</code> function defined above, I had separate <code>launchEditor</code> and <code>launchVim</code> commands. We’ll start with the general <code>launchEditor</code> function, which will launch whatever is defined in <code>$EDITOR</code>:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchEditor ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span>
+<span class="ot">&gt;</span> launchEditor filename header <span class="fu">=</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   writeFile filename header
+<span class="ot">&gt;</span>   system <span class="fu">$</span> printf <span class="st">&quot;$EDITOR \&quot;%s\&quot;&quot;</span> filename</code></pre>
+<p>This is fine, and works, but it has two issues which bother me. Firstly, it generates the file and then opens it – meaning that if I change my mind and decide to quit the editor without saving, the file is left over. Secondly, the cursor begins at the start of the file, rather than where I’d like to start editing.</p>
+<p>As it happens, I can fix both of this problems with my editor of choice, vim. I’m not really sure how I could do this in a general way, since all editors use a different set of command-line parameters, so I decided to leave the generic <code>launchEditor</code> as is above and write a new, vim-specific one to get the functionality I want. The result is as follows:</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchVim ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span>
+<span class="ot">&gt;</span> launchVim filename header <span class="fu">=</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   system <span class="fu">$</span> printf vimCmdFormat header filename
+<span class="ot">&gt;</span>   <span class="kw">where</span>
+<span class="ot">&gt;</span>     vimCmdFormat <span class="fu">=</span> <span class="st">&quot;vim &#39;+let @c=\&quot;%s\&quot;&#39; &#39;+put! c&#39; &#39;+normal 3G$&#39; \&quot;%s\&quot;&quot;</span></code></pre>
+<p>The haskell is pretty much the same; I’ve just changed the format string I pass to <code>printf</code>, and removed the call to <code>writeFile</code> since I’ll be sending my content directly into vim now. The way I do this is to load the content into one of vim’s registers (<code>+let @c=...</code>), then, having launched vim, pasting the contents of that register back out into the file (<code>+put! c</code>). Finally I position the cursor using normal-mode keybindings, and then pass the filename.</p>
+<h2 id="caveats-and-issues">Caveats and Issues</h2>
+<p>As I mentioned, this is my first Haskell program, so I am sure there will be a number of problems with it. If you spot anything particularly bad, please <script type="text/javascript">
+<!--
+h='&#100;&#112;&#x77;&#114;&#x69;&#x67;&#104;&#116;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#100;&#x61;&#110;&#x69;&#x2b;&#98;&#108;&#x6f;&#x67;';e=n+a+h;
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>');
+// -->
+</script><noscript>&#x63;&#x6f;&#110;&#116;&#x61;&#x63;&#116;&#32;&#x6d;&#x65;&#32;&#40;&#100;&#x61;&#110;&#x69;&#x2b;&#98;&#108;&#x6f;&#x67;&#32;&#x61;&#116;&#32;&#100;&#112;&#x77;&#114;&#x69;&#x67;&#104;&#116;&#32;&#100;&#x6f;&#116;&#32;&#x63;&#x6f;&#x6d;&#x29;</noscript> and let me know! You can even suggest modifications to the article by editing it directly <a href="https://github.com/dpwright/dpwright.github.com/edit/source/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs">here</a> and sending them as a pull request. Any feedback is greatly appreciated!</p>
+<p>The biggest thing that sticks out to me is my frequent use of <code>printf</code>, particularly when it comes to generating commands to pass to <code>system</code>. This feels a little like overkill, and I’m sure there must be a better way.</p>
+<p>Another problem is that punctuation in blog titles won’t be handled well. The filename generator simply makes everything lower-case and adds hyphens; it should perhaps strip out any characters which are not URL-friendly, too. The call to vim is worse – since it passes the header text as a command-line parameter, it must keep the title as-is, but will break if the title contains quotation marks. The only solution I can think of for this is to write the header text to a temporary file and then read it in from vim, but I’ll leave that as an exercise for the reader and just avoid using quotation marks in my blog posts for now ;-)</p>
+<h2 id="in-summary">In Summary</h2>
+<p><img src="http://cdn.memegenerator.net/instances/400x/38355687.jpg" alt="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" /> </p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/functional-programming.html">functional-programming</a>, <a href="/tags/haskell.html">haskell</a>, <a href="/tags/hakyll.html">hakyll</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>Git script to rebase all child branches following a command</title>
+    <link href="http://dpwright.com/posts/2012-09-25-git-script-to-rebase-all-child-branches-following-a-command.html" />
+    <id>http://dpwright.com/posts/2012-09-25-git-script-to-rebase-all-child-branches-following-a-command.html</id>
+    <published>2012-09-25T00:00:00Z</published>
+    <updated>2012-09-25T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="info">25 September, 2012</div>
+
+
+
+<p>This script looks at the current status of the DAG to find the children of the current branch, runs an action, then rebases those children. It is particularly useful for users of <code>git-svn</code>, who may find themselves having to rebase all topic branches (and sub-topics which build off those) every time they <code>git svn rebase</code> or <code>git svn dcommit</code>.</p>
+<p>For pure git projects, this is considered by many to be bad form, so use with discretion. People who like a linear history might like it.</p>
+<p>I expect the script, in its current state, will fail in cases where the rebase can’t be done automatically, but for simple day-to-day operations it makes <code>git-svn</code> that bit less painful to use :-)</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">#!/usr/bin/ruby</span>
+<span class="co">#GistID: 3779324</span>
+
+require <span class="st">&#39;escape&#39;</span>
+
+exit <span class="kw">if</span> <span class="dt">ARGV</span>.empty?
+
+current_branch = <span class="st">`git symbolic-ref -q HEAD`</span>.sub(<span class="ot">/^refs\/heads\//</span>, <span class="st">&quot;&quot;</span>).strip
+exit <span class="kw">if</span> current_branch.empty?
+
+<span class="kw">def</span> branch_output_to_array(output)
+	output.gsub(<span class="ot">/^[ *]*/</span>, <span class="st">&quot;&quot;</span>).split(<span class="st">&quot;\n&quot;</span>).collect{ |e| e.strip }
+<span class="kw">end</span>
+
+<span class="dt">IGNORED_BRANCHES</span> = branch_output_to_array(<span class="st">`git branch --no-color -r`</span>) &lt;&lt; <span class="st">&quot;HEAD&quot;</span>
+
+<span class="kw">def</span> branches_on(commit)
+	ignored = <span class="dt">IGNORED_BRANCHES</span> &lt;&lt; commit
+
+	log = <span class="st">`git log --pretty=%d --simplify-by-decoration </span><span class="ot">#{</span>commit<span class="ot">}</span><span class="st"> | head -n 1`</span>
+	branches = log.sub(<span class="ot">/^ \(([^)]+)\).*$/</span>, <span class="st">&#39;\1&#39;</span>).split(<span class="st">&quot;, &quot;</span>)
+	branches.collect{ |e| e.strip }.reject{ |b| ignored.include? b }
+<span class="kw">end</span>
+
+<span class="kw">def</span> children_of(branch)
+	c = branch_output_to_array(<span class="st">`git branch --no-color --contains </span><span class="ot">#{</span>branch<span class="ot">}</span><span class="st">`</span>)
+	c.reject!{ |b| b == branch }
+
+	grandchildren = c.collect{|c| children_of c}.flatten
+	c.reject{ |b| grandchildren.include? b }
+<span class="kw">end</span>
+
+<span class="kw">def</span> branch_tree_from(branch)
+	siblings = branches_on branch
+	children = children_of(branch).reject{|c| siblings.include? c}
+
+	tail = siblings.collect{|s| [s]} + children.collect{|c| branch_tree_from(c)}
+	tail.empty? ? [branch] : [branch, tail]
+<span class="kw">end</span>
+
+<span class="kw">def</span> rebase_all_children(tree)
+	parent = tree.shift
+	children = tree.shift
+	children.map <span class="kw">do</span> |e|
+		system <span class="st">&quot;git rebase </span><span class="ot">#{</span>parent<span class="ot">}</span><span class="st"> </span><span class="ot">#{</span>e.first<span class="ot">}</span><span class="st">&quot;</span>
+
+		<span class="kw">if</span> e.size &gt; <span class="dv">1</span>
+			rebase_all_children e
+		<span class="kw">end</span>
+	<span class="kw">end</span>
+<span class="kw">end</span>
+
+initial_tree = branch_tree_from current_branch
+
+<span class="kw">if</span> system <span class="st">&quot;git </span><span class="ot">#{</span><span class="dt">Escape</span>.shell_command(<span class="dt">ARGV</span>)<span class="ot">}</span><span class="st">&quot;</span>
+	rebase_all_children initial_tree
+	system <span class="st">&quot;git checkout </span><span class="ot">#{</span>current_branch<span class="ot">}</span><span class="st">&quot;</span>
+<span class="kw">end</span></code></pre>
+<p>I have an alias set up to invoke it with <code>git rar</code> (“Run and Rebase”), so that I can type, for example, <code>git rar svn rebase</code>.</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/alias.html">alias</a>, <a href="/tags/git.html">git</a>, <a href="/tags/git-svn.html">git-svn</a>, <a href="/tags/ruby.html">ruby</a>, <a href="/tags/scripts.html">scripts</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>Git alias to get a git commit sha1 from an SVN revision number in git-svn</title>
+    <link href="http://dpwright.com/posts/2012-08-01-git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-gitsvn.html" />
+    <id>http://dpwright.com/posts/2012-08-01-git-alias-to-get-a-git-commit-sha1-from-an-svn-revision-number-in-gitsvn.html</id>
+    <published>2012-08-01T00:00:00Z</published>
+    <updated>2012-08-01T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="info"> 1 August, 2012</div>
+
+
+
+<p>This little snippet is useful if you use git-svn – it gives you an alias to get a git commit ID from an SVN revision number. If you work with others who say things like, “I think this problem was introduced in revision 10342” it can come in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global <code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">svn-ref</span> = <span class="st">&quot;!f() { git log --grep </span><span class="dt">\\</span><span class="st">&quot;</span>git-svn-id.*@<span class="ot">$1</span><span class="dt">\\</span><span class="st">&quot; --pretty=%H; }; f&quot;</span></code></pre>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/alias.html">alias</a>, <a href="/tags/git.html">git</a>, <a href="/tags/git-svn.html">git-svn</a>, <a href="/tags/subversion.html">subversion</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>Git alias to amend old commits</title>
+    <link href="http://dpwright.com/posts/2012-06-26-git-alias-to-amend-old-commits.html" />
+    <id>http://dpwright.com/posts/2012-06-26-git-alias-to-amend-old-commits.html</id>
+    <published>2012-06-26T00:00:00Z</published>
+    <updated>2012-06-26T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="info">26 June, 2012</div>
+
+
+
+<p><code>git commit --amend</code> is a useful little command for fixing mistakes in log messages just after you’ve made a commit, but sometimes you don’t realise your error until a few commits down the line, by which time it’s too late. You have to reset to the earlier version, amend the commit message, and then rebase all your commits since then on top of the new, amended commit.</p>
+<p>Earlier today, in #git on freenode, somebody who went by the name of constant mentioned that they wanted to do this in one command. Another member of the chat, frogsonwheels, suggested a solution which essentially did as described above in a series of git commands strung together using <code>&amp;amp;&amp;amp;</code>.</p>
+<p>I decided to tidy it up a bit and put it into a git alias, thus:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">amend-commit</span> = <span class="st">&quot;!f() { START=</span><span class="kw">`(git</span> symbolic-ref -q HEAD <span class="kw">||</span> <span class="kw">git</span> rev-parse HEAD<span class="kw">)</span> <span class="kw">|</span> <span class="kw">cut</span> -d<span class="st">&quot;/&quot;</span> -f 3<span class="kw">`</span><span class="st">; git checkout -q </span><span class="ot">$1</span><span class="st"> &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD </span><span class="ot">$1</span><span class="st"> </span><span class="ot">$START</span><span class="st">; }; f&quot;</span></code></pre>
+<p>Note that this is still doing the rebase mentioned above, it’s just automatin the steps a little bit. These means that all the usual warnings regarding rebase apply: don’t run this command on a commit which has already been published. Also, this rebases the currently checked out branch/revision, which means if any other branches have been made based off the amended commit <em>or any commit since</em>, those branches won’t be rebased and you’ll have to rebase them automatically once you’ve done the amend-commit. You can usually tell if this is the case pretty easily by inspecting the output of <code>git log --graph --oneline --decorate</code>.</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/alias.html">alias</a>, <a href="/tags/git.html">git</a></div>
+]]></summary>
+</entry>
+<entry>
+    <title>Bash oneliner: watch a filesize</title>
+    <link href="http://dpwright.com/posts/2012-06-25-bash-oneliner-watch-a-filesize.html" />
+    <id>http://dpwright.com/posts/2012-06-25-bash-oneliner-watch-a-filesize.html</id>
+    <published>2012-06-25T00:00:00Z</published>
+    <updated>2012-06-25T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="info">25 June, 2012</div>
+
+
+
+<p>Sometimes, when running a long operation modifying a single file, I want to monitor its progress by watching that file’s size increase. Here’s a simple one-liner which will print the incrementing filesize until Ctrl-C is pressed:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">while</span> <span class="kw">true;</span> <span class="kw">do</span> <span class="kw">echo</span> -e -n <span class="st">&quot;\r</span><span class="kw">`ls</span> -l -h FILENAME <span class="kw">|</span> <span class="kw">awk</span> <span class="st">&#39;{ print $5 }&#39;</span><span class="kw">`</span><span class="st">&quot;</span><span class="kw">;</span> <span class="kw">done</span></code></pre>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/bash.html">bash</a>, <a href="/tags/oneliners.html">oneliners</a>, <a href="/tags/shell.html">shell</a></div>
+]]></summary>
+</entry>
+
+</feed>

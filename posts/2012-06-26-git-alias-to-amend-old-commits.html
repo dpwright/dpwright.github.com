@@ -6,30 +6,38 @@
         <title>Wright Access - Git alias to amend old commits</title>
         <link rel="stylesheet" type="text/css" href="../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
     </head>
     <body>
         <div id="header">
-             <h1 id="logo"><a href="../">Wright Access</a></h1>
+            <div id="logo">
+             <h1 id="logomain"><a href="../">Wright Access</a></h1>
              <h2 id="sublogo">dpwright's notes on code, Japan, Japanese, and anything else</h2>
-            <div id="social">
-                <a class="icon" href="http://github.com/dpwright"><i class="icon-github"></i></a>
-                <a class="icon" href="http://twitter.com/danielpwright"><i class="icon-twitter"></i>en</a>
-                <a class="icon" href="http://twitter.com/tataminomusi"><i class="icon-twitter"></i>jp</a>
-                <a class="icon" href="mailto:dani@dpwright.com"><i class="icon-envelope"></i></a>
-             </div>
+             <div id="social">
+                 <a class="icon" href="http://github.com/dpwright"><i class="fa fa-github"></i></a>
+                 <a class="icon" href="http://twitter.com/danielpwright"><i class="fa fa-twitter"></i>en</a>
+                 <a class="icon" href="http://twitter.com/tataminomusi"><i class="fa fa-twitter"></i>jp</a>
+                 <a class="icon" href="mailto:dani@dpwright.com"><i class="fa fa-envelope-o"></i></a>
+                 <a class="icon" href="../atom.xml"><i class="fa fa-rss-square"></i></a>
+              </div>
+            </div>
             <div id="navigation">
-                <a href="../tags/code.html">Code</a>
-                <a href="../tags/git.html">Git</a>
-                <a href="../tags/vim.html">Vim</a>
-                <a class="jp" href="../tags/日本語.html">日本語</a>
+                <a href="../tags/functional-programming.html">λ</a>
+                <a href="../tags/git.html"><i class="fa fa-code-fork"></i></a>
+                <a id="vim-icon" href="../tags/vim.html">:w</a>
+                <span id="jp-icon"><a href="../tags/日本語.html">日</a></span>
+                <a href="../pages/about.html"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
         <div id="content">
-            <h1>Git alias to amend old commits</h1>
+            <h1 class="title">Git alias to amend old commits</h1>
 
-            <div class="info">June 26, 2012</div>
+            <div class="info">26 June, 2012</div>
+
+
 
 <p><code>git commit --amend</code> is a useful little command for fixing mistakes in log messages just after you’ve made a commit, but sometimes you don’t realise your error until a few commits down the line, by which time it’s too late. You have to reset to the earlier version, amend the commit message, and then rebase all your commits since then on top of the new, amended commit.</p>
 <p>Earlier today, in #git on freenode, somebody who went by the name of constant mentioned that they wanted to do this in one command. Another member of the chat, frogsonwheels, suggested a solution which essentially did as described above in a series of git commands strung together using <code>&amp;amp;&amp;amp;</code>.</p>
@@ -37,11 +45,11 @@
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">amend-commit</span> = <span class="st">&quot;!f() { START=</span><span class="kw">`(git</span> symbolic-ref -q HEAD <span class="kw">||</span> <span class="kw">git</span> rev-parse HEAD<span class="kw">)</span> <span class="kw">|</span> <span class="kw">cut</span> -d<span class="st">&quot;/&quot;</span> -f 3<span class="kw">`</span><span class="st">; git checkout -q </span><span class="ot">$1</span><span class="st"> &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD </span><span class="ot">$1</span><span class="st"> </span><span class="ot">$START</span><span class="st">; }; f&quot;</span></code></pre>
 <p>Note that this is still doing the rebase mentioned above, it’s just automatin the steps a little bit. These means that all the usual warnings regarding rebase apply: don’t run this command on a commit which has already been published. Also, this rebases the currently checked out branch/revision, which means if any other branches have been made based off the amended commit <em>or any commit since</em>, those branches won’t be rebased and you’ll have to rebase them automatically once you’ve done the amend-commit. You can usually tell if this is the case pretty easily by inspecting the output of <code>git log --graph --oneline --decorate</code>.</p>
 
-<div class="tagsinfo">Tagged with: <a href="../tags/code.html">code</a>, <a href="../tags/alias.html">alias</a>, <a href="../tags/git.html">git</a></div>
+<div class="tagsinfo">Tagged with: <a href="../tags/alias.html">alias</a>, <a href="../tags/git.html">git</a></div>
 
         </div>
         <div id="footer">
-            Copyright © 2013 Daniel P. Wright.
+            Copyright © 2012-2014 Daniel P. Wright.
             Site proudly generated by
             <a href="http://jaspervdj.be/hakyll">Hakyll</a>.
         </div>

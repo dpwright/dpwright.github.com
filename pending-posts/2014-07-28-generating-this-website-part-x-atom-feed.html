@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Wright Access - Generating this website part x: Atom Feed</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../">Wright Access</a></h1>
+             <h2 id="sublogo">dpwright's notes on code, Japan, Japanese, and anything else</h2>
+             <div id="social">
+                 <a class="icon" href="http://github.com/dpwright"><i class="fa fa-github"></i></a>
+                 <a class="icon" href="http://twitter.com/danielpwright"><i class="fa fa-twitter"></i>en</a>
+                 <a class="icon" href="http://twitter.com/tataminomusi"><i class="fa fa-twitter"></i>jp</a>
+                 <a class="icon" href="mailto:dani@dpwright.com"><i class="fa fa-envelope-o"></i></a>
+                 <a class="icon" href="../atom.xml"><i class="fa fa-rss-square"></i></a>
+              </div>
+            </div>
+            <div id="navigation">
+                <a href="../tags/functional-programming.html">λ</a>
+                <a href="../tags/git.html"><i class="fa fa-code-fork"></i></a>
+                <a id="vim-icon" href="../tags/vim.html">:w</a>
+                <span id="jp-icon"><a href="../tags/日本語.html">日</a></span>
+                <a href="../pages/about.html"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1 class="title">Generating this website part x: Atom Feed</h1>
+
+            <div class="info">28 July, 2014</div>
+
+
+
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span>
+<span class="ot">&gt;</span> 
+<span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Feed</span> <span class="kw">where</span></code></pre>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Data.Monoid</span>         ((&lt;&gt;))
+<span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Hakyll</span>
+<span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Posts</span></code></pre>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; feedConfig ::</span> <span class="dt">FeedConfiguration</span>
+<span class="ot">&gt;</span> feedConfig <span class="fu">=</span> <span class="dt">FeedConfiguration</span>
+<span class="ot">&gt;</span>            { feedTitle       <span class="fu">=</span> <span class="st">&quot;Wright Access&quot;</span>
+<span class="ot">&gt;</span>            , feedDescription <span class="fu">=</span> <span class="st">&quot;dpwright's notes on code, Japan, Japanese, and anything else&quot;</span>
+<span class="ot">&gt;</span>            , feedAuthorName  <span class="fu">=</span> <span class="st">&quot;Daniel P. Wright&quot;</span>
+<span class="ot">&gt;</span>            , feedAuthorEmail <span class="fu">=</span> <span class="st">&quot;dani@dpwright.com&quot;</span>
+<span class="ot">&gt;</span>            , feedRoot        <span class="fu">=</span> <span class="st">&quot;http://dpwright.com&quot;</span>
+<span class="ot">&gt;</span>            }</code></pre>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; feed ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()
+<span class="ot">&gt;</span> feed tags <span class="fu">=</span> create [<span class="st">&quot;atom.xml&quot;</span>] <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   route idRoute
+<span class="ot">&gt;</span>   compile <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>     ps <span class="ot">&lt;-</span> fmap (take <span class="dv">10</span>) <span class="fu">.</span> recentFirst <span class="fu">=&lt;&lt;</span> loadAllSnapshots <span class="st">&quot;posts/*&quot;</span> <span class="st">&quot;content&quot;</span>
+<span class="ot">&gt;</span>     renderAtom feedConfig feedCtx ps
+<span class="ot">&gt;</span>   <span class="kw">where</span> feedCtx <span class="fu">=</span> postCtx tags <span class="fu">&lt;&gt;</span> bodyField <span class="st">&quot;description&quot;</span></code></pre>
+
+<div class="tagsinfo">Tagged with: <a href="../tags/hakyll.html">hakyll</a>, <a href="../tags/literate-programs.html">literate-programs</a>, <a href="../tags/generating%20this%20website.html">generating this website</a></div>
+
+        </div>
+        <div id="footer">
+            Copyright © 2012-2014 Daniel P. Wright.
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>.
+        </div>
+    </body>
+</html>

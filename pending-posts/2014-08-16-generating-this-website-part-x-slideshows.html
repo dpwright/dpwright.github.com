@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Wright Access - Generating this website part x: Slideshows</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../">Wright Access</a></h1>
+             <h2 id="sublogo">dpwright's notes on code, Japan, Japanese, and anything else</h2>
+             <div id="social">
+                 <a class="icon" href="http://github.com/dpwright"><i class="fa fa-github"></i></a>
+                 <a class="icon" href="http://twitter.com/danielpwright"><i class="fa fa-twitter"></i>en</a>
+                 <a class="icon" href="http://twitter.com/tataminomusi"><i class="fa fa-twitter"></i>jp</a>
+                 <a class="icon" href="mailto:dani@dpwright.com"><i class="fa fa-envelope-o"></i></a>
+                 <a class="icon" href="../atom.xml"><i class="fa fa-rss-square"></i></a>
+              </div>
+            </div>
+            <div id="navigation">
+                <a href="../tags/functional-programming.html">λ</a>
+                <a href="../tags/git.html"><i class="fa fa-code-fork"></i></a>
+                <a id="vim-icon" href="../tags/vim.html">:w</a>
+                <span id="jp-icon"><a href="../tags/日本語.html">日</a></span>
+                <a href="../pages/about.html"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1 class="title">Generating this website part x: Slideshows</h1>
+
+            <div class="info">16 August, 2014</div>
+
+
+
+<p>Occasionally I give talks for which I want to write up an accompanying blog post. Since Pandoc supports various slideshow formats directly, I can actually use the same system both for my blog posts and for writing my slides – in fact, I can use the same source to produce all three: the post, the slides, and any accompanying code – using literate programming!</p>
+<p>Of course, this won’t always work. Sometimes, the way you present things in a talk must flow quite differently from the way you present them in a blog post. But this is a limitation of the presentation media, not a technical limitation, and so I’d like to support both formats. Here’s an outline of what we’re going to try and achieve:</p>
+<ul>
+<li>If the post is in the <code>posts/</code> directory, it will be rendered into a blog post as usual.</li>
+<li>If the post has the metadata field <code>slides</code>, it will be processed as a slideshow of the format specified in that field. So, if the <code>slides</code> field contains the string <code>RevealJSSlides</code> then the file will generate a <code>reveal.js</code> slideshow; if it contains <code>S5Slides</code> it will be formatted as S5, and so on. For a full list of supported slideshow formats, see the <a href="https://hackage.haskell.org/package/pandoc-1.13/docs/Text-Pandoc-Options.html#t:HTMLSlideVariant">pandoc documentation</a>.</li>
+<li>The slides compiler will search both the <code>posts</code> and <code>slides</code> directories, so that it is possible to generate slides without generating a post.</li>
+<li>Any files in the <code>slides/</code> directory which do not contain the ‘slides’ metadata field will default to <code>RevealJSSlides</code></li>
+<li>Slides will be output into the <code>slides/</code> directory, regardless of which directory they came from.</li>
+<li>If the file extension is <code>.lhs</code>, the file will be treated as literate haskell as usual.</li>
+</ul>
+<p>All in all, this set of requirements should be fairly simple; the only potentially tricky part is searching for slides using the posts’ metadata rather than their filename, and even that should just come down to quitting out of the compiler early in case the <code>slides</code> field isn’t present.</p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>As always, we begin by specifying <code>OverloadedStrings</code> and importing <code>Hakyll</code>.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span>
+<span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Slides</span> <span class="kw">where</span>
+<span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre>
+<p>Monoid’s <code>mappend</code> operator is also useful to have.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Monoid</span>   ((&lt;&gt;))</code></pre>
+<p>We’ll be making use of a custom pandoc compiler to actually output the slides, so we’ll need to bring the appropriate pandoc options into scope.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Options</span> (<span class="dt">WriterOptions</span> (..), <span class="dt">HTMLSlideVariant</span>(..))</code></pre>
+<p>I’m also going to import the <code>Posts</code> module as the compiler I use for generating slideshows will be similar to the one used for generating standard blog posts, so I’ll want to reuse that.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span></code></pre>
+<h2 id="locating-slideshow-files">Locating slideshow files</h2>
+<p>The first step is to create some Hakyll <code>Rules</code> specifying which files to match and where to put them. The requirements outlined above essentially specify two alternatives:</p>
+<ul>
+<li>Files in the <code>posts</code> directory which <em>must</em> contain the <code>slides</code> metadata field.</li>
+<li>Files in the <code>slides</code> directory which <em>may</em> contain a <code>slides</code> field (and if not default to <code>RevealJSSlides</code>.</li>
+</ul>
+<p>Let’s approach these in order. Firstly, the slides in the <code>posts</code> directory:</p>
+<div class="sidenote">
+TODO: The following code doesn’t actually work yet, so it is commented out. I am still looking for a good way to make Rules depend on metadata rather than just the filename.
+</div>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">-- slideshowPosts :: Rules ()</span>
+<span class="ot">&gt;</span> <span class="co">-- slideshowPosts = do</span>
+<span class="ot">&gt;</span> <span class="co">--   ids &lt;- getMatches &quot;posts/*&quot;</span>
+<span class="ot">&gt;</span> <span class="co">--   forM_ ids $ \ident -&gt; do</span>
+<span class="ot">&gt;</span> <span class="co">--     slides &lt;- getMetadataField ident &quot;slides&quot;</span>
+<span class="ot">&gt;</span> <span class="co">--     case slides of</span>
+<span class="ot">&gt;</span> <span class="co">--       Nothing -&gt; return ()</span>
+<span class="ot">&gt;</span> <span class="co">--       Just s  -&gt; rulesExtraDependencies [IdentifierDependency ident] $ do</span>
+<span class="ot">&gt;</span> <span class="co">--         undefined</span></code></pre>
+<p>Next the slides in the <code>slides</code> directory.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slideshows ::</span> <span class="dt">Rules</span> ()
+<span class="ot">&gt;</span> slideshows <span class="fu">=</span> match <span class="st">&quot;slides/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   route <span class="fu">$</span> setExtension <span class="st">&quot;.html&quot;</span>
+<span class="ot">&gt;</span>   compile <span class="fu">$</span> getUnderlying
+<span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> (<span class="ot">`getMetadataField`</span> <span class="st">&quot;slides&quot;</span>)
+<span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> slidesCompiler <span class="fu">.</span> maybe <span class="dt">SlidySlides</span> read
+<span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre>
+<h2 id="generating-the-slideshows">Generating the slideshows</h2>
+<p>Now that we know which files we should be creating slideshows for, we need a compiler to do the actual generation! As usual, we start with the context, which is very simple – just attach a date to the default context.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesCtx ::</span> <span class="dt">Context</span> <span class="dt">String</span>
+<span class="ot">&gt;</span> slidesCtx <span class="fu">=</span> dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span>
+<span class="ot">&gt;</span>          <span class="fu">&lt;&gt;</span> defaultContext</code></pre>
+<p>Pandoc supports a variety of different slideshow formats, and I haven’t settled on one in particular, so I’ll add support for them individually as I try them out. Each slideshow engine requires a different template, so we’ll make a quick lookup for that.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesTemplate ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Identifier</span>
+<span class="ot">&gt;</span> slidesTemplate <span class="dt">RevealJsSlides</span> <span class="fu">=</span> <span class="st">&quot;templates/slides/reveal.js.html&quot;</span>
+<span class="ot">&gt;</span> slidesTemplate <span class="dt">S5Slides</span>       <span class="fu">=</span> <span class="st">&quot;templates/slides/s5.html&quot;</span>
+<span class="ot">&gt;</span> slidesTemplate <span class="dt">SlidySlides</span>    <span class="fu">=</span> <span class="st">&quot;templates/slides/slidy.html&quot;</span></code></pre>
+<p>Note that this is a partial function – I haven’t added support for all the slideshow engines yet so if you try to use one without a template the Hakyll build will fail.</p>
+<p>Another difference between the various HTML slideshow engines is which HTML they expect to be working with! Reveal.js expects HTML 5, while the others I’ve tried all work better with HTML 4 source. I’ve made a quick lookup for that as well.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesExpectHTML5 ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+<span class="ot">&gt;</span> slidesExpectHTML5 <span class="dt">RevealJsSlides</span> <span class="fu">=</span> <span class="dt">True</span>
+<span class="ot">&gt;</span> slidesExpectHTML5 _              <span class="fu">=</span> <span class="dt">False</span></code></pre>
+<p>Finally, the compiler itself! This takes a standard pandoc compiler, adds the <code>readerOptions</code> and <code>writerOptions</code> we defined in the entry on standard <a href="#todo">posts</a>, and then customizes them with slideshow-specific functionality.</p>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesCompiler ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)
+<span class="ot">&gt;</span> slidesCompiler sv <span class="fu">=</span> pandocCompilerWith readerOptions slideWriterOpts
+<span class="ot">&gt;</span>                 <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate (slidesTemplate sv) slidesCtx
+<span class="ot">&gt;</span>   <span class="kw">where</span> slideWriterOpts <span class="fu">=</span> writerOptions
+<span class="ot">&gt;</span>                         { writerSlideVariant <span class="fu">=</span> sv
+<span class="ot">&gt;</span>                         , writerHtml5        <span class="fu">=</span> slidesExpectHTML5 sv
+<span class="ot">&gt;</span>                         , writerIncremental  <span class="fu">=</span> <span class="dt">True</span>
+<span class="ot">&gt;</span>                         }</code></pre>
+<h2 id="added-extras">Added extras</h2>
+<p>That’s really all there is to it on the Hakyll side! To make writing slides and blog posts in the same file easier, I have a couple of CSS <code>div</code> classes set up in the slideshow style files – for instance, anything inside a <code>&lt;div class=&quot;notes&quot;&gt;</code> will be shown in the blog post but not in the slideshow. I have yet to add the reverse functionality but I can’t imagine it would be too difficult. All that can be done with a bit of CSS cleverness, though, with no special support from Hakyll itself.</p>
+
+<div class="tagsinfo">Tagged with: <a href="../tags/literate-programs.html">literate-programs</a>, <a href="../tags/hakyll.html">hakyll</a>, <a href="../tags/generating%20this%20website.html">generating this website</a></div>
+
+        </div>
+        <div id="footer">
+            Copyright © 2012-2014 Daniel P. Wright.
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>.
+        </div>
+    </body>
+</html>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Wright Access - 引用文</title>
+        <title>Wright Access - Git alias to get a git commit sha1 from an SVN revision number in git-svn</title>
         <link rel="stylesheet" type="text/css" href="../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -33,15 +33,16 @@
         </div>
 
         <div id="content">
-            <h1 class="title">引用文</h1>
+            <h1 class="title">Git alias to get a git commit sha1 from an SVN revision number in git-svn</h1>
 
-            <table id="postlist">
-        <tr>
-        <td><a href="../posts/2012-05-09-%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%81%AF%E8%A9%A9%E4%BA%BA%E3%81%AA%E3%81%AE%E3%81%8B%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AA%E3%81%AE%E3%81%8B.html">プログラマは詩人なのか、魔法使いなのか？</a></td>
-        <td class="postdate"> 9 May, 2012</td>
-    </tr>
+            <div class="info"> 1 August, 2012</div>
 
-</table>
+
+
+<p>This little snippet is useful if you use git-svn – it gives you an alias to get a git commit ID from an SVN revision number. If you work with others who say things like, “I think this problem was introduced in revision 10342” it can come in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global <code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">svn-ref</span> = <span class="st">&quot;!f() { git log --grep </span><span class="dt">\\</span><span class="st">&quot;</span>git-svn-id.*@<span class="ot">$1</span><span class="dt">\\</span><span class="st">&quot; --pretty=%H; }; f&quot;</span></code></pre>
+
+<div class="tagsinfo">Tagged with: <a href="../tags/alias.html">alias</a>, <a href="../tags/git.html">git</a>, <a href="../tags/git-svn.html">git-svn</a>, <a href="../tags/subversion.html">subversion</a></div>
 
         </div>
         <div id="footer">
