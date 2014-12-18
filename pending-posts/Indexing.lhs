@@ -5,12 +5,14 @@ title: Generating this website part x: Indexing
 ---
 
 > {-# LANGUAGE OverloadedStrings #-}
->
 > module Indexing where
+> import           Hakyll
 
 > import           Data.Monoid         ((<>))
 > import           Control.Applicative ((<$>))
-> import           Hakyll
+
+> import Data.Hashable
+> import Data.Ord
 
 > itemCtx :: Context String
 > itemCtx = dateField "date" "%e %B, %Y"
@@ -33,14 +35,29 @@ title: Generating this website part x: Indexing
 >   makeItem "" >>= loadAndApplyTemplate "templates/archive.html" ctx
 >               >>= loadAndApplyTemplate "templates/default.html" ctx
 >               >>= relativizeUrls
->
-> tagIndex :: Tags -> Rules ()
-> tagIndex tags = tagsRules tags $ \_ pattern -> do
->   route idRoute
->   compile $ indexCompiler pattern defaultContext
->
+
 > index :: Rules ()
 > index = create ["index.html"] $ do
 >   route idRoute
 >   compile $ indexCompiler "posts/*" baseContext
 >   where baseContext = constField "title" "" <> defaultContext
+
+Tag index
+---------
+
+> tagCloud :: Tags -> Rules ()
+> tagCloud tags = create ["tags/index.html"] $ do
+>   route idRoute
+>   compile $ makeItem ""
+>         >>= loadAndApplyTemplate "templates/tags.html"    tagsCtx
+>         >>= loadAndApplyTemplate "templates/default.html" tagsCtx
+>         >>= relativizeUrls
+>   where tagsCtx = constField "title" "tags"
+>                <> tagCloudField "tagCloud" 100 500 (shuffle tags)
+>                <> defaultContext
+>         shuffle = sortTagsBy . comparing $ hash . fst
+>
+> tagIndex :: Tags -> Rules ()
+> tagIndex tags = tagsRules tags $ \_ pattern -> do
+>   route idRoute
+>   compile $ indexCompiler pattern defaultContext
