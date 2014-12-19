@@ -111,7 +111,7 @@
 <span class="ot">&gt;</span>   <span class="kw">where</span> xforms <span class="fu">=</span> hakyllHeaderXF<span class="fu">:</span>standardTransforms
 <span class="ot">&gt;</span>         postIdPrefix <span class="fu">=</span> <span class="st">&quot;Post ID: &quot;</span>
 <span class="ot">&gt;</span>         getPostId <span class="fu">=</span> read <span class="fu">.</span> drop (length postIdPrefix)</code></pre>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; writeIdToFile ::</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">Integer</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; writeIdToFile ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">Integer</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
 <span class="ot">&gt;</span> writeIdToFile f pid <span class="fu">=</span> withSystemTempDirectory <span class="st">&quot;hakyll&quot;</span> <span class="fu">$</span> \tmpDir <span class="ot">-&gt;</span> <span class="kw">do</span>
 <span class="ot">&gt;</span>     (fTmp, hTmp) <span class="ot">&lt;-</span> openTempFile tmpDir <span class="st">&quot;post&quot;</span>
 <span class="ot">&gt;</span>     withFile f <span class="dt">ReadMode</span> <span class="fu">$</span> \hIn <span class="ot">-&gt;</span> <span class="kw">do</span>
