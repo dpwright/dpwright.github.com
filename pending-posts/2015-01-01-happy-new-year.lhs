@@ -210,10 +210,14 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >                                   (r2 (imageWidth, photoHeight))
 
 > prepareFonts :: Fonts String -> IO (Fonts String)
-> prepareFonts = TV.sequence . fmap prepareFont where
+> prepareFonts fs = makeDirectory >> TV.sequence (fmap prepareFont fs) where
 >   fontforge f f' = unwords ["fontforge --lang=ff -c 'Open($1); Generate($2)'", f, f']
+>   fontDir        = "svg-fonts"
+>   makeDirectory  = do
+>     dirExists <- doesDirectoryExist fontDir
+>     unless dirExists $ createDirectory fontDir
 >   prepareFont f  = do
->     let f' = "svg-fonts" </> filter (/= ' ') (takeBaseName f) <.> "svg"
+>     let f' = fontDir </> filter (/= ' ') (takeBaseName f) <.> "svg"
 >     fontAlreadyConverted <- doesFileExist f'
 >     unless fontAlreadyConverted $ do
 >       system $ fontforge f f'
