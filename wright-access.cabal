@@ -53,3 +53,17 @@ executable equationalReasoningExamples
                        mtl
   hs-source-dirs:      slides
   default-language:    Haskell2010
+
+executable nengajou2015
+  main-is:             2015-01-01-happy-new-year.lhs
+  build-depends:       base >=4.7 && <4.8,
+                       diagrams,
+                       diagrams-lib,
+                       diagrams-rasterific,
+                       text,
+                       directory,
+                       filepath,
+                       process,
+                       SVGFonts
+  hs-source-dirs:      pending-posts, posts
+  default-language:    Haskell2010
