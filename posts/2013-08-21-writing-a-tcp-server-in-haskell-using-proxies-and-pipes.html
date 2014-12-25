@@ -46,17 +46,14 @@ Read the original article <a href="http://blog.vitei.com/?p=147">here</a>.</p>
 <center>
 <img src="http://blog.vitei.com/wp-content/uploads/2013/08/haskell-pipes2.jpg" alt="Haskell Pipes" />
 </center>
-
 <div class="sidenote">
 Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pipes 4</a>, this article is now rather out-of-date. I leave it up here for posterity, but if you’re new to Pipes you should probably just ignore it and find a more up-to-date tutorial.
 </div>
-
 <p>Since my last post, I’ve really been enjoying Haskell, and in fact a lot of the functional ideas I had formerly been playing with in Clojure I am now exploring in Haskell instead. I will go into more detail on the reasons for that in a future post – for now I just wanted to share a neat bit of code I wrote the other day that I think really demonstrates the kind of concise, readable code Haskell enables.</p>
 <div>
 
 </div>
 <!--more-->
-
 <h2 id="problem-description">Problem description</h2>
 <p>This is a really simple, common requirement: the application requires a TCP server to take requests and perform whatever it is the application does, after which it will respond with some sort of output. Everyone’s had to do it at some point, and there’s a range of ways to implement it – from the hack-it-in-quick interface to some simple utility to the robustness of, say, a web server.</p>
 <p>My requirements were fairly rudimentary, and so this implementation is a pretty simple one. Still, maybe it’ll be a useful starting-point for anyone who wants to get a server up and running quickly.</p>
