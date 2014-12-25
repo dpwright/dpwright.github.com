@@ -1,13 +1,15 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
-@import url(http://fonts.googleapis.com/css?family=Sorts+Mill+Goudy);
+@import url(../fonts/ComputerModern/Serif/cmun-serif.css);
+@import url(../fonts/ComputerModern/Typewriter/cmun-typewriter.css);
 
 body {
     max-width: 1040px;
     background-color: #fafafa;
     color: #333;
-    font-family: "Sorts Mill Goudy", "Garamond", serif;
+    font-family: "Computer Modern Serif", "Garamond", serif;
     font-size: 20px;
     margin: 0px auto 0px auto;
+    text-rendering: optimizeLegibility;
 }
 
 p {
@@ -15,6 +17,7 @@ p {
 
 code {
     font-size: 0.8em;
+    font-family: "Computer Modern Typewriter", monospace;
 }
 
 blockquote {
