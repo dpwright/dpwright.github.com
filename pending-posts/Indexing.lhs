@@ -14,32 +14,37 @@ title: Generating this website part x: Indexing
 > import Data.Hashable
 > import Data.Ord
 
-> itemCtx :: Context String
-> itemCtx = dateField "date" "%e %B, %Y"
->        <> defaultContext
+> itemCtx :: Tags -> Context String
+> itemCtx tags = tagsField "tags" tags
+>             <> dateField "date" "%e %B, %Y"
+>             <> defaultContext
 
-> postList :: Pattern
+> postList :: Tags
+>          -> Pattern
 >          -> ([Item String] -> Compiler [Item String])
 >          -> Compiler String
-> postList pattern sortFilter = do
+> postList tags pattern sortFilter = do
 >   ps      <- sortFilter =<< loadAll pattern
 >   itemTpl <- loadBody "templates/post-item.html"
->   applyTemplateList itemTpl itemCtx ps
+>   applyTemplateList itemTpl (itemCtx tags) ps
 >
 > indexCtx :: Context String -> String -> Context String
 > indexCtx base list = constField "posts" list <> base
 >
-> indexCompiler :: Pattern -> Context String -> Compiler (Item String)
-> indexCompiler pattern baseCtx = do
->   ctx <- indexCtx baseCtx <$> postList pattern recentFirst
+> indexCompiler :: Tags
+>               -> Pattern
+>               -> Context String
+>               -> Compiler (Item String)
+> indexCompiler tags pattern baseCtx = do
+>   ctx <- indexCtx baseCtx <$> postList tags pattern recentFirst
 >   makeItem "" >>= loadAndApplyTemplate "templates/archive.html" ctx
 >               >>= loadAndApplyTemplate "templates/default.html" ctx
 >               >>= relativizeUrls
 
-> index :: Rules ()
-> index = create ["index.html"] $ do
+> index :: Tags -> Rules ()
+> index tags = create ["index.html"] $ do
 >   route idRoute
->   compile $ indexCompiler "posts/*" baseContext
+>   compile $ indexCompiler tags "posts/*" baseContext
 >   where baseContext = constField "title" "" <> defaultContext
 
 Tag index
@@ -60,4 +65,4 @@ Tag index
 > tagIndex :: Tags -> Rules ()
 > tagIndex tags = tagsRules tags $ \_ pattern -> do
 >   route idRoute
->   compile $ indexCompiler pattern defaultContext
+>   compile $ indexCompiler tags pattern defaultContext

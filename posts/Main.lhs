@@ -77,10 +77,9 @@ We can put them together by simply listing them using `do`-notation.
 >   static
 >   pages
 >   css
->   index
 >   slideshows
 
-<div class="sidenote">Note: the `index`  and `slideshows` rules above will be
+<div class="sidenote">Note: the `slideshows` rule above will be
 defined in future blog posts</div>
 
 The rules themselves govern the compilation and generation of files.  Perhaps
@@ -166,7 +165,7 @@ trick which allows me to keep the function point-free, and I think makes it read
 a little more declaratively.
 
 > taggedRules :: Tags -> Rules ()
-> taggedRules = posts & tagIndex & tagCloud & feed
+> taggedRules = posts & index & tagIndex & tagCloud & feed
 >   where (&) = liftA2 (>>)
 
 This trick exploits the fact that `(->)`, the type of functions, implements
