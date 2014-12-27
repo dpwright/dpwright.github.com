@@ -1,12 +1,11 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
 @import url(../fonts/ComputerModern/Serif/cmun-serif.css);
-@import url(../fonts/ComputerModern/Typewriter/cmun-typewriter.css);
+@import url(../fonts/ComputerModern/Concrete/cmun-concrete.css);
 
 body {
-    max-width: 1040px;
+    max-width: 600px;
     background-color: #fafafa;
     color: #333;
-    font-family: "Computer Modern Serif", "Garamond", serif;
+    font-family: "Computer Modern Serif", serif;
     font-size: 20px;
     margin: 0px auto 0px auto;
     text-rendering: optimizeLegibility;
@@ -16,8 +15,7 @@ p {
 }
 
 code {
-    font-size: 0.8em;
-    font-family: "Computer Modern Typewriter", monospace;
+    font-family: "Computer Modern Concrete", monospace;
 }
 
 blockquote {
@@ -71,12 +69,34 @@ a:hover {
     color: #47a3ff;
 }
 
+.postMenuItem h2 {
+    font-weight: 500;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.postMenuItem h2 a {
+    color: black
+}
+
+.postMenuItem h2 a:hover {
+    color: #da1071
+}
+
+.postMenuItem .postDate {
+    font-weight: 600;
+}
+
+.postMenuItem .postTagsList {
+    font-size: 0.7em;
+}
+
 pre {
     overflow-x: auto;
 }
 
 div#header {
-    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+    font-family: "Computer Modern Serif", "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     margin: 0px;
     padding: 0px;
     position: relative;
@@ -96,72 +116,33 @@ div#header a:hover {
 }
 
 h1#logomain {
-    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
-    position: absolute;
-    margin: 0px 0px;
-    padding: 0px;
+    font-family: "Computer Modern Serif", serif;
     text-align: left;
-    font-size: 40px;
-}
-
-h2#sublogo {
-    font-family: "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
-    font-size: 16px;
-    top: 30px;
-    left: 63px;
-    position: absolute;
-    padding: 0px;
+    font-size: 60px;
 }
 
 div#header #social {
-    position: absolute;
-    top: 22px;
-    left: 241px;
-    text-align: left;
     font-size: 16px:
+    text-align: left;
 }
 
 div#header #navigation {
+    text-align: right;
     position: absolute;
+    top: 7px;
     right: 0px;
-    top: 10px;
-    vertical-align: middle;
 }
 
 div#header #navigation a {
-    font-size: 40px;
+    font-size: 50px;
     margin: 20px 10px 0px 12px;
     text-decoration: none;
     text-transform: lowercase;
     color: #333;
 }
 
-div#header #navigation a#vim-icon {
-    font-family: monospace;
-}
-
-div#header #navigation a#jp-icon {
-    font-size: 36px;
-}
-
 div#header #navigation a:hover {
     color: #da1071;
-}
-
-div#header #navigation #jp-icon a {
-    font-size: 35px;
-}
-
-div#content {
-    position: relative;
-    top: 80px;
-    margin: 20px auto 0px auto;
-    padding: 10px;
-    max-width: 900px;
-}
-
-table#postlist {
-    width: 100%;
 }
 
 div#footer {
@@ -170,7 +151,7 @@ div#footer {
     color: #555;
     font-size: 12px;
     margin-top: 30px;
-    padding: 12px 0px 12px 0px;
+    padding: 0px 0px 12px 0px;
     text-align: center;
 }
 
@@ -188,35 +169,6 @@ div.tagsinfo {
 }
 
 td.postdate {
-    text-align: right;
     vertical-align: middle;
 }
 
-span.math {
-    font-size: 1.05em;
-}
-
-/* iPhone */
-@media only screen
-and (min-device-width : 320px)
-and (max-device-width : 568px) {
-  h1#logomain {
-    font-size: 60px;
-  }
-
-  h2#sublogo {
-    font-size: 24px;
-    top: 40px;
-    left: 90px;
-  }
-
-  div#header #social {
-    font-size: 32px;
-    top: 25px;
-    left: 344px;
-  }
-
-  div#header #navigation {
-    top: 15px;
-  }
-}
