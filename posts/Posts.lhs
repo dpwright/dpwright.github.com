@@ -42,20 +42,20 @@ we'll have to live with a longish import list.  I won't go into too much detail
 here but as I've used explicit imports you can see exactly which functions I'm
 importing from where.
 
-> import Data.Monoid         ((<>))
-> import Data.Maybe          (fromMaybe)
-> import Data.List           (intercalate)
-> import Data.Char           (toLower, isAlphaNum)
-> import Control.Applicative ((<$>), (<*>))
-> import Control.Monad       (msum)
+> import Data.Monoid         	((<>))
+> import Data.Maybe          	(fromMaybe)
+> import Data.List           	(intercalate)
+> import Data.Char           	(toLower, isAlphaNum)
+> import Control.Applicative 	((<$>), (<*>))
+> import Control.Monad       	(msum)
 
 I'm going to be making use of a few system/date related functions to handle the
 date specified in the header and rename the file appropriately.
 
-> import System.FilePath     (replaceBaseName)
-> import System.Locale       (defaultTimeLocale)
-> import Data.Time.Clock     (UTCTime (..))
-> import Data.Time.Format    (formatTime, parseTime)
+> import System.FilePath     	(replaceBaseName)
+> import System.Locale       	(defaultTimeLocale)
+> import Data.Time.Clock     	(UTCTime (..))
+> import Data.Time.Format    	(formatTime, parseTime)
 
 The `Map` and `Set` data structures export function names that clash with those
 from the standard prelude for working with lists, so I'll import those qualified
@@ -73,9 +73,9 @@ Finally some more specific imports.  I'll be overriding some of Pandoc's
 default options so I'll need to bring those into scope.  As well as that, I'm
 going to import the `Crossposting` module which we'll cover later in the series.
 
-> import Text.Pandoc.Definition (Pandoc(..))
-> import Text.Pandoc.Options (ReaderOptions(..), WriterOptions (..),
->                             Extension (..), HTMLMathMethod(..), def)
+> import Text.Pandoc.Definition 	(Pandoc(..))
+> import Text.Pandoc.Options    	(ReaderOptions(..), WriterOptions (..),
+>                               	Extension (..), HTMLMathMethod(..), def)
 > import Crossposting
 > import ElasticTabstops
 
@@ -116,14 +116,14 @@ The writer options are manipulated in a similar way, adding MathJax support,
 syntax highlighting, and literate Haskell.
 
 > writerOptions :: WriterOptions
-> writerOptions = def
->               { writerHTMLMathMethod = MathJax ""
->               , writerHighlight      = True
->               , writerExtensions     = extensions
->               }
->   where extensions = writerExtensions def `S.union` S.fromList
->                    [ Ext_literate_haskell
->                    ]
+> writerOptions 	= def
+>               	{ writerHTMLMathMethod = MathJax ""
+>               	, writerHighlight      = True
+>               	, writerExtensions     = extensions
+>               	}
+>   where extensions 	= writerExtensions def `S.union` S.fromList
+>                    	[ Ext_literate_haskell
+>                    	]
 
 The `MathJax` constructor takes a string to supply the URL to `mathjax.js`, so
 that it can embed it in the output HTML, however in this case Hakyll overrides
@@ -158,10 +158,10 @@ First, then, the `Context`, which simply extracts data from the metadata header
 at the top of the file.
 
 > postCtx :: Tags -> Context String
-> postCtx tags = dateField "date" "%e %B, %Y"
->             <> tagsField "tags" tags
->             <> crosspostField "xp"
->             <> defaultContext
+> postCtx tags 	= dateField "date" "%e %B, %Y"
+>              	<> tagsField "tags" tags
+>              	<> crosspostField "xp"
+>              	<> defaultContext
 
 As well as the `defaultContext`, which gives us some common fields such as
 `title`, we make use of the `date`, `tags`, and `xp` fields.  The first two
@@ -183,11 +183,11 @@ The `Compiler` follows standard conventions: run the Pandoc compiler (in this
 case our `customCompiler` defined above), apply templates, and fix up the URLs.
 
 > postCompiler :: Tags -> Compiler (Item String)
-> postCompiler tags = customCompiler
->                 >>= loadAndApplyTemplate "templates/post.html"    ctx
->                 >>= saveSnapshot "content"
->                 >>= loadAndApplyTemplate "templates/default.html" ctx
->                 >>= relativizeUrls
+> postCompiler tags 	= customCompiler
+>                   	>>= loadAndApplyTemplate "templates/post.html"    ctx
+>                   	>>= saveSnapshot "content"
+>                   	>>= loadAndApplyTemplate "templates/default.html" ctx
+>                   	>>= relativizeUrls
 >   where ctx = postCtx tags
 
 Hang on, what's that `saveSnapshot` in the middle there?  I never mentioned
@@ -247,10 +247,10 @@ define here.
 > dateAndTitle :: Metadata -> Routes
 > dateAndTitle meta = fromMaybe idRoute $
 >   constructName <$> getField "title" <*> getField "date"
->   where getField  = (`M.lookup` meta)
->         constructName t d = setBaseName $ date d ++ "-" ++ title t
->         date  = formatTime defaultTimeLocale "%Y-%m-%d" . readTime
->         title = map toLower . intercalate "-" . map (filter isAlphaNum) . words
+>   where 	getField          	= (`M.lookup` meta)
+>         	constructName t d 	= setBaseName $ date d ++ "-" ++ title t
+>         	date              	= formatTime defaultTimeLocale "%Y-%m-%d" . readTime
+>         	title             	= map toLower . intercalate "-" . map (filter isAlphaNum) . words
 
 There's a lot going on in this definition so we'll go through it carefully.
 
@@ -324,17 +324,17 @@ string and converts it to a `UTCTime` which we can manipulate.
 
 > readTime :: String -> UTCTime
 > readTime t = fromMaybe empty' . msum $ attempts
->   where attempts = [parseTime defaultTimeLocale fmt t | fmt <- formats]
->         empty'   = error $ "Could not parse date field: " ++ t
->         formats  = [ "%a, %d %b %Y %H:%M:%S %Z"
->                    , "%Y-%m-%dT%H:%M:%S%Z"
->                    , "%Y-%m-%d %H:%M:%S%Z"
->                    , "%Y-%m-%d %H:%M"
->                    , "%Y-%m-%d"
->                    , "%B %e, %Y %l:%M %p"
->                    , "%B %e, %Y"
->                    , "%b %d, %Y"
->                    ]
+>   where 	attempts 	= [parseTime defaultTimeLocale fmt t | fmt <- formats]
+>         	empty'   	= error $ "Could not parse date field: " ++ t
+>         	formats  	= [ "%a, %d %b %Y %H:%M:%S %Z"
+>         	         	  , "%Y-%m-%dT%H:%M:%S%Z"
+>         	         	  , "%Y-%m-%d %H:%M:%S%Z"
+>         	         	  , "%Y-%m-%d %H:%M"
+>         	         	  , "%Y-%m-%d"
+>         	         	  , "%B %e, %Y %l:%M %p"
+>         	         	  , "%B %e, %Y"
+>         	         	  , "%b %d, %Y"
+>         	         	  ]
 
 The basic idea for the implementation is taken from Hakyll itself, from its
 `getItemUTC` which is defined in [`Hakyll.Web.Template.Context`][hwtc].
@@ -364,10 +364,10 @@ but we'll just pass the `defaultContext` as we don't need any of the extra
 metadata posts use.
 
 > pageCompiler :: Compiler (Item String)
-> pageCompiler = customCompiler
->            >>= loadAndApplyTemplate "templates/page.html"    defaultContext
->            >>= loadAndApplyTemplate "templates/default.html" defaultContext
->            >>= relativizeUrls
+> pageCompiler 	= customCompiler
+>              	>>= loadAndApplyTemplate "templates/page.html"    defaultContext
+>              	>>= loadAndApplyTemplate "templates/default.html" defaultContext
+>              	>>= relativizeUrls
 
 The rules for pages are equally simple -- just grab anything from the `pages`
 folder, compile it using the `pageCompiler` and set its extension to `html`.
