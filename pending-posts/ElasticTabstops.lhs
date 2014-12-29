@@ -25,9 +25,10 @@ title: Generating this website part x: Elastic Tabstops
 >   Div ([], ["elastic-tabstops"], []) $ map makeTable groups
 >   where
 >     groups                      	= foldr groupMaker [] $ lines s
->     makeTable (n, g)            	= Table [] (allLeft n) [] [] $ map makeRow g
+>     makeTable (n, g)            	= Table [] (allLeft n) (columnWidths n) [] $ map makeRow g
 >     makeRow                     	= map (:[]) . zipWith ($) codeRow . splitOn "\t"
 >     allLeft n                   	= replicate (n+1) AlignLeft
+>     columnWidths n              	= replicate (n) 0 ++ [1]
 >     removeLiterate (i, cs, kvs) 	= (i, delete "literate" cs, kvs)
 >     codeRow                     	= map CodeBlock $ a:map removeLiterate (repeat a)
 

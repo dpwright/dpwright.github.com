@@ -191,6 +191,7 @@ td.postdate {
 .elastic-tabstops > table > tbody > tr > td {
     margin: 0px;
     padding: 0px;
+    width: 8em;
 }
 
 .elastic-tabstops > table > tbody > tr > td > pre {
