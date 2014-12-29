@@ -73,9 +73,11 @@ Finally some more specific imports.  I'll be overriding some of Pandoc's
 default options so I'll need to bring those into scope.  As well as that, I'm
 going to import the `Crossposting` module which we'll cover later in the series.
 
+> import Text.Pandoc.Definition (Pandoc(..))
 > import Text.Pandoc.Options (ReaderOptions(..), WriterOptions (..),
 >                             Extension (..), HTMLMathMethod(..), def)
 > import Crossposting
+> import ElasticTabstops
 
 After all that, we can actually get on with writing some code!  If you're new to
 Haskell, don't worry too much about all these imports -- in general you just add
@@ -98,10 +100,10 @@ needs here -- in particular, I want support for:
 - Smart Parsing (conversion of `--` to --, and so forth)
 
 The compiler itself is just a standard compiler with different reader and writer
-options:
+options, and some pandoc-level transformations:
 
 > customCompiler :: Compiler (Item String)
-> customCompiler = pandocCompilerWith readerOptions writerOptions
+> customCompiler = pandocCompilerWithTransform readerOptions writerOptions pandocTransforms
 
 Those options are defined in terms of Pandoc's defaults, provided by the
 `Default` typeclass, which allows you to specify a default definition `def` for
@@ -131,6 +133,13 @@ import `mathjax.js`, so we can just pass the empty string here.
 Defining `extensions` as a union of the default extensions with a single-member
 set may seem like overkill, and for only one item it is, but doing it this way
 means that if I ever want to add an extension I can just add it to the list.
+
+Finally, we define `pandocTransform`, for our post-processing needs.  This is
+just the composition of any pandoc-level filters we want to apply -- see the
+posts for those individual filters for more information.
+
+> pandocTransforms :: Pandoc -> Pandoc
+> pandocTransforms = elasticTabstops
 
 Generating posts
 ----------------
