@@ -103,10 +103,6 @@ a:hover {
     font-size: 0.7em;
 }
 
-pre {
-    overflow-x: auto;
-}
-
 div#header {
     font-family: "Computer Modern Serif", "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     margin: 0px;
@@ -181,3 +177,33 @@ td.postdate {
     vertical-align: middle;
 }
 
+.elastic-tabstops > table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+    width: 600px;
+}
+
+.elastic-tabstops > table > tbody > tr {
+    margin: 0px;
+    padding: 0px;
+}
+
+.elastic-tabstops > table > tbody > tr > td {
+    margin: 0px;
+    padding: 0px;
+}
+
+.elastic-tabstops > table > tbody > tr > td > pre {
+    margin: 0px;
+    padding: 0px;
+}
+
+@media screen and (max-device-width: 480px) {
+    body {
+        -webkit-text-size-adjust: none;
+    }
+
+    .elastic-tabstops {
+        overflow-x: auto;
+    }
+}
