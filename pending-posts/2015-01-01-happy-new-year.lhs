@@ -25,17 +25,17 @@ Haskellで年賀状を作ってみました
 
 ```
 executable nengajou2015
-  main-is:             2015-01-01-happy-new-year.lhs
-  build-depends:       base >=4.7 && <4.8,
-                       diagrams            == 1.2.*,
-                       diagrams-lib        == 1.2.*,
-                       diagrams-rasterific == 0.1.*,
-                       text                == 1.1.*,
-                       directory           == 1.2.*,
-                       filepath            == 1.3.*,
-                       process             >= 1.1.0.0 && <1.3,
-                       SVGFonts            == 1.4.0.3
-  default-language:    Haskell2010
+  main-is:          	2015-01-01-happy-new-year.lhs	
+  build-depends:    	base                	>= 4.7 && <4.8,
+                    	diagrams            	== 1.2.*,
+                    	diagrams-lib        	== 1.2.*,
+                    	diagrams-rasterific 	== 0.1.*,
+                    	text                	== 1.1.*,
+                    	directory           	== 1.2.*,
+                    	filepath            	== 1.3.*,
+                    	process             	>= 1.1.0.0 && <1.3,
+                    	SVGFonts            	== 1.4.0.3
+  default-language: 	Haskell2010	
 ```
 
 `arithmoi`は最近`llvm`のバージョンによってエラーになるときがあります。
@@ -97,8 +97,8 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 
 `Data.Text`を使った方が最適…
 
-> import qualified Data.Text    as T
-> import qualified Data.Text.IO as TIO
+> import qualified Data.Text    	as T
+> import qualified Data.Text.IO 	as TIO
 
 え、さっき`Traversable`って言わなかった？
 
@@ -123,11 +123,11 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 
 一つだけを自分で定義する。それは、フォントを設定するための型。
 
-> data Fonts a = Fonts
->              { english  :: a
->              , numbers  :: a
->              , japanese :: a
->              } deriving (Functor, Foldable, Traversable)
+> data Fonts a 	= Fonts
+>              	{ english  :: a
+>              	, numbers  :: a
+>              	, japanese :: a
+>              	} deriving (Functor, Foldable, Traversable)
 
 なぜわざわざ多相型を定義して、`String`ばっかりにinstantiateするのか？
 
@@ -141,44 +141,45 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >   where reportError err = putStrLn err >> exitWith (ExitFailure 1)
 
 > isosceles :: Angle -> Double -> Diagram B R2
-> isosceles θ h = polygon (with
->   & polyType .~ PolySides
->     [ (180 @@ deg) ^-^ θ ]
->     [ legLength, legLength ]
+> isosceles θ h = polygon (with &
+>   polyType .~ PolySides
+>   [ (180 @@ deg) ^-^ θ ]
+>   [ legLength, legLength ]
 >   ) where legLength = h / cosA (θ^/2)
 
 > isoscelesBase :: Angle -> Double -> Double
 > isoscelesBase θ h = 2 * tanA (θ^/2) * h
 
 > topImage :: Angle -> Diagram B R2 -> Diagram B R2
-> topImage θ photo = triangles <> photo # clipBy (rect (ttb - 2) (ph - 2)) where
+> topImage θ photo 	= triangles <> photo
+>                  	# clipBy (rect (ttb - 2) (ph - 2)) where
 
->   ph   = height photo
->   hh   = ph / 2
->   qh   = ph / 4
+>   ph   	= height photo
+>   hh   	= ph / 2
+>   qh   	= ph / 4
 
->   mt h = isosceles θ h
->        # centerXY
->        # lc white
->        # lw ultraThick
+>   mt h 	= isosceles θ h
+>        	# centerXY
+>        	# lc white
+>        	# lw ultraThick
 
->   tt   = mt ph # reflectY
->   ttb  = isoscelesBase θ ph
+>   tt   	= mt ph # reflectY
+>   ttb  	= isoscelesBase θ ph
 
->   bt   = mt hh # translateY (-qh)
->   brt  = bt # translateX bto
->   blt  = reflectX brt
->   bto  = ttb / 4
+>   bt   	= mt hh # translateY (-qh)
+>   brt  	= bt # translateX bto
+>   blt  	= reflectX brt
+>   bto  	= ttb / 4
 
->   θ'   = (180 @@ deg) ^-^ θ
->   et   = isosceles θ' bto
->        # centerXY
->        # lw none
->        # fc white
->        # translateY (bto / 2)
->        # rotate (90 @@ deg)
->   etr  = et # translateX (bto * 2)
->   etl  = reflectX etr
+>   θ'   	= (180 @@ deg) ^-^ θ
+>   et   	= isosceles θ' bto
+>        	# centerXY
+>        	# lw none
+>        	# fc white
+>        	# translateY (bto / 2)
+>        	# rotate (90 @@ deg)
+>   etr  	= et # translateX (bto * 2)
+>   etl  	= reflectX etr
 
 >   triangles = etl <> blt <> tt <> brt <> etr
 
@@ -211,12 +212,12 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 
 > prepareFonts :: Fonts String -> IO (Fonts String)
 > prepareFonts fs = makeDirectory >> TV.sequence (fmap prepareFont fs) where
->   fontforge f f' = unwords ["fontforge --lang=ff -c 'Open($1); Generate($2)'", f, f']
->   fontDir        = "svg-fonts"
->   makeDirectory  = do
+>   fontforge f f' 	= unwords ["fontforge --lang=ff -c 'Open($1); Generate($2)'", f, f']
+>   fontDir        	= "svg-fonts"
+>   makeDirectory  	= do
 >     dirExists <- doesDirectoryExist fontDir
 >     unless dirExists $ createDirectory fontDir
->   prepareFont f  = do
+>   prepareFont f  	= do
 >     let f' = fontDir </> filter (/= ' ') (takeBaseName f) <.> "svg"
 >     fontAlreadyConverted <- doesFileExist f'
 >     unless fontAlreadyConverted $ do
@@ -226,18 +227,18 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 
 > stripNamespaceLineFrom :: FilePath -> IO ()
 > stripNamespaceLineFrom f = TIO.readFile f >>= go where
->   go = T.words
->    >>> filter (not . T.isInfixOf "xmlns")
->    >>> T.unwords
->    >>> TIO.writeFile f
+>   go 	= T.words
+>      	>>> filter (not . T.isInfixOf "xmlns")
+>      	>>> T.unwords
+>      	>>> TIO.writeFile f
 
 > main :: IO ()
 > main = do
 >   photo <- loadPhoto "static/images/2015-01-01-happy-new-year/beach-club.png"
->   fonts <- prepareFonts Fonts { english  = "/Library/Fonts/Microsoft/Garamond.ttf"
->                               , numbers  = "/Library/Fonts/Microsoft/Calisto MT"
->                               , japanese = "/Library/Fonts/Microsoft/ＤＦＰ教科書体W3" }
->   mainWith . bg white . pad 1.1  $ nengajou fonts photo
+>   fonts <- prepareFonts Fonts 	{ english  = "/Library/Fonts/Microsoft/Garamond.ttf"
+>                               	, numbers  = "/Library/Fonts/Microsoft/Calisto MT"
+>                               	, japanese = "/Library/Fonts/Microsoft/ＤＦＰ教科書体W3" }
+>   mainWith . bg white . pad 1.1 $ nengajou fonts photo
 
 [diagrams]: http://projects.haskell.org/diagrams
 [XQuartz]:  https://xquartz.macosforge.org/
