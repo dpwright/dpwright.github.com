@@ -60,6 +60,18 @@ h2 {
     font-size: 130%;
 }
 
+h1.title {
+    margin: 0px;
+    padding: 0px;
+}
+
+h2.subtitle {
+    margin: 0px;
+    padding: 0px;
+    font-size: 120%;
+    text-align: center;
+}
+
 a {
     color: #da1071;
     text-decoration: none;
