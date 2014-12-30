@@ -382,7 +382,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 > main :: IO ()
 > main = do
 >   photo <- loadPhoto "static/images/2015-01-01-happy-new-year/beach-club.png"
->   fonts <- prepareFonts Fonts 	{ english  = "/Library/Fonts/Microsoft/Garamond.ttf"
+>   fonts <- prepareFonts Fonts 	{ english  = "/Library/Fonts/Microsoft/Garamond"
 >                               	, numbers  = "/Library/Fonts/Microsoft/Calisto MT"
 >                               	, japanese = "/Library/Fonts/Microsoft/ＤＦＰ教科書体W3" }
 >   mainWith . bg white . pad 1.1 $ nengajou fonts photo
