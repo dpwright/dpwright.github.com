@@ -80,6 +80,8 @@ Macを使ってたので、まず[XQuartz]をインストールしました。
 $ brew install fontforge
 ```
 
+を入力して、インストールします。
+
 予備
 ----
 
@@ -244,38 +246,80 @@ diagramsは正三角形を作る関数を定義されているけど、
 画像
 ----
 
+画像自体も簡単に説明できます。まず、５つの三角と合わすため、
+写真を切ります。その切った写真の上に、三角を載せます。
+
 > topImage :: Angle -> Diagram B R2 -> Diagram B R2
-> topImage θ photo 	= triangles <> photo
->                  	# clipBy (rect (ttb - 2) (ph - 2)) where
+> topImage θ photo = triangles <> clippedPhoto where
 
->   ph   	= height photo
->   hh   	= ph / 2
->   qh   	= ph / 4
+切るサイズは、写真の元の高さ✕真ん中の、大きい三角の底面の長さです。
+それではちょっと幅が見えてしまうので、あと２ピクセルずつも、念の為に切ります。
 
->   mt a 	= isosceles θ a
->        	# centerXY
->        	# lc white
->        	# lw ultraThick
+>   clippedPhoto 	= photo # clipBy (rect 	(centralTriangleBase - 2)
+>                	                       	(photoHeight - 2))
+>   photoHeight         	= height photo
+>   centralTriangleBase 	= isoscelesBase θ photoHeight
 
->   tt   	= mt ph # reflectY
->   ttb  	= isoscelesBase θ ph
+`triangles`は、左から右に言うと、
 
->   bt   	= mt hh # translateY (-qh)
->   brt  	= bt # translateX bto
->   blt  	= reflectX brt
->   bto  	= ttb / 4
+>   triangles 	= mconcat
+>             	[ edgeTriangleLeft
+>             	, bottomTriangleLeft
+>             	, centralTriangle
+>             	, bottomTriangleRight
+>             	, edgeTriangleRight
+>             	]
 
->   θ'   	= (180 @@ deg) ^-^ θ
->   et   	= isosceles θ' bto
->        	# centerXY
->        	# lw none
->        	# fc white
->        	# translateY (bto / 2)
->        	# rotate (90 @@ deg)
->   etr  	= et # translateX (bto * 2)
->   etl  	= reflectX etr
+になります。この画像では順番は何でもいいけど、
+実は描く順番になります（`edgeTriangleLeft`の上に
+`bottomTriangleLeft`を描いて、その上に
+`centralTriangle`を描く…との形）。
 
->   triangles = etl <> blt <> brt <> etr <> tt
+この画像の三角を見ると２種類があります。
+まずは、真ん中の３つの三角。
+
+<center>![](/images/2015-01-01-happy-new-year/outline-triangles.png "Picture of 3 central triangles goes here")</center>
+
+輪郭のみが描いて、下にある写真が見える三角ですね。
+
+>   outlineTriangle a 	= isosceles θ a
+>                     	# centerXY
+>                     	# lc white
+>                     	# lw ultraThick
+
+なぜ`centerXY`が必要か？Diagramsはデフォルトでは
+原点は高度から見る真ん中ではなく、重心に設定してあります。
+二等辺三角形を鏡映すると、ずれてしまう。
+`centerXY`をしたら、簡単に鏡映できるようになります。
+
+次は左と右の、真っ白の三角です。
+
+<center>![](/images/2015-01-01-happy-new-year/outline-triangles.png "Picture of 2 edge triangles goes here")</center>
+
+この三角形の頂角は真ん中の三角の反対角度になっています。
+
+>   θ' = (180 @@ deg) ^-^ θ
+
+位置は
+
+>   edgeTriangle 	= isosceles θ' bottomTriangleHalfBase
+>                	# centerXY
+>                	# lw none
+>                	# fc white
+>                	# translateY (bottomTriangleHalfBase / 2)
+>                	# rotate (90 @@ deg)
+
+>   centralTriangle   	= outlineTriangle photoHeight # reflectY
+
+>   bottomTriangle 	= outlineTriangle (photoHeight / 2)
+>                  	# translateY (-(photoHeight / 4))
+>   bottomTriangleRight    	= bottomTriangle # translateX bottomTriangleHalfBase
+>   bottomTriangleLeft     	= reflectX bottomTriangleRight
+>   bottomTriangleHalfBase 	= centralTriangleBase / 4
+
+>   edgeTriangleRight 	= edgeTriangle # translateX (bottomTriangleHalfBase * 2)
+>   edgeTriangleLeft  	= reflectX edgeTriangleRight
+
 
 メッセージ
 ----------
