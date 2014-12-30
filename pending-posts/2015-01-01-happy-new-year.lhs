@@ -1,20 +1,47 @@
 ---
 date: 2015-01-01 08:14:31
-tags: 日本語, functional-programming, haskell, お正月, new year
-title: 明けましておめでとうございます
-subtitle: 今年もよろしくお願いします
+tags: 日本語, functional-programming, haskell, お正月, new year, 年賀状
+title: あけましておめでとうございます
 ---
 
-<center>![](../images/2015-01-01-happy-new-year/nengajou.png "明けましておめでとうございます")</center>
+<center>![](/images/2015-01-01-happy-new-year/nengajou.png "明けましておめでとうございます")</center>
 
-Haskellで年賀状を作ってみました
--------------------------------
+年賀状をHaskellで
+-----------------
 
-今年も関数型言語をがんばろ！という気持ちで、年賀状を作ってみました。
-デザインはもともと妻がアプリで作ったんだけど、
-これだったら自分で作れるぜー、と言ってHaskellの[diagrams]ライブラリを、`cabal install`しました。
+上の画像が今年の僕達の年賀状です。
 
-結局５分の仕事が二日間かかりましたが、面白かった。
+実は、妻が最初アプリでデザインを考えていたのですが、
+画像のダウンロードができず、Pixelmatorで作りなおそうという話がでました。
+でも、これってHaskellでできるんじゃないの…？と思い、
+試しにやってみることにしました。
+
+結局５分の仕事が２日になったけど、面白かったです。
+
+概要
+----
+
+まず、上の画像をみて、デザインを考えます。
+
+最初は、下記のやりかたでやろうと思っていました。
+
+1. 写真の上に、真っ白のレイヤーを載せる。
+2. その白いレイヤーから３つの三角を切って、下の写真が見えるようになる。
+3. 最後にメッセージを追加する。
+
+ただ、diagramsでは、レイヤーを作って、そのレイヤーから切る機能がなかった
+（というか、あるかもしれないけど、僕が分からなかったので）。
+
+結局、「上の白いレイヤーから切る」という方法ではなく、
+「そのまま５つの三角を描く」という方法でやりました。
+
+文章ではちょっと分かりづらいと思うので、絵で説明します。
+
+<center>![](/images/2015-01-01-happy-new-year/triangles.png "５つの三角")</center>
+
+この下にメッセージをつけます。
+
+では、実際にどう作ったか振り返ります。
 
 依存関係
 --------
@@ -58,7 +85,7 @@ $ brew install fontforge
 
 `LANGUAGE`プラグマは、意外と多くなりました。
 まず、いつもの`OverloadedStrings`と、
-diagramsのドキュメンテーションにおすすめされる`NoMonomorphismRestriction`。
+diagramsのドキュメンテーションにすすめされる`NoMonomorphismRestriction`。
 
 > {-# LANGUAGE OverloadedStrings #-}
 > {-# LANGUAGE NoMonomorphismRestriction #-}
@@ -71,8 +98,6 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 > {-# LANGUAGE DeriveFunctor #-}
 > {-# LANGUAGE DeriveFoldable #-}
 > {-# LANGUAGE DeriveTraversable #-}
-
-（`Data.Map`でもよかったかもしれないけど…）
 
 よっし！diagramsをインポートしよ！
 
@@ -119,9 +144,9 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 型定義
 ------
 
-今回のプロジェクトは殆どの型はdiagramsで定義されている。
+今回のプロジェクトは殆どの型はdiagramsで定義されています。
 
-一つだけを自分で定義する。それは、フォントを設定するための型。
+一つだけを自分で定義します。それは、フォントを設定するための型です。
 
 > data Fonts a 	= Fonts
 >              	{ english  :: a
@@ -129,26 +154,95 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >              	, japanese :: a
 >              	} deriving (Functor, Foldable, Traversable)
 
-なぜわざわざ多相型を定義して、`String`ばっかりにinstantiateするのか？
-
-実は、同じストラクチャーで、ロードする前のファイル名と、
+なぜ多相型で定義する必要があるのか？
+フォントは自動的に`.ttf`から`.svg`に変換するつもりなんで、
+同じストラクチャーで、ロードする前のファイル名と、
 準備ができた使える状況のフォントを入れたいのです。
-今は両方とも`String`になるけど、SVGFonts 1.4.0.4から、
-`PreparedFont`になる。
 
-> loadPhoto :: FilePath -> IO (Diagram B R2)
-> loadPhoto fp = either reportError (return . image) =<< loadImageEmb fp
->   where reportError err = putStrLn err >> exitWith (ExitFailure 1)
+> newtype PreparedFont = PreparedFont { fromPF :: String }
+
+このnewtypeを使って、「フォントが変換された」と、型安全的に証明します。
+
+それでは、コード自体を始めます。
+
+二等辺三角形
+------------
+
+もう一回三角の画像を見てみましょう。
+
+<center>![](/images/2015-01-01-happy-new-year/triangles.png "５つの三角")</center>
+
+この５つの三角は全部二等辺三角形です！
+diagramsは正三角形を作る関数を定義されているけど、
+二等辺三角形はないため、自分で定義します。
 
 > isosceles :: Angle -> Double -> Diagram B R2
-> isosceles θ h = polygon (with &
+> isosceles θ a = polygon (with &
 >   polyType .~ PolySides
 >   [ (180 @@ deg) ^-^ θ ]
 >   [ legLength, legLength ]
->   ) where legLength = h / cosA (θ^/2)
+>   ) where legLength = a / cosA (θ^/2)
+
+`θ`は頂角、`a`は高度（altitude）です。
+
+`(^-^)`、`(^/)`は[vector-space]というパッケージで定義され、
+角度やベクトル等を引算、割算ができるような関数です。
+分からないときは`^`をなしにしてみたら、だいたいあってます
+（`^-^` → `-`、`^/` → `/`)。
+
+`(&)`、`(.~)`は[lens]のオペレーターです。
+今からlensの説明しようとすると話が終わらないので、省きます。
+
+画像のレイアウトをするため、底面の長さが必要なときがあります。
+それを計算するために下記のユーティリティ関数を使います。
 
 > isoscelesBase :: Angle -> Double -> Double
-> isoscelesBase θ h = 2 * tanA (θ^/2) * h
+> isoscelesBase θ a = 2 * tanA (θ^/2) * a
+
+レイアウト
+----------
+
+簡単に言うと、このデザインは「上に画像があって、その下にメッセージ」と説明できます。
+
+とりあえず、フォントや写真はもう既にロードされているとしてみます。
+そうすると、下記のようになります。
+
+> nengajou :: Fonts PreparedFont -> Diagram B R2 -> Diagram B R2
+> nengajou fs photo = 	topImage θ photoShiftedRight # inViewport
+>                     	===
+>                     	message fs imageWidth (photoHeight / 3)
+
+`(===)`は、２つの*`Diagram`*を重ねる関数です。
+
+分かりやすいでしょう！
+`topImage`は上の画像、`message`は下のメッセージ。
+重ねると、年賀状になると。
+
+あとは、ここで使った値を定義するだけです。
+
+>   where
+>     θ                 	= 	50 @@ deg
+>     photoHeight       	= 	height photo
+>     imageWidth        	= 	isoscelesBase θ photoHeight
+
+まずは、写真や画像についての変数です。`θ`はここで変更したら、三角形の形が変わります。
+`photoHeight`は写真全体の高さけど、
+`imageWidth`はできた画像（メーン三角）の幅となります。
+
+>     photoShiftedRight 	= 	photo # translateX 40
+
+ちょっと細かいことですけど、
+実はもとの写真では僕達は真ん中じゃなかったので、
+これで調整します。
+
+>     inViewport = 	view 	(p2 ((-imageWidth) / 2, (-photoHeight) / 2))
+>                  	     	(r2 (imageWidth, photoHeight))
+
+色が付いている三角の画像をみると、ちょっと外側が汚いのです。
+`inViewport`は、そとのいらない分を消す関数です。
+
+画像
+----
 
 > topImage :: Angle -> Diagram B R2 -> Diagram B R2
 > topImage θ photo 	= triangles <> photo
@@ -158,7 +252,7 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >   hh   	= ph / 2
 >   qh   	= ph / 4
 
->   mt h 	= isosceles θ h
+>   mt a 	= isosceles θ a
 >        	# centerXY
 >        	# lc white
 >        	# lw ultraThick
@@ -181,36 +275,42 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >   etr  	= et # translateX (bto * 2)
 >   etl  	= reflectX etr
 
->   triangles = etl <> blt <> tt <> brt <> etr
+>   triangles = etl <> blt <> brt <> etr <> tt
 
-> message :: Fonts String -> Double -> Double -> Diagram B R2
+メッセージ
+----------
+
+> message :: Fonts PreparedFont -> Double -> Double -> Diagram B R2
 > message fs w h = center messageText where
->   text' f (a, d) l s = stroke (textPath s f a d) # lw l # fc black <> strutY d
->   textPath s f a d = textSVG' $ TextOpts s (outlMap $ f fs) INSIDE_WH KERN False a d
->   proportions = [ (0, 6), (w * 9 / 10, 10), (0, 1), (w / 6, 6)
->                 , (0, 4), (w * 33 / 40, 4), (w * 33 / 40, 5) ]
->   totalHeight = sum (map snd proportions)
->   part n      = second ((/ totalHeight) . (* h)) $ proportions !! (n - 1)
->   space       = strut . r2
->   messageText = space   (part 1)
->     === text'  english  (part 2) thin (map toUpper "Happy New Year")
->     === space           (part 3)
->     === text'  numbers  (part 4) none "2015"
->     === space           (part 5)
->     === text'  japanese (part 6) none "昨年はお世話になりました　今年もよろしくお願いします"
->     === text'  english  (part 7) none "Wishing you a fantastic New Year, from Aki & Dani"
+>   text' f (a, d) l s	= 	stroke (textPath s f a d) # lw l # fc black <> strutY d
+>   textPath s f a d 	= 	textSVG' $ TextOpts s (outlMap . fromPF $ f fs) INSIDE_WH KERN False a d
+>   proportions  	= 	[ (0, 6), (w * 9 / 10, 10), (0, 1), (w / 6, 6)
+>                	  	, (0, 4), (w * 33 / 40, 4), (w * 33 / 40, 5) ]
+>   totalHeight  	= 	sum (map snd proportions)
+>   part n       	= 	second ((/ totalHeight) . (* h)) $ proportions !! (n - 1)
+>   space        	= 	strut . r2
+>   messageText  	= 	space (part 1)
+>                	  	===
+>                	  	text' english (part 2) thin (map toUpper "Happy New Year")
+>                	  	===
+>                	  	space (part 3)
+>                	  	===
+>                	  	text' numbers (part 4) none "2015"
+>                	  	===
+>                	  	space (part 5)
+>                	  	===
+>                	  	text' japanese (part 6) none "昨年はお世話になりました　今年もよろしくお願いします"
+>                	  	===
+>                	  	text' english (part 7) none "Wishing you a fantastic New Year, from Aki & Dani"
 
-> nengajou :: Fonts String -> Diagram B R2 -> Diagram B R2
-> nengajou fs photo = topImage θ photoShiftedRight # inViewport
->                   === message fs imageWidth (photoHeight / 3)
->   where θ                  = 50 @@ deg
->         photoHeight        = height photo
->         imageWidth         = isoscelesBase θ photoHeight
->         photoShiftedRight  = photo # translateX 40
->         inViewport         = view (p2 ((-imageWidth) / 2, (-photoHeight) / 2))
->                                   (r2 (imageWidth, photoHeight))
+不純なところ
+------------
 
-> prepareFonts :: Fonts String -> IO (Fonts String)
+> loadPhoto :: FilePath -> IO (Diagram B R2)
+> loadPhoto fp = either reportError (return . image) =<< loadImageEmb fp
+>   where reportError err = putStrLn err >> exitWith (ExitFailure 1)
+
+> prepareFonts :: Fonts String -> IO (Fonts PreparedFont)
 > prepareFonts fs = makeDirectory >> TV.sequence (fmap prepareFont fs) where
 >   fontforge f f' 	= unwords ["fontforge --lang=ff -c 'Open($1); Generate($2)'", f, f']
 >   fontDir        	= "svg-fonts"
@@ -223,7 +323,7 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >     unless fontAlreadyConverted $ do
 >       system $ fontforge f f'
 >       stripNamespaceLineFrom f'
->     return f'
+>     return $ PreparedFont f'
 
 > stripNamespaceLineFrom :: FilePath -> IO ()
 > stripNamespaceLineFrom f = TIO.readFile f >>= go where
@@ -231,6 +331,9 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >      	>>> filter (not . T.isInfixOf "xmlns")
 >      	>>> T.unwords
 >      	>>> TIO.writeFile f
+
+`main`関数
+----------
 
 > main :: IO ()
 > main = do
@@ -240,5 +343,7 @@ diagramsのドキュメンテーションにおすすめされる`NoMonomorphism
 >                               	, japanese = "/Library/Fonts/Microsoft/ＤＦＰ教科書体W3" }
 >   mainWith . bg white . pad 1.1 $ nengajou fonts photo
 
-[diagrams]: http://projects.haskell.org/diagrams
-[XQuartz]:  https://xquartz.macosforge.org/
+[diagrams]:     http://projects.haskell.org/diagrams
+[XQuartz]:      https://xquartz.macosforge.org/
+[vector-space]: https://hackage.haskell.org/package/vector-space
+[lens]:         https://hackage.haskell.org/package/lens
