@@ -1,5 +1,5 @@
 ---
-date: 2015-01-01 08:14:31
+date: 2015-01-01 00:00:00
 tags: 日本語, functional-programming, haskell, お正月, new year, 年賀状
 title: あけましておめでとうございます
 ---
@@ -16,7 +16,8 @@ title: あけましておめでとうございます
 でも、これってHaskellでできるんじゃないの…？と思い、
 試しにやってみることにしました。
 
-結局５分の仕事が２日になったけど、面白かったです。
+５分の仕事が結局２日になったけど（笑）…
+面白かったので、やり方を公開します。
 
 概要
 ----
@@ -151,14 +152,14 @@ diagramsのドキュメンテーションに推奨される`NoMonomorphismRestri
 
 自分で定義をしたのは一つだけです。それは、フォントを設定するための型です。
 
-> data Fonts a 	= Fonts
->              	{ english  :: a
->              	, numbers  :: a
->              	, japanese :: a
->              	} deriving (Functor, Foldable, Traversable)
+> data Fonts a 	= Fonts	
+>              	{ english  	:: a
+>              	, numbers  	:: a
+>              	, japanese 	:: a
+>              	} deriving 	(Functor, Foldable, Traversable)
 
-なぜ多相型で定義する必要があるのか？
-フォントは自動的に`.ttf`から`.svg`に変換するつもりなので、
+「なぜ多相型で定義する必要があるの？」と思うかもしれませんが、
+フォントは自動的に`.ttf`から`.svg`に変換できるようにしたいので、
 同じストラクチャーで、ロードする前のファイル名と、
 準備ができた使える状態のフォントを入れたいと思います。
 
@@ -168,7 +169,7 @@ diagramsのドキュメンテーションに推奨される`NoMonomorphismRestri
 （因みに最新版のSVGFontsでは`PreparedFont`は既に定義されているので、
 最新版がHackageにアップされたらこれは必要なくなります。）
 
-それでは、コード自体を始めます。
+それでは、コード自体を始めましょう。
 
 二等辺三角形
 ------------
@@ -178,7 +179,7 @@ diagramsのドキュメンテーションに推奨される`NoMonomorphismRestri
 <center>![](/images/2015-01-01-happy-new-year/triangles.png "５つの三角形")</center>
 
 この５つの三角形は全部二等辺三角形です！
-diagramsは正三角形を作る関数を定義されているけど、
+diagramsは正三角形を作る関数が定義されていますが、
 二等辺三角形はないため、自分で定義する必要があります。
 
 > isosceles :: Angle -> Double -> Diagram B R2
@@ -196,7 +197,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 （`(^-^)` → `(-)`、`(^/)` → `(/)`)。
 
 `(&)`、`(.~)`は[lens]のオペレーターです。
-今からlensの説明しようとすると話が終わらないので、省きます。
+今からlensの説明しようとすると話が終わらないので、今日は省きます。
 
 画像のレイアウトをするため、底辺の長さが必要なときがあります。
 それを計算するために下記のユーティリティ関数を使います。
@@ -230,8 +231,8 @@ diagramsは正三角形を作る関数を定義されているけど、
 >     photoHeight       	= 	height photo
 >     imageWidth        	= 	isoscelesBase θ photoHeight
 
-まずは、写真や画像についての変数です。`θ`はここで変更したら、三角形の形が変わります。
-`photoHeight`は写真全体の高さだけど、
+まずは、写真や画像についての変数です。`θ`の値を変更したら、三角形の形を変えられます。
+`photoHeight`は写真全体の高さですが、
 `imageWidth`はできた画像（緑のメイン三角形）の幅となります。
 
 >     photoShiftedRight 	= 	photo # translateX 40
@@ -249,13 +250,13 @@ diagramsは正三角形を作る関数を定義されているけど、
 ----
 
 画像自体も簡単に説明できます。まず、５つの三角形と合わせるため、
-写真を切ります。その切った写真の上に、三角形を載せます。
+写真を切る必要があります。その切った写真の上に、三角形を載せていきます。
 
 > topImage :: Angle -> Diagram B R2 -> Diagram B R2
 > topImage θ photo = triangles <> clippedPhoto where
 
 切るサイズは、写真の元の高さ✕緑の三角形の底辺の長さです。
-それではちょっと幅が見えてしまうので、あと２ピクセルずつも、念の為に切ります。
+それではちょっと幅が見えてしまうので、あと２ピクセルずつ、念の為に切ります。
 
 >   clippedPhoto 	= photo # clipBy (rect 	(centralTriangleBase - 2)
 >                	                       	(photoHeight - 2))
@@ -272,8 +273,10 @@ diagramsは正三角形を作る関数を定義されているけど、
 >             	, edgeTriangleRight
 >             	]
 
-になります。この画像では順番は何でもいいけど、
-実は上から下の順番になります（`edgeTriangleLeft`の下に
+になります。この画像では順番は関係ないけれど、
+場合によっては必要になりますね。
+*`Diagram`*を連結すると、
+上から下の順番になります（`edgeTriangleLeft`の下に
 `bottomTriangleLeft`を描いて、その下に
 `centralTriangle`を描く…という形）。
 
@@ -289,7 +292,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 >                     	# lc white
 >                     	# lw ultraThick
 
-なぜ`centerXY`が必要か？Diagramsはデフォルトでは
+「なぜ`centerXY`が必要か？」ですが、Diagramsはデフォルトでは
 原点は高度から見る真ん中ではなく、重心に設定してあります。
 二等辺三角形を鏡映すると、ずれてしまう。
 `centerXY`をしたら、簡単に鏡映できるようになります。
@@ -303,7 +306,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 >   θ' = (180 @@ deg) ^-^ θ
 
 高度は下の三角形の底辺の半分です。
-この値はまた使うので変数に保存しときましょう。
+この値はまた使うので変数に保存しておきましょう。
 
 >   bottomTriangleHalfBase 	= centralTriangleBase / 4
 
@@ -401,7 +404,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 >   drawMsgPart (MsgSpace ph)        	= strut $ r2 (0, getRealHeight ph)
 >   drawMsgPart (MsgText ph pw f o t) 	= text' (w * pw, getRealHeight ph) f o t
 
-*`MsgSpace`*だったらただ*y* 軸にスペースを開けます。
+*`MsgSpace`*だったら、ただ*y* 軸にスペースを開けます。
 *`MsgText`*だったら`text'`としてレンダーします。
 
 `getRealHeight`は、割合の分子から、実際の高さに変換する関数です。
