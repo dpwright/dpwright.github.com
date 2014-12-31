@@ -26,18 +26,18 @@ title: あけましておめでとうございます
 最初は、下記のやりかたでやろうと思っていました。
 
 1. 写真の上に、真っ白のレイヤーを載せる。
-2. その白いレイヤーから３つの三角を切って、下の写真が見えるようになる。
+2. その白いレイヤーから３つの三角形を切って、下の写真が見えるようになる。
 3. 最後にメッセージを追加する。
 
 ただ、diagramsでは、レイヤーを作って、そのレイヤーから切る機能がなかった
 （というか、あるかもしれないけど、僕が分からなかったので）。
 
 結局、「上の白いレイヤーから切る」という方法ではなく、
-「そのまま５つの三角を描く」という方法でやりました。
+「そのまま５つの三角形を描く」という方法でやりました。
 
 文章ではちょっと分かりづらいと思うので、絵で説明します。
 
-<center>![](/images/2015-01-01-happy-new-year/triangles.png "５つの三角")</center>
+<center>![](/images/2015-01-01-happy-new-year/triangles.png "５つの三角形")</center>
 
 この下にメッセージをつけます。
 
@@ -54,13 +54,13 @@ title: あけましておめでとうございます
 executable nengajou2015
   main-is:          	2015-01-01-happy-new-year.lhs	
   build-depends:    	base                	>= 4.7 && <4.8,
-                    	diagrams            	== 1.2.*,
-                    	diagrams-lib        	== 1.2.*,
-                    	diagrams-rasterific 	== 0.1.*,
-                    	text                	== 1.1.*,
-                    	directory           	== 1.2.*,
-                    	filepath            	== 1.3.*,
-                    	process             	>= 1.1.0.0 && <1.3,
+                    	diagrams            	== 1.2,
+                    	diagrams-lib        	== 1.2.0.2,
+                    	diagrams-rasterific 	== 0.1.0.1,
+                    	text                	== 1.1.1.3,
+                    	directory           	== 1.2.1.0,
+                    	filepath            	== 1.3.0.2,
+                    	process             	== 1.2.0.0,
                     	SVGFonts            	== 1.4.0.3
   default-language: 	Haskell2010	
 ```
@@ -87,15 +87,16 @@ $ brew install fontforge
 
 `LANGUAGE`プラグマは、意外と多くなりました。
 まず、いつもの`OverloadedStrings`と、
-diagramsのドキュメンテーションにすすめされる`NoMonomorphismRestriction`。
+diagramsのドキュメンテーションに推奨される`NoMonomorphismRestriction`。
 
 > {-# LANGUAGE OverloadedStrings #-}
 > {-# LANGUAGE NoMonomorphismRestriction #-}
 
-実は`NoMonomorphismRestriction`は今回はいらなかったけど、
-あった方がいいと書いてあったから入れてみました。
+`NoMonomorphismRestriction`は使った方がいいと書いてあったので
+入れましたが必要なかったので、結果的に使いませんでした。
 
-フォントを設定するためのデータ構造で、`Functor`と`Traversable`の関数を使いたいです。
+フォントを設定するためのデータ構造では、
+`Functor`と`Traversable`の関数を使いたいと思いました。
 
 > {-# LANGUAGE DeriveFunctor #-}
 > {-# LANGUAGE DeriveFoldable #-}
@@ -148,7 +149,7 @@ diagramsのドキュメンテーションにすすめされる`NoMonomorphismRes
 
 今回のプロジェクトは殆どの型はdiagramsで定義されています。
 
-一つだけを自分で定義します。それは、フォントを設定するための型です。
+自分で定義をしたのは一つだけです。それは、フォントを設定するための型です。
 
 > data Fonts a 	= Fonts
 >              	{ english  :: a
@@ -157,9 +158,9 @@ diagramsのドキュメンテーションにすすめされる`NoMonomorphismRes
 >              	} deriving (Functor, Foldable, Traversable)
 
 なぜ多相型で定義する必要があるのか？
-フォントは自動的に`.ttf`から`.svg`に変換するつもりなんで、
+フォントは自動的に`.ttf`から`.svg`に変換するつもりなので、
 同じストラクチャーで、ロードする前のファイル名と、
-準備ができた使える状況のフォントを入れたいのです。
+準備ができた使える状態のフォントを入れたいと思います。
 
 > newtype PreparedFont = PreparedFont { fromPF :: String }
 
@@ -172,13 +173,13 @@ diagramsのドキュメンテーションにすすめされる`NoMonomorphismRes
 二等辺三角形
 ------------
 
-もう一回三角の画像を見てみましょう。
+もう一度下の画像を見てみましょう。
 
-<center>![](/images/2015-01-01-happy-new-year/triangles.png "５つの三角")</center>
+<center>![](/images/2015-01-01-happy-new-year/triangles.png "５つの三角形")</center>
 
-この５つの三角は全部二等辺三角形です！
+この５つの三角形は全部二等辺三角形です！
 diagramsは正三角形を作る関数を定義されているけど、
-二等辺三角形はないため、自分で定義します。
+二等辺三角形はないため、自分で定義する必要があります。
 
 > isosceles :: Angle -> Double -> Diagram B R2
 > isosceles θ a = polygon (with &
@@ -191,13 +192,13 @@ diagramsは正三角形を作る関数を定義されているけど、
 
 `(^-^)`、`(^/)`は[vector-space]というパッケージで定義され、
 角度やベクトル等を引算、割算ができるような関数です。
-分からないときは`^`をなしにしてみたら、だいたいあってます
-（`^-^` → `-`、`^/` → `/`)。
+意味が分からないときは`^`を消してみたら、だいたいの意味が見えてきます
+（`(^-^)` → `(-)`、`(^/)` → `(/)`)。
 
 `(&)`、`(.~)`は[lens]のオペレーターです。
 今からlensの説明しようとすると話が終わらないので、省きます。
 
-画像のレイアウトをするため、底面の長さが必要なときがあります。
+画像のレイアウトをするため、底辺の長さが必要なときがあります。
 それを計算するために下記のユーティリティ関数を使います。
 
 > isoscelesBase :: Angle -> Double -> Double
@@ -208,7 +209,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 
 簡単に言うと、このデザインは「上に画像があって、その下にメッセージ」と説明できます。
 
-とりあえず、フォントや写真はもう既にロードされているとしてみます。
+とりあえず、フォントや写真はもう既にロードされていると見なしましょう。
 そうすると、下記のようになります。
 
 > nengajou :: Fonts PreparedFont -> Diagram B R2 -> Diagram B R2
@@ -216,11 +217,11 @@ diagramsは正三角形を作る関数を定義されているけど、
 >                     	===
 >                     	message fs imageWidth (photoHeight / 3)
 
-`(===)`は、２つの*`Diagram`*を重ねる関数です。
+`(===)`は、２つの*`Diagram`*を上から下に並べる関数です。
 
 分かりやすいでしょう！
 `topImage`は上の画像、`message`は下のメッセージ。
-重ねると、年賀状になると。
+並べると、年賀状になると。
 
 あとは、ここで使った値を定義するだけです。
 
@@ -230,31 +231,30 @@ diagramsは正三角形を作る関数を定義されているけど、
 >     imageWidth        	= 	isoscelesBase θ photoHeight
 
 まずは、写真や画像についての変数です。`θ`はここで変更したら、三角形の形が変わります。
-`photoHeight`は写真全体の高さけど、
-`imageWidth`はできた画像（メーン三角）の幅となります。
+`photoHeight`は写真全体の高さだけど、
+`imageWidth`はできた画像（緑のメイン三角形）の幅となります。
 
 >     photoShiftedRight 	= 	photo # translateX 40
 
-ちょっと細かいことですけど、
-実はもとの写真では僕達は真ん中じゃなかったので、
-これで調整します。
+実はもとの写真では人物は真ん中ではなかったので、
+細かいことになりますが、これで調整しています。
 
 >     inViewport = 	view 	(p2 ((-imageWidth) / 2, (-photoHeight) / 2))
 >                  	     	(r2 (imageWidth, photoHeight))
 
-色が付いている三角の画像をみると、ちょっと外側が汚いのです。
-`inViewport`は、そとのいらない分を消す関数です。
+色が付いている三角形の画像をみると、ちょっと外側が汚いので、
+`inViewport`で、外の部分を消す関数を用意しました。
 
 画像
 ----
 
-画像自体も簡単に説明できます。まず、５つの三角と合わすため、
-写真を切ります。その切った写真の上に、三角を載せます。
+画像自体も簡単に説明できます。まず、５つの三角形と合わせるため、
+写真を切ります。その切った写真の上に、三角形を載せます。
 
 > topImage :: Angle -> Diagram B R2 -> Diagram B R2
 > topImage θ photo = triangles <> clippedPhoto where
 
-切るサイズは、写真の元の高さ✕真ん中の、大きい三角の底面の長さです。
+切るサイズは、写真の元の高さ✕緑の三角形の底辺の長さです。
 それではちょっと幅が見えてしまうので、あと２ピクセルずつも、念の為に切ります。
 
 >   clippedPhoto 	= photo # clipBy (rect 	(centralTriangleBase - 2)
@@ -273,16 +273,16 @@ diagramsは正三角形を作る関数を定義されているけど、
 >             	]
 
 になります。この画像では順番は何でもいいけど、
-実は描く順番になります（`edgeTriangleLeft`の上に
-`bottomTriangleLeft`を描いて、その上に
-`centralTriangle`を描く…との形）。
+実は上から下の順番になります（`edgeTriangleLeft`の下に
+`bottomTriangleLeft`を描いて、その下に
+`centralTriangle`を描く…という形）。
 
-この画像の三角を見ると２種類があります。
-まずは、真ん中の３つの三角。
+この画像の三角形を見ると２種類があります。
+まずは、真ん中の３つの三角形。
 
 <center>![](/images/2015-01-01-happy-new-year/outline-triangles.png "Picture of 3 central triangles goes here")</center>
 
-輪郭のみが描いて、下にある写真が見える三角ですね。
+輪郭のみを描いて、下にある写真が見える三角形ですね。
 
 >   outlineTriangle a 	= isosceles θ a
 >                     	# centerXY
@@ -294,15 +294,15 @@ diagramsは正三角形を作る関数を定義されているけど、
 二等辺三角形を鏡映すると、ずれてしまう。
 `centerXY`をしたら、簡単に鏡映できるようになります。
 
-次は左と右の、真っ白の三角です。
+次は左と右の、真っ白の三角形です。
 
 <center>![](/images/2015-01-01-happy-new-year/edge-triangles.png "Picture of 2 edge triangles goes here")</center>
 
-この三角形の頂角は真ん中の三角の反対角度になっています。
+この三角形の頂角は真ん中の三角形の反対角度になっています。
 
 >   θ' = (180 @@ deg) ^-^ θ
 
-高度は下の三角形の底面の半分です。
+高度は下の三角形の底辺の半分です。
 この値はまた使うので変数に保存しときましょう。
 
 >   bottomTriangleHalfBase 	= centralTriangleBase / 4
@@ -316,8 +316,8 @@ diagramsは正三角形を作る関数を定義されているけど、
 >                	# rotate (90 @@ deg)
 
 `outlineTriangle`と`edgeTriangle`の２種類を定義できました。
-それで５つの三角形が描けます。まずは真ん中の三角形です。
-高度は写真と一緒で、Y軸に鏡映します。
+これで５つの三角形が描けます。まずは真ん中の三角形です。
+高度は写真と一緒です。その三角形を、*y* 軸に鏡映します。
 
 >   centralTriangle   	= outlineTriangle photoHeight # reflectY
 
@@ -329,7 +329,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 >   edgeTriangleRight   	= edgeTriangle
 >                       	# translateX (bottomTriangleHalfBase * 3 / 2)
 
-最後は左側です。右側を、X軸に鏡映するだけです。
+最後は左側です。右側を、*x* 軸に鏡映するだけです。
 
 >   bottomTriangleLeft 	= reflectX bottomTriangleRight
 >   edgeTriangleLeft   	= reflectX edgeTriangleRight
@@ -339,41 +339,41 @@ diagramsは正三角形を作る関数を定義されているけど、
 メッセージ
 ----------
 
-最初に「型は`Fonts`以外は定義しない」と言ったときは嘘つきました。
-実は、メッセージを定義するため、下記のユーティリティー型を定義しました。
+最初に「型は*`Fonts`*以外は定義しない」と言いましたが、
+実は、メッセージを定義するため、今回下記のユーティリティー型を定義しました。
 
-> data MessagePart =
->   MsgText
->   { proportionalHeight 	:: Double
->   , proportionalWidth  	:: Double
->   , font               	:: Fonts PreparedFont -> PreparedFont
->   , outline            	:: Measure R2
->   , msgText            	:: String
->   } |                  	
->   MsgSpace             	
->   { proportionalHeight 	:: Double
->   }                    	
+> data MessagePart
+>   = 	MsgText            	
+>   { 	proportionalHeight 	:: Double
+>   , 	proportionalWidth  	:: Double
+>   , 	font               	:: Fonts PreparedFont -> PreparedFont
+>   , 	outline            	:: Measure R2
+>   , 	msgText            	:: String
+>   } 	                   	
+>   | 	MsgSpace           	
+>   { 	proportionalHeight 	:: Double
+>   } 	                   	
 
-この型はメッセージのDiagramを定義するための、一瞬の型だから、
+この型はメッセージのDiagramを定義するための、一瞬の型なので、
 絶対必要とは言えません。
-正直、もともとこのプログラム書いたときはこの型を使わず作りました。
+正直、もともとこのプログラムを書いたときはこの型は使わず作りました。
 ただ、あった方が絶対分かりやすいと思って、
 ブログのためにちょっとリファクタリングしてみました。
 
 *`MessagePart`*はメッセージの一行です。
 その一行はメッセージのテキスト（*`MsgText`*)か、
-何も表記しない、ただスペース開けるための○○（*`MsgSpace`*）です。
+何も表記しない、ただスペース開けるため（*`MsgSpace`*）です。
 
 この型について一つポイントがあります。
 `proportionalHeight`と`proportionalWidth`は、「高さ」と「幅」の割合を意味します。
 ただ、表記の仕方はそれぞれ違います。
 `proportionalWidth`の方は、全体の幅に対しての割合ー
 例えば、幅の半分としたいなら`1/2`と表記します。
-一方、`proportionalHeight`は、表記スペースに対して一行の大きさを決るめるため、表記スペースに対するの「割合の分子」のみ表記します。
+一方、`proportionalHeight`は、表記スペースに対して一行の大きさを決るため、表記スペースに対するの「割合の分子」のみ表記します。
 分母は、全部のメッセージの`proportionalHeight`の合計になるはずです。
 結果、*`MessagePart`*を並べれば、スペースを１００％と使えていることになります。
 
-これがあったらメッセージは、ただ*`MessagePart`*のリストになります。
+この型があったらメッセージ自体は、ただ*`MessagePart`*のリストになります。
 
 > messageParts :: [MessagePart]
 > messageParts =
@@ -389,7 +389,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 >              	"Wishing you a fantastic New Year, from Aki & Dani"
 >   ]
 
-では、このメッセージはどうやって*`Diagram`*に変換しますか？
+では、このメッセージをどうやって*`Diagram`*に変換しましょう？
 
 > message :: Fonts PreparedFont -> Double -> Double -> Diagram B R2
 > message fs w h = center messageText where
@@ -401,7 +401,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 >   drawMsgPart (MsgSpace ph)        	= strut $ r2 (0, getRealHeight ph)
 >   drawMsgPart (MsgText ph pw f o t) 	= text' (w * pw, getRealHeight ph) f o t
 
-*`MsgSpace`*だったらただY軸にスペースを開けます。
+*`MsgSpace`*だったらただ*y* 軸にスペースを開けます。
 *`MsgText`*だったら`text'`としてレンダーします。
 
 `getRealHeight`は、割合の分子から、実際の高さに変換する関数です。
@@ -446,7 +446,7 @@ diagramsは正三角形を作る関数を定義されているけど、
 >     unless dirExists $ createDirectory fontDir
 
 変換自体はfontforgeを使って行います。
-もしもう既に変換されたフォントがあったらまた変換する必要はありません。
+もしもう既に変換されたフォントがあるならまた変換する必要はありません。
 
 >   fontforge f f' 	= unwords ["fontforge --lang=ff -c 'Open($1); Generate($2)'", f, f']
 >   prepareFont f  	= do
@@ -457,9 +457,9 @@ diagramsは正三角形を作る関数を定義されているけど、
 >       stripNamespaceLineFrom f'
 >     return $ PreparedFont f'
 
-fontforgeが出すXMLはネームスペースに入っているけど、
+fontforgeが出すXMLはネームスペースに入っていますが、
 SVGFontsがネームスペース無しのXMLしかサポートされていません。
-下記の関数はネームスペースを外します。
+下記の関数はネームスペース宣言を外します。
 
 > stripNamespaceLineFrom :: FilePath -> IO ()
 > stripNamespaceLineFrom f = TIO.readFile f >>= go
@@ -473,9 +473,9 @@ SVGFontsがネームスペース無しのXMLしかサポートされていませ
 
 最後に、上記の関数を結んでいく`main`関数です。
 
-写真とフォントの準備して、`nengajou`の関数に渡して*`Diagram`*作成します。
-`pad`を使って枠を作ります。それから背景を白にします。
-遂にDiagramsの`mainWith`関数を使ってコマンドラインインターフェースが出来上がります。
+写真とフォントの準備をし、`nengajou`の関数に渡して*`Diagram`*を作成します。
+`pad`を使って枠を作ります。それから背景を白にしましょう。
+最終、Diagramsの`mainWith`関数を使ってコマンドラインインターフェースが出来上がります。
 
 > main :: IO ()
 > main = do
@@ -484,11 +484,11 @@ SVGFontsがネームスペース無しのXMLしかサポートされていませ
 >     	{ english  	= "/Library/Fonts/Microsoft/Garamond"
 >     	, numbers  	= "/Library/Fonts/Microsoft/Calisto MT"
 >     	, japanese 	= "/Library/Fonts/Microsoft/ＤＦＰ教科書体W3" }
->   mainWith $ nengajou fonts photo # pad 1.1 # bg white
+>   mainWith $ nengajou fonts photo # pad 1.1 # bg black
 
-それでは、今年の年賀状を完成しました！
+さあ、これで今年の年賀状が完成しました！
 
-今年も頑張って、関数型言語で面白いものを作りましょう！
+今年も楽しみながら、関数型言語で面白いものを作って行きましょう！
 
 [diagrams]:     http://projects.haskell.org/diagrams
 [XQuartz]:      https://xquartz.macosforge.org/
