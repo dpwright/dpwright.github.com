@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
         <title>Wright Access - How to extract an intention-revealing name using Vim</title>
         <link rel="stylesheet" type="text/css" href="../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
@@ -13,27 +14,16 @@
     <body>
         <div id="header">
             <div id="logo">
-             <h1 id="logomain"><a href="../">Wright Access</a></h1>
-             <h2 id="sublogo">dpwright's notes on code, Japan, Japanese, and anything else</h2>
-             <div id="social">
-                 <a class="icon" href="http://github.com/dpwright"><i class="fa fa-github"></i></a>
-                 <a class="icon" href="http://twitter.com/danielpwright"><i class="fa fa-twitter"></i>en</a>
-                 <a class="icon" href="http://twitter.com/tataminomusi"><i class="fa fa-twitter"></i>jp</a>
-                 <a class="icon" href="mailto:dani@dpwright.com"><i class="fa fa-envelope-o"></i></a>
-                 <a class="icon" href="../atom.xml"><i class="fa fa-rss-square"></i></a>
-              </div>
+             <h1 id="logomain"><a href="../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../tags/functional-programming.html">λ</a>
-                <a href="../tags/git.html"><i class="fa fa-code-fork"></i></a>
-                <a id="vim-icon" href="../tags/vim.html">:w</a>
-                <span id="jp-icon"><a href="../tags/日本語.html">日</a></span>
                 <a href="../pages/about.html"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
         <div id="content">
             <h1 class="title">How to extract an intention-revealing name using Vim</h1>
+            
 
             <div class="info"> 3 May, 2012</div>
 
@@ -41,18 +31,59 @@
 
 <blockquote>
 <p>This method has a <a href="http://c2.com/cgi/wiki?MagicNumber">magic number</a>:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time
-     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / <span class="dv">1000</span>
-   <span class="kw">end</span></code></pre>
+<div class="elastic-tabstops">
+<table>
+<col width="100%" />
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / <span class="dv">1000</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">end</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>Let’s extract that to an <a href="http://c2.com/cgi/wiki?IdentifiersRevealIntent">intention-revealing name</a>. We’ll type</p>
-<pre class="vim"><code>   /1000&lt;Enter&gt;                           # Find the number we want to extract
-   cwmilliseconds_per_second&lt;Esc&gt;         # Replace the number with a variable name
-   O&lt;Ctrl+A&gt; = &lt;Esc&gt;p                     # Assign the replaced number to the variable</code></pre>
+<div class="elastic-tabstops">
+<table>
+<col width="100%" />
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="vim"><code>   /1000&lt;Enter&gt;                           # Find the number we want to extract</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="vim"><code>   cwmilliseconds_per_second&lt;Esc&gt;         # Replace the number with a variable name</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="vim"><code>   O&lt;Ctrl+A&gt; = &lt;Esc&gt;p                     # Assign the replaced number to the variable</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>The result:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time
-     milliseconds_per_second = <span class="dv">1000</span>
-     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / milliseconds_per_second
-   <span class="kw">end</span></code></pre>
+<div class="elastic-tabstops">
+<table>
+<col width="100%" />
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">     milliseconds_per_second = <span class="dv">1000</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / milliseconds_per_second</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">end</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
 </blockquote>
 <div class="quote-attribution">
 – thoughtbot, <cite><a href="http://robots.thoughtbot.com/post/22258289125/how-to-extract-an-intention-revealing-name-using-vim">How to extract an intention-revealing name using Vim</a></cite>
@@ -63,9 +94,15 @@
 
         </div>
         <div id="footer">
-            Copyright © 2012-2014 Daniel P. Wright.
-            Site proudly generated by
-            <a href="http://jaspervdj.be/hakyll">Hakyll</a>.
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
         </div>
     </body>
 </html>

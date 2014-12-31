@@ -65,6 +65,7 @@
 <h3>
 どの言語に向いてる？
 </h3>
+
 <ul class="incremental">
 <li>💖 Haskell 💕</li>
 <li>依存型言語：Agda, Idris, Coq…</li>
@@ -77,6 +78,7 @@
 <h3>
 どのレベル？
 </h3>
+
 </div>
 </div>
 <div id="文芸的プログラミング" class="slide section level2">
@@ -93,6 +95,7 @@
 <h3>
 は、いったい何ですか？！
 </h3>
+
 </div>
 </div>
 <div id="例変数置換" class="slide section level2">
@@ -130,10 +133,8 @@ x &amp;= y - 1
 <div id="例連立方程式-1" class="slide section level2">
 <h1>例　連立方程式</h1>
 <table>
-<colgroup>
 <col width="30%" />
 <col width="30%" />
-</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><p><span class="math">\[
@@ -181,6 +182,7 @@ y  &amp;= 2
 <h3>
 コードを見せよ！
 </h3>
+
 </div>
 <div id="簡単な例" class="slide section level2">
 <h1>簡単な例</h1>
@@ -236,16 +238,16 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class
 <span class="ot">&gt;</span>   getLine                       <span class="fu">&gt;&gt;=</span> \name <span class="ot">-&gt;</span>
 <span class="ot">&gt;</span>   replicateM_ <span class="dv">3</span> <span class="fu">$</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre>
 <p>出力は本当に３回出るか？</p>
-<p>（この例は <a href="http://www.haskellforall.com/2013/12/equational-reasoning.html" class="uri">http://www.haskellforall.com/2013/12/equational-reasoning.html</a> による）</p>
+<p>（この例は <a href="http://www.haskellforall.com/2013/12/equational-reasoning.html">http://www.haskellforall.com/2013/12/equational-reasoning.html</a> による）</p>
 </div>
 </div>
 <div id="ソースコード参照" class="slide section level2">
 <h1>ソースコード参照</h1>
 
 <ul class="incremental">
-<li>Haskell Report Standard Prelude <a href="http://www.haskell.org/onlinereport/standard-prelude.html" class="uri">http://www.haskell.org/onlinereport/standard-prelude.html</a></li>
-<li>Hoogle <a href="http://www.haskell.org/hoogle/" class="uri">http://www.haskell.org/hoogle/</a></li>
-<li>Hayoo <a href="http://hayoo.fh-wedel.de" class="uri">http://hayoo.fh-wedel.de</a></li>
+<li>Haskell Report Standard Prelude <a href="http://www.haskell.org/onlinereport/standard-prelude.html">http://www.haskell.org/onlinereport/standard-prelude.html</a></li>
+<li>Hoogle <a href="http://www.haskell.org/hoogle/">http://www.haskell.org/hoogle/</a></li>
+<li>Hayoo <a href="http://hayoo.fh-wedel.de">http://hayoo.fh-wedel.de</a></li>
 <li>Googleで“hackage <関数名>”を検索してみる</li>
 </ul>
 <div class="incremental">
@@ -310,6 +312,7 @@ replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span 
 <blockquote>
 <code>n</code>の値を知らないと<code>take</code>の置換できないので、<code>3</code>を入れる
 </blockquote>
+
 <p>と書くとイラっとする。</p>
 <p>また、今の証明は<code>3</code>の値としか証明できてない。 <code>4</code>を入れるとまた証明が必要。</p>
 <p>もっといい方法あるのでしょうか？</p>
@@ -361,6 +364,7 @@ replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicat
 <h3>
 <code>replicate</code>の「分配法則」
 </h3>
+
 <pre class="sourceCode haskell"><code class="sourceCode haskell">replicate <span class="dv">0</span>       x <span class="fu">=</span> []                             <span class="co">-- 和</span>
 replicate (m <span class="fu">+</span> n) x <span class="fu">=</span> replicate m x <span class="fu">++</span> replicate n x
 replicate <span class="dv">1</span>         <span class="fu">=</span> return                         <span class="co">-- 積</span>
@@ -369,6 +373,7 @@ replicate (m <span class="fu">*</span> n)   <span class="fu">=</span> replicate 
 <h3>
 <code>sequence_</code>の「順序化」
 </h3>
+
 <pre class="sourceCode haskell"><code class="sourceCode haskell">sequence_ []          <span class="fu">=</span> return ()                    <span class="co">-- 連結　→　順序制御</span>
 sequence_ (xs <span class="fu">++</span> ys)  <span class="fu">=</span> sequence_ xs <span class="fu">&gt;&gt;</span> sequence_ ys
 sequence_ <span class="fu">.</span> return    <span class="fu">=</span> void <span class="fu">.</span> id                    <span class="co">-- リスト関数　→　普通関数</span>
@@ -377,6 +382,7 @@ sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <spa
 <h3>
 <code>replicateM_</code>の「分配法則」の証明
 </h3>
+
 <pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> sequence_ (replicate <span class="dv">0</span> x)
                       <span class="fu">=</span> sequence_ []
                       <span class="fu">=</span> return ()
@@ -418,6 +424,7 @@ sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <spa
 <h3>
 あるいは、ある法則に従っていることを証明できること
 </h3>
+
 </div>
 <div id="最適化をできること" class="slide section level2 titlepage">
 <h1>最適化をできること</h1>
@@ -425,18 +432,23 @@ sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <spa
 ＝最適化されたバージョンは元のバージョンに等しいと証明すること
 </h3>
 
+<div class="notes">
+証明できたら、コンパイル時に自動的に最適化を行える！
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">/</span>div<span class="fu">&gt;</span></code></pre>
 </div>
 <div id="ドキュメンテーション" class="slide section level2 titlepage">
 <h1>ドキュメンテーション</h1>
 <h3>
 Hackageではよく使われている
 </h3>
+
 </div>
 <div id="難しいコンセプトを理解すること" class="slide section level2 titlepage">
 <h1>難しいコンセプトを理解すること</h1>
 <h3>
 分からないモナドがあったら等式推論をやってみ！
 </h3>
+
 </div>
 <div id="なれたら実は楽しい" class="slide section level2 titlepage">
 <h1>なれたら実は楽しい！</h1>
@@ -463,14 +475,14 @@ Hackageではよく使われている
 <ul class="incremental">
 <li>Gabriel Gonzalezさん (Tekmo)　がよく使っている
 <ul class="incremental">
-<li>Equational Reasoning <a href="http://www.haskellforall.com/2013/12/equational-reasoning.html" class="uri">http://www.haskellforall.com/2013/12/equational-reasoning.html</a></li>
-<li>Equational Reasoning at Scale <a href="http://www.haskellforall.com/2014/07/equational-reasoning-at-scale.html" class="uri">http://www.haskellforall.com/2014/07/equational-reasoning-at-scale.html</a></li>
+<li>Equational Reasoning <a href="http://www.haskellforall.com/2013/12/equational-reasoning.html">http://www.haskellforall.com/2013/12/equational-reasoning.html</a></li>
+<li>Equational Reasoning at Scale <a href="http://www.haskellforall.com/2014/07/equational-reasoning-at-scale.html">http://www.haskellforall.com/2014/07/equational-reasoning-at-scale.html</a></li>
 </ul></li>
 <li>Pearls of Functional Algorithm Design, Richard Bird
 <ul class="incremental">
-<li><a href="http://www.amazon.co.jp/Pearls-Functional-Algorithm-Design-Richard-ebook/dp/B009019VUK/ref=sr_1_1?ie=UTF8&amp;qid=1409933562&amp;sr=8-1&amp;keywords=pearls+of+functional+algorithm+design" class="uri">http://www.amazon.co.jp/Pearls-Functional-Algorithm-Design-Richard-ebook/dp/B009019VUK/ref=sr_1_1?ie=UTF8&amp;qid=1409933562&amp;sr=8-1&amp;keywords=pearls+of+functional+algorithm+design</a></li>
+<li><a href="http://www.amazon.co.jp/Pearls-Functional-Algorithm-Design-Richard-ebook/dp/B009019VUK/ref=sr_1_1?ie=UTF8&amp;qid=1409933562&amp;sr=8-1&amp;keywords=pearls+of+functional+algorithm+design">http://www.amazon.co.jp/Pearls-Functional-Algorithm-Design-Richard-ebook/dp/B009019VUK/ref=sr_1_1?ie=UTF8&amp;qid=1409933562&amp;sr=8-1&amp;keywords=pearls+of+functional+algorithm+design</a></li>
 </ul></li>
-<li>Typeclassopedia <a href="http://www.haskell.org/haskellwiki/Typeclassopedia" class="uri">http://www.haskell.org/haskellwiki/Typeclassopedia</a>
+<li>Typeclassopedia <a href="http://www.haskell.org/haskellwiki/Typeclassopedia">http://www.haskell.org/haskellwiki/Typeclassopedia</a>
 <ul class="incremental">
 <li>等式推論の話自体はないけど、Typeclass法則は全部方程式で書いてて、等式推論で証明するのはいい練習になるかもしれない</li>
 </ul></li>
@@ -483,7 +495,53 @@ Hackageではよく使われている
 ありがとうございました
 </h3>
 
+<div class="notes">
 </div>
+</div>
+<div id="例stateモナド" class="slide section level2">
+<h1>例　Stateモナド</h1>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">newtype</span> <span class="dt">State</span> s a <span class="fu">=</span> <span class="dt">State</span> {<span class="ot"> runState ::</span> s <span class="ot">-&gt;</span> (a, s) }
+<span class="ot">&gt;</span> <span class="kw">instance</span> <span class="dt">Monad</span> (<span class="dt">State</span> s) <span class="kw">where</span>
+<span class="ot">&gt;</span>     return a <span class="fu">=</span> <span class="dt">State</span> <span class="fu">$</span> \s <span class="ot">-&gt;</span> (a, s)
+<span class="ot">&gt;</span>     m <span class="fu">&gt;&gt;=</span> k  <span class="fu">=</span> <span class="dt">State</span> <span class="fu">$</span> \s <span class="ot">-&gt;</span> <span class="kw">let</span>
+<span class="ot">&gt;</span>         (a, s') <span class="fu">=</span> runState m s
+<span class="ot">&gt;</span>         <span class="kw">in</span> runState (k a) s'
+<span class="ot">&gt;</span> get   <span class="fu">=</span> <span class="dt">State</span> <span class="fu">$</span> \s <span class="ot">-&gt;</span> (s, s)
+<span class="ot">&gt;</span> put s <span class="fu">=</span> <span class="dt">State</span> <span class="fu">$</span> \_ <span class="ot">-&gt;</span> ((), s)</code></pre>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> m <span class="fu">&gt;&gt;</span> k <span class="fu">=</span> m <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> k</code></pre>
+<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> tick <span class="fu">=</span> <span class="kw">do</span>
+<span class="ot">&gt;</span>   n <span class="ot">&lt;-</span> get
+<span class="ot">&gt;</span>   put <span class="fu">$</span> n <span class="fu">+</span> <span class="dv">1</span>
+<span class="ot">&gt;</span>   return n</code></pre>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">tick <span class="fu">=</span> get <span class="fu">&gt;&gt;=</span> \n <span class="ot">-&gt;</span> put (n <span class="fu">+</span> <span class="dv">1</span>) <span class="fu">&gt;&gt;</span> return n                        <span class="co">-- do記法翻訳</span>
+     <span class="fu">=</span> get <span class="fu">&gt;&gt;=</span> \n <span class="ot">-&gt;</span> put (n <span class="fu">+</span> <span class="dv">1</span>) <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> return n                 <span class="co">-- (&gt;&gt;)の定義</span>
+     <span class="fu">=</span> get <span class="fu">&gt;&gt;=</span> \n <span class="ot">-&gt;</span> put (n <span class="fu">+</span> <span class="dv">1</span>)                                    <span class="co">-- returnの定義</span>
+           <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> (n, s))
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> (s, s)) <span class="fu">&gt;&gt;=</span> \n <span class="ot">-&gt;</span> put (n <span class="fu">+</span> <span class="dv">1</span>)                   <span class="co">-- getの定義</span>
+                            <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> (n, s))
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> (s, s)) <span class="fu">&gt;&gt;=</span> \n <span class="ot">-&gt;</span> <span class="dt">State</span> (\_ <span class="ot">-&gt;</span> ((), n <span class="fu">+</span> <span class="dv">1</span>))     <span class="co">-- putの定義</span>
+                            <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> (n, s))
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> <span class="kw">let</span> (a, s') <span class="fu">=</span> runState (<span class="dt">State</span> (\t <span class="ot">-&gt;</span> (t, t))) s <span class="co">-- (&gt;&gt;=)の定義</span>
+                    <span class="kw">in</span> runState ((\n <span class="ot">-&gt;</span> <span class="dt">State</span> (\_ <span class="ot">-&gt;</span> ((), n <span class="fu">+</span> <span class="dv">1</span>))
+                             <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s'' <span class="ot">-&gt;</span> (n, s''))) a) s')
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> <span class="kw">let</span> (a, s') <span class="fu">=</span> (s, s)                            <span class="co">-- runState適用</span>
+                    <span class="kw">in</span> runState ((\n <span class="ot">-&gt;</span> <span class="dt">State</span> (\_ <span class="ot">-&gt;</span> ((), n <span class="fu">+</span> <span class="dv">1</span>))
+                              <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s'' <span class="ot">-&gt;</span> (n, s''))) a) s')
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> runState ((\n <span class="ot">-&gt;</span> <span class="dt">State</span> (\_ <span class="ot">-&gt;</span> ((), n <span class="fu">+</span> <span class="dv">1</span>))       <span class="co">-- (a, s')変数置換</span>
+                           <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s'' <span class="ot">-&gt;</span> (n, s''))) s) s)
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> runState (<span class="dt">State</span> (\_ <span class="ot">-&gt;</span> ((), s <span class="fu">+</span> <span class="dv">1</span>))              <span class="co">-- n変数置換</span>
+                           <span class="fu">&gt;&gt;=</span> \_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s'' <span class="ot">-&gt;</span> (s, s''))) s)
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> runState                                         <span class="co">-- (&gt;&gt;=)の定義</span>
+        (<span class="dt">State</span> (\t <span class="ot">-&gt;</span> <span class="kw">let</span> (a, s') <span class="fu">=</span> runState (<span class="dt">State</span> (\_ <span class="ot">-&gt;</span> ((), s <span class="fu">+</span> <span class="dv">1</span>))) t
+                      <span class="kw">in</span> runState ((\_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s'' <span class="ot">-&gt;</span> (s, s''))) a) s')) s)
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> runState                                         <span class="co">-- runState適用</span>
+        (<span class="dt">State</span> (\t <span class="ot">-&gt;</span> <span class="kw">let</span> (a, s') <span class="fu">=</span> ((), t <span class="fu">+</span> <span class="dv">1</span>)
+                      <span class="kw">in</span> runState ((\_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s'' <span class="ot">-&gt;</span> (s, s''))) a) s')) s)
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> runState                                         <span class="co">-- (a, s')変数置換</span>
+        (<span class="dt">State</span> (\t <span class="ot">-&gt;</span> runState ((\_ <span class="ot">-&gt;</span> <span class="dt">State</span> (\s'' <span class="ot">-&gt;</span> (s, s''))) ()) (t <span class="fu">+</span> <span class="dv">1</span>))) s)
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> runState (<span class="dt">State</span> (\t <span class="ot">-&gt;</span> (s, t <span class="fu">+</span> <span class="dv">1</span>))) s)           <span class="co">-- runState適用</span>
+     <span class="fu">=</span> <span class="dt">State</span> (\s <span class="ot">-&gt;</span> (s, s <span class="fu">+</span> <span class="dv">1</span>))                                      <span class="co">-- runState適用</span></code></pre>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">/</span>div<span class="fu">&gt;</span></code></pre>
 </div>
 </body>
 </html>
