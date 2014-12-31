@@ -130,7 +130,7 @@
 </tbody>
 </table>
 </div>
-<p>フォントを<code>svn</code>に変換するため、<code>fontforge</code>が必要です。 Macを使ってたので、まず<a href="https://xquartz.macosforge.org/">XQuartz</a>をインストールしました。 それから、Homebrewで、</p>
+<p>フォントを<code>svg</code>に変換するため、<code>fontforge</code>が必要です。 Macを使ってたので、まず<a href="https://xquartz.macosforge.org/">XQuartz</a>をインストールしました。 それから、Homebrewで、</p>
 <div class="elastic-tabstops">
 <table>
 <col width="100%" />
