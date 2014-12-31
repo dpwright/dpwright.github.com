@@ -73,7 +73,7 @@ executable nengajou2015
 $ cabal install --constrain "arithmoi -llvm"
 ```
 
-フォントを`svn`に変換するため、`fontforge`が必要です。
+フォントを`svg`に変換するため、`fontforge`が必要です。
 Macを使ってたので、まず[XQuartz]をインストールしました。
 それから、Homebrewで、
 
