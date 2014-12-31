@@ -129,7 +129,7 @@ diagramsのドキュメンテーションにすすめされる`NoMonomorphismRes
 
 え、さっき`Traversable`って言わなかった？
 
-> import Data.Foldable (Foldable (..))
+> import Data.Foldable (Foldable)
 > import Data.Traversable as TV
 
 まだだよー
@@ -164,6 +164,8 @@ diagramsのドキュメンテーションにすすめされる`NoMonomorphismRes
 > newtype PreparedFont = PreparedFont { fromPF :: String }
 
 このnewtypeを使って、「フォントが変換された」と、型安全的に証明します。
+（因みに最新版のSVGFontsでは`PreparedFont`は既に定義されているので、
+最新版がHackageにアップされたらこれは必要なくなります。）
 
 それでは、コード自体を始めます。
 
@@ -294,73 +296,159 @@ diagramsは正三角形を作る関数を定義されているけど、
 
 次は左と右の、真っ白の三角です。
 
-<center>![](/images/2015-01-01-happy-new-year/outline-triangles.png "Picture of 2 edge triangles goes here")</center>
+<center>![](/images/2015-01-01-happy-new-year/edge-triangles.png "Picture of 2 edge triangles goes here")</center>
 
 この三角形の頂角は真ん中の三角の反対角度になっています。
 
 >   θ' = (180 @@ deg) ^-^ θ
 
-位置は
+高度は下の三角形の底面の半分です。
+この値はまた使うので変数に保存しときましょう。
+
+>   bottomTriangleHalfBase 	= centralTriangleBase / 4
+
+あとは色と90°の回転です。
 
 >   edgeTriangle 	= isosceles θ' bottomTriangleHalfBase
 >                	# centerXY
 >                	# lw none
 >                	# fc white
->                	# translateY (bottomTriangleHalfBase / 2)
 >                	# rotate (90 @@ deg)
+
+`outlineTriangle`と`edgeTriangle`の２種類を定義できました。
+それで５つの三角形が描けます。まずは真ん中の三角形です。
+高度は写真と一緒で、Y軸に鏡映します。
 
 >   centralTriangle   	= outlineTriangle photoHeight # reflectY
 
->   bottomTriangle 	= outlineTriangle (photoHeight / 2)
->                  	# translateY (-(photoHeight / 4))
->   bottomTriangleRight    	= bottomTriangle # translateX bottomTriangleHalfBase
->   bottomTriangleLeft     	= reflectX bottomTriangleRight
->   bottomTriangleHalfBase 	= centralTriangleBase / 4
+あとは右側の下の三角形と真っ白の三角形。
 
->   edgeTriangleRight 	= edgeTriangle # translateX (bottomTriangleHalfBase * 2)
->   edgeTriangleLeft  	= reflectX edgeTriangleRight
+>   bottomTriangleRight 	= outlineTriangle (photoHeight / 2)
+>                       	# translateY (-(photoHeight / 4))
+>                       	# translateX bottomTriangleHalfBase
+>   edgeTriangleRight   	= edgeTriangle
+>                       	# translateX (bottomTriangleHalfBase * 3 / 2)
 
+最後は左側です。右側を、X軸に鏡映するだけです。
+
+>   bottomTriangleLeft 	= reflectX bottomTriangleRight
+>   edgeTriangleLeft   	= reflectX edgeTriangleRight
+
+画像の分はここまでです。
 
 メッセージ
 ----------
 
+最初に「型は`Fonts`以外は定義しない」と言ったときは嘘つきました。
+実は、メッセージを定義するため、下記のユーティリティー型を定義しました。
+
+> data MessagePart =
+>   MsgText
+>   { proportionalHeight 	:: Double
+>   , proportionalWidth  	:: Double
+>   , font               	:: Fonts PreparedFont -> PreparedFont
+>   , outline            	:: Measure R2
+>   , msgText            	:: String
+>   } |                  	
+>   MsgSpace             	
+>   { proportionalHeight 	:: Double
+>   }                    	
+
+この型はメッセージのDiagramを定義するための、一瞬の型だから、
+絶対必要とは言えません。
+正直、もともとこのプログラム書いたときはこの型を使わず作りました。
+ただ、あった方が絶対分かりやすいと思って、
+ブログのためにちょっとリファクタリングしてみました。
+
+*`MessagePart`*はメッセージの一行です。
+その一行はメッセージのテキスト（*`MsgText`*)か、
+何も表記しない、ただスペース開けるための○○（*`MsgSpace`*）です。
+
+この型について一つポイントがあります。
+`proportionalHeight`と`proportionalWidth`は、「高さ」と「幅」の割合を意味します。
+ただ、表記の仕方はそれぞれ違います。
+`proportionalWidth`の方は、全体の幅に対しての割合ー
+例えば、幅の半分としたいなら`1/2`と表記します。
+一方、`proportionalHeight`は、表記スペースに対して一行の大きさを決るめるため、表記スペースに対するの「割合の分子」のみ表記します。
+分母は、全部のメッセージの`proportionalHeight`の合計になるはずです。
+結果、*`MessagePart`*を並べれば、スペースを１００％と使えていることになります。
+
+これがあったらメッセージは、ただ*`MessagePart`*のリストになります。
+
+> messageParts :: [MessagePart]
+> messageParts =
+>   [ MsgSpace 	6
+>   , MsgText  	10 (9 / 10) english thin
+>              	(map toUpper "Happy New Year")
+>   , MsgSpace 	1
+>   , MsgText  	6 (1 / 6) numbers none "2015"
+>   , MsgSpace 	4
+>   , MsgText  	4 (33 / 40) japanese none
+>              	"昨年はお世話になりました　今年もよろしくお願いします"
+>   , MsgText  	5 (33 / 40) english none
+>              	"Wishing you a fantastic New Year, from Aki & Dani"
+>   ]
+
+では、このメッセージはどうやって*`Diagram`*に変換しますか？
+
 > message :: Fonts PreparedFont -> Double -> Double -> Diagram B R2
 > message fs w h = center messageText where
->   text' f (a, d) l s	= 	stroke (textPath s f a d) # lw l # fc black <> strutY d
->   textPath s f a d 	= 	textSVG' $ TextOpts s (outlMap . fromPF $ f fs) INSIDE_WH KERN False a d
->   proportions  	= 	[ (0, 6), (w * 9 / 10, 10), (0, 1), (w / 6, 6)
->                	  	, (0, 4), (w * 33 / 40, 4), (w * 33 / 40, 5) ]
->   totalHeight  	= 	sum (map snd proportions)
->   part n       	= 	second ((/ totalHeight) . (* h)) $ proportions !! (n - 1)
->   space        	= 	strut . r2
->   messageText  	= 	space (part 1)
->                	  	===
->                	  	text' english (part 2) thin (map toUpper "Happy New Year")
->                	  	===
->                	  	space (part 3)
->                	  	===
->                	  	text' numbers (part 4) none "2015"
->                	  	===
->                	  	space (part 5)
->                	  	===
->                	  	text' japanese (part 6) none "昨年はお世話になりました　今年もよろしくお願いします"
->                	  	===
->                	  	text' english (part 7) none "Wishing you a fantastic New Year, from Aki & Dani"
+>   messageText  = foldr1 (===) . map drawMsgPart $ messageParts
+
+*`MessagePart`*を一つ一つ`drawMsgPart`で描いて、
+それから`foldr1 (===)`で上から下まで並べます。
+
+>   drawMsgPart (MsgSpace ph)        	= strut $ r2 (0, getRealHeight ph)
+>   drawMsgPart (MsgText ph pw f o t) 	= text' (w * pw, getRealHeight ph) f o t
+
+*`MsgSpace`*だったらただY軸にスペースを開けます。
+*`MsgText`*だったら`text'`としてレンダーします。
+
+`getRealHeight`は、割合の分子から、実際の高さに変換する関数です。
+
+>   getRealHeight ph 	= h * ph / totalHeight
+>   totalHeight  	= sum $ map proportionalHeight messageParts
+
+`text'`は、SVGFontsを使ってテキストをレンダーします。
+
+>   text' (a, d) f o t 	= stroke (textPath t f a d)
+>                      	# lw o # fc black <> strutY d
+>   textPath t f a d 	= textSVG' $ 	TextOpts t (outlMap . fromPF $ f fs)
+>                    	             	INSIDE_WH KERN False a d
 
 不純なところ
 ------------
+
+今までの関数は純粋的に定義しました。
+これからは、実世界と繋がっている`IO`モナドを使って、
+写真やフォントを準備するための関数を定義します。
+
+写真は簡単です。Diagramsの`loadImageEmb`関数を呼んで、
+エラーが返されたらそのまま出力して停止します。
 
 > loadPhoto :: FilePath -> IO (Diagram B R2)
 > loadPhoto fp = either reportError (return . image) =<< loadImageEmb fp
 >   where reportError err = putStrLn err >> exitWith (ExitFailure 1)
 
+フォントはもうちょっと複雑なんです。
+
 > prepareFonts :: Fonts String -> IO (Fonts PreparedFont)
-> prepareFonts fs = makeDirectory >> TV.sequence (fmap prepareFont fs) where
->   fontforge f f' 	= unwords ["fontforge --lang=ff -c 'Open($1); Generate($2)'", f, f']
+> prepareFonts fs = do 	makeDirectory
+>                      	TV.sequence (fmap prepareFont fs) where
+
+フォントは`.ttf`から`.svg`に変換しないと使えないんです。
+変換されたフォントは`svg-fonts`というディレクトリーに出力します。
+まず、そのディレクトリーがない場合は作成しないとダメです。
+
 >   fontDir        	= "svg-fonts"
 >   makeDirectory  	= do
 >     dirExists <- doesDirectoryExist fontDir
 >     unless dirExists $ createDirectory fontDir
+
+変換自体はfontforgeを使って行います。
+もしもう既に変換されたフォントがあったらまた変換する必要はありません。
+
+>   fontforge f f' 	= unwords ["fontforge --lang=ff -c 'Open($1); Generate($2)'", f, f']
 >   prepareFont f  	= do
 >     let f' = fontDir </> filter (/= ' ') (takeBaseName f) <.> "svg"
 >     fontAlreadyConverted <- doesFileExist f'
@@ -369,23 +457,38 @@ diagramsは正三角形を作る関数を定義されているけど、
 >       stripNamespaceLineFrom f'
 >     return $ PreparedFont f'
 
+fontforgeが出すXMLはネームスペースに入っているけど、
+SVGFontsがネームスペース無しのXMLしかサポートされていません。
+下記の関数はネームスペースを外します。
+
 > stripNamespaceLineFrom :: FilePath -> IO ()
-> stripNamespaceLineFrom f = TIO.readFile f >>= go where
->   go 	= T.words
->      	>>> filter (not . T.isInfixOf "xmlns")
->      	>>> T.unwords
->      	>>> TIO.writeFile f
+> stripNamespaceLineFrom f = TIO.readFile f >>= go
+>   where go 	=   	T.words
+>            	>>> 	filter (not . T.isInfixOf "xmlns")
+>            	>>> 	T.unwords
+>            	>>> 	TIO.writeFile f
 
 `main`関数
 ----------
 
+最後に、上記の関数を結んでいく`main`関数です。
+
+写真とフォントの準備して、`nengajou`の関数に渡して*`Diagram`*作成します。
+`pad`を使って枠を作ります。それから背景を白にします。
+遂にDiagramsの`mainWith`関数を使ってコマンドラインインターフェースが出来上がります。
+
 > main :: IO ()
 > main = do
 >   photo <- loadPhoto "static/images/2015-01-01-happy-new-year/beach-club.png"
->   fonts <- prepareFonts Fonts 	{ english  = "/Library/Fonts/Microsoft/Garamond"
->                               	, numbers  = "/Library/Fonts/Microsoft/Calisto MT"
->                               	, japanese = "/Library/Fonts/Microsoft/ＤＦＰ教科書体W3" }
->   mainWith . bg white . pad 1.1 $ nengajou fonts photo
+>   fonts <- prepareFonts Fonts
+>     	{ english  	= "/Library/Fonts/Microsoft/Garamond"
+>     	, numbers  	= "/Library/Fonts/Microsoft/Calisto MT"
+>     	, japanese 	= "/Library/Fonts/Microsoft/ＤＦＰ教科書体W3" }
+>   mainWith $ nengajou fonts photo # pad 1.1 # bg white
+
+それでは、今年の年賀状を完成しました！
+
+今年も頑張って、関数型言語で面白いものを作りましょう！
 
 [diagrams]:     http://projects.haskell.org/diagrams
 [XQuartz]:      https://xquartz.macosforge.org/
