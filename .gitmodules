@@ -6,4 +6,4 @@
 	url = https://github.com/hakimel/reveal.js.git
 [submodule "_site"]
 	path = _site
-	url = git@github.com:dpwright/dpwright.github.com
+	url = https://github.com/dpwright/dpwright.github.com
