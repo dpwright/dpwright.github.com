@@ -53,7 +53,9 @@
 <p>With that caveat out the way, first I’ll import the necessary modules.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Environment</span></code></pre></td>
@@ -89,7 +91,9 @@
 <p>The interface I’m aiming for is simple: simply type the name of the script, followed by the title of the blog post. The one slightly tricky thing is that I’d like to be able to write the title either quoted or unquoted, so the following to examples should be the same:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">new-post</span> An example blog post</code></pre></td>
@@ -103,7 +107,9 @@
 <p>In order to do this, we’re going to “normalise” the arguments, so that whatever the input we’re working with a list of words, broken up by spaces. Haskell provides a couple of helper functions for this: <code>words</code> takes a string and splits it up by spaces (so that you get a list of words out, hence the name), and <code>unwords</code> does the opposite – it joins a list of strings together, putting spaces between each one. To perform the normalisation, we can simply run <code>words</code> followed by <code>unwords</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> normaliseArgs <span class="fu">=</span> words <span class="fu">.</span> unwords</code></pre></td>
@@ -116,7 +122,9 @@
 <p>Having explained the <code>normaliseArgs</code> function, we can look at the implementation of the script itself. The <code>main</code> function gives an overview of how the script will work:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -157,7 +165,9 @@
 <p>In most languages, I would start by creating local variables containing the formatted date and title and work from there, but here I’m going to take advantage of Haskell’s <code>where</code> form to write in a more declarative style. We start by declaring the type information:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeFilename ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
@@ -168,7 +178,9 @@
 <p>So <code>makeFilename</code> is a function which takes in an array of strings, the current time, and a file extension, and returns a string – the filename. Let’s assume for the moment that we’ve already dealt with the nitty gritty of actually generating the string we want to use for our filename. The thing we’d want to return in that case is a concatenation of that filename base with the folder it’s meant to be in, <code>posts</code>, and the file extension. Something like this:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> makeFilename args t ext <span class="fu">=</span> concat [<span class="st">&quot;posts/&quot;</span>, filename_base, ext]</code></pre></td>
@@ -179,7 +191,9 @@
 <p>Seems simple enough, but what is that <code>filename_base</code>? Well, let’s define that right now, using the <code>where</code> form:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -206,7 +220,9 @@
 <p>Blog posts have a standard header which lists the date and time they were created, the tags associated with that post, and the title. Since both the date and the title are formatted differently in the header to the filename I don’t feel the need to move the generation of those strings into their own function; instead we’ll just create them locally inside the <code>makeHeader</code> function as we did for <code>makeFilename</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeHeader ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
@@ -234,7 +250,9 @@
 <p>Lastly, we need to launch our editor! You may have noticed in the <code>main</code> function defined above, I had separate <code>launchEditor</code> and <code>launchVim</code> commands. We’ll start with the general <code>launchEditor</code> function, which will launch whatever is defined in <code>$EDITOR</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchEditor ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span></code></pre></td>
@@ -255,7 +273,9 @@
 <p>As it happens, I can fix both of this problems with my editor of choice, vim. I’m not really sure how I could do this in a general way, since all editors use a different set of command-line parameters, so I decided to leave the generic <code>launchEditor</code> as is above and write a new, vim-specific one to get the functionality I want. The result is as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchVim ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span></code></pre></td>
@@ -280,7 +300,7 @@
 <p>As I mentioned, this is my first Haskell program, so I am sure there will be a number of problems with it. If you spot anything particularly bad, please <script type="text/javascript">
 <!--
 h='&#100;&#112;&#x77;&#114;&#x69;&#x67;&#104;&#116;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#100;&#x61;&#110;&#x69;&#x2b;&#98;&#108;&#x6f;&#x67;';e=n+a+h;
-document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>');
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+'contact me'+'<\/'+'a'+'>');
 // -->
 </script><noscript>contact me (dani+blog at dpwright dot com)</noscript> and let me know! You can even suggest modifications to the article by editing it directly <a href="https://github.com/dpwright/dpwright.github.com/edit/source/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs">here</a> and sending them as a pull request. Any feedback is greatly appreciated!</p>
 <p>The biggest thing that sticks out to me is my frequent use of <code>printf</code>, particularly when it comes to generating commands to pass to <code>system</code>. This feels a little like overkill, and I’m sure there must be a better way.</p>

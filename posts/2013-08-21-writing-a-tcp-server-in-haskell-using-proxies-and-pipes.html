@@ -36,17 +36,14 @@ Read the original article <a href="http://blog.vitei.com/?p=147">here</a>.</p>
 <center>
 <img src="http://blog.vitei.com/wp-content/uploads/2013/08/haskell-pipes2.jpg" alt="Haskell Pipes" />
 </center>
-
 <div class="sidenote">
 Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pipes 4</a>, this article is now rather out-of-date. I leave it up here for posterity, but if you’re new to Pipes you should probably just ignore it and find a more up-to-date tutorial.
 </div>
-
 <p>Since my last post, I’ve really been enjoying Haskell, and in fact a lot of the functional ideas I had formerly been playing with in Clojure I am now exploring in Haskell instead. I will go into more detail on the reasons for that in a future post – for now I just wanted to share a neat bit of code I wrote the other day that I think really demonstrates the kind of concise, readable code Haskell enables.</p>
 <div>
 
 </div>
 <!--more-->
-
 <h2 id="problem-description">Problem description</h2>
 <p>This is a really simple, common requirement: the application requires a TCP server to take requests and perform whatever it is the application does, after which it will respond with some sort of output. Everyone’s had to do it at some point, and there’s a range of ways to implement it – from the hack-it-in-quick interface to some simple utility to the robustness of, say, a web server.</p>
 <p>My requirements were fairly rudimentary, and so this implementation is a pretty simple one. Still, maybe it’ll be a useful starting-point for anyone who wants to get a server up and running quickly.</p>
@@ -55,7 +52,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>This server is built around the <code>pipes</code> package, a very nicely-designed framework which allow you to stream data through some sort of pipeline. The <code>pipes-network</code> package, originally written by Paolo Capriotti and now maintained by Renzo Carbonara, provides some useful <code>Producer</code> and <code>Pipe</code> functions which read from and write to a TCP socket respectively, so a lot of the work has already been done for us. Before we start, we will need to install the <code>pipes-network</code> package:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cabal</span> install pipes-network</code></pre></td>
@@ -66,7 +65,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>pipes-network</code> delivers and expects to receive its data in <code>ByteString</code> form, rather than a plain <code>String</code>. I wanted to work with <code>Text</code> in my own code. This mix of three different string types can get quite confusing, and I really don’t want to clutter up my code with lots of conversions of literal strings, so let’s make use of the <code>OverloadedStrings</code> LANGUAGE pragma to perform those conversions for us:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -78,7 +79,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Finally, let’s import the modules we need:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Network</span></code></pre></td>
@@ -125,7 +128,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The interpreter is a simple, pure function, which simply maps <code>Text</code> to some command type <code>c</code> (defined by the program):</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">Interpreter</span> c <span class="fu">=</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> c</code></pre></td>
@@ -136,7 +141,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The handler is slightly more involved. Firstly, I didn’t want it to have to worry about the terminator string, so I would have the server add those itself. This posed a problem though: since the output could potentially be multiple lines, and the action could take a long time to complete, I wanted to stream it out to the socket as it came in, not all in one chunk at the end. But in order to do this, I would have to know whether or not to add the terminator string for a particular piece of output, as it should only be added at the very end. My handler, then, would need to output some information about whether or not it was complete, along with whatever text it needed to deliver so far. This can be accomplished with the following type:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Output</span> t <span class="fu">=</span> <span class="dt">Still</span> t</code></pre></td>
@@ -163,7 +170,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Our command handler, then, is expected to read in commands from the interpreter <em>upstream</em> and send its output to the socket <em>downstream</em> – look at the list above again and it should be quite obvious that it is a <code>Pipe</code>! Thus, our <code>Handler</code> definition:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">Handler</span> c <span class="fu">=</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> <span class="dt">ProxyFast</span> c (<span class="dt">Output</span> <span class="dt">T.Text</span>) <span class="dt">IO</span> ()</code></pre></td>
@@ -177,7 +186,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Now our types are in place, we’re almost there! Let’s make a simple function to start our server up and set it running first, which I’ll call <code>run</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; run ::</span> <span class="dt">Interpreter</span> c <span class="ot">-&gt;</span> <span class="dt">Handler</span> c <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -195,7 +206,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>runProxy</code> expects a function taking <code>()</code> and returning the proxy we want to run. In addition to this, we want to feed the <code>Interpreter</code>, <code>Handler</code>, and active <code>Socket</code> to the proxy to work with. The type signature for our <code>server</code> function, therefore, must be:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; server ::</span> <span class="dt">Interpreter</span> c <span class="ot">-&gt;</span> <span class="dt">Handler</span> c <span class="ot">-&gt;</span> <span class="dt">Socket</span> <span class="ot">-&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Session</span> <span class="dt">ProxyFast</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -206,7 +219,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>One thing I love about Haskell is how easy it is to work top-down; you can start with a rough outline of what you want to get done and then fill in the blanks later. Here is the implementation of <code>server</code>, which can be expressed as a composition of proxies representing each part of the process:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> server i h s <span class="fu">=</span> readSocket <span class="fu">&gt;-&gt;</span> interpret <span class="fu">&gt;-&gt;</span> handle <span class="fu">&gt;-&gt;</span> writeSocket</code></pre></td>
@@ -217,7 +232,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>This is the sort of expressive power the <code>pipes</code> library gives us – it almost reads like an ASCII diagram describing the required server behaviour! It only remains for us to “fill in the blanks” by defining each of these functions. We can do this in a <code>where</code> clause, and for the most part, each part of the session is itself a composition of simple proxies. I’m going to work from the outside in, beginning with the administrivia of reading data in from the socket and writing results back out to it, and then dealing with the actual interpretation and handling of data at the end. We’ll begin with reading in data from the socket:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -235,7 +252,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Writing the data back out is pretty similar – we receive UTF-8 <code>Text</code> and we want to encode it as a <code>ByteString</code> before sending it out through the socket. This time, though, we don’t care about buffering – we can just send text out as it comes in – so we can omit the call to <code>split</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     writeSocket <span class="fu">=</span> mapD encodeUtf8 <span class="fu">&gt;-&gt;</span> socketWriteD s <span class="fu">&gt;-&gt;</span> done</code></pre></td>
@@ -246,7 +265,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The reason for the <code>done</code> at the end there is that it turns out that <code>socketWriteD</code> pipes any data it writes to the socket downstream, to ease composition. In order to close off our session, we need a <code>Consumer</code> which will sit there forever, taking data from upstream and ignoring it. Strictly speaking this isn’t necessary, but it allows us to treat our server as a <code>Session</code> rather than a <code>Producer</code>. Its definition is as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     done () <span class="fu">=</span> forever <span class="fu">$</span> request () <span class="fu">&gt;&gt;</span> return ()</code></pre></td>
@@ -258,7 +279,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Remember we defined the interpreter as a pure function taking in <code>Text</code> and spitting out <code>Commands</code>? <code>interpret</code>, then, merely needs to convert this pure function into a <code>Pipe</code>, using <code>mapD</code> again:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     interpret <span class="fu">=</span> mapD i</code></pre></td>
@@ -269,7 +292,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The handler has the small extra complication of needing to append our terminator string whenever the application tells us it is <code>Done</code>. We can do this by composing the handler function (which is already a pipe) with a small utility function:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     terminator <span class="fu">=</span> <span class="st">&quot;\r\nEND\r\n\r\n&quot;</span></code></pre></td>
@@ -292,7 +317,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>split</code> takes the delimiter to split on and returns a <code>Pipe</code> function, which runs a loop passing in the current state of the buffer as its parameter. It starts, of course, with the empty buffer:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; split ::</span> <span class="dt">Proxy</span> p <span class="ot">=&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> p <span class="dt">T.Text</span> <span class="dt">T.Text</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -307,7 +334,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The loop itself begins by requesting the latest data from upstream, and appending it to our existing buffer:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -327,7 +356,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>We then check whether the delimiter can be found in the newly received text, and if it can we split the entire buffer on the delimiter, send the first part (up to the first delimiter) downstream, and pass the remainder back to the next iteration of the loop. If the delimiter can’t be found, we just loop again with the updated contents of the buffer:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">if</span> d <span class="ot">`T.isInfixOf`</span> a</code></pre></td>
@@ -357,7 +388,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>“add” will take as its input a list of integers and return the result of adding them together as its output. “echo” will simply echo the text back out. “quit” will disconnect the client. These commands can be defined as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Command</span> <span class="fu">=</span> <span class="dt">Add</span> [<span class="dt">Integer</span>]</code></pre></td>
@@ -377,7 +410,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Firstly we’ll write our interpreter. Of course there’s all sorts of things you could do here – parsing text is one of Haskell’s great strengths! But all I really want is to put the command, followed by a space, followed by its parameters, separated by spaces. A proper interpreter would need to handle syntax/type errors and the like, but for the sake of simplicity I will assume only valid input can be received:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; interpreter ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">Command</span></code></pre></td>
@@ -407,7 +442,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>safeRead</code> is our nod toward handling unexpected input. Usually, if <code>read</code> receives a string that can’t be parsed as the type we’re looking for (<code>Integer</code> in our case), it will throw an exception. What we’re going to do here is just ignore it by returning the default value of <code>0</code>. Its implementation is as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     safeRead defval x <span class="fu">=</span> maybe defval id (readMaybe x)</code></pre></td>
@@ -422,7 +459,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Next up is our command handler. In order to have access to the <code>respond</code> function to pipe output downstream, we have to implement this as a <code>Pipe</code>. For those commands which simply take a simple input and return a simple response, though, it would be nicer to define them as a simpler mapping of the form:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; command ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Command</span> <span class="ot">-&gt;</span> m <span class="dt">T.Text</span></code></pre></td>
@@ -434,7 +473,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Let’s define our currently supported commands in terms of this simpler interface:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> command (<span class="dt">Echo</span> t) <span class="fu">=</span> return t</code></pre></td>
@@ -451,7 +492,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Our handler itself, then, will be a dispatcher, which can send commands to the appropriate handler if one exists, or pass them off to this simple handler otherwise:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; commandDispatcher ::</span> <span class="dt">Proxy</span> p <span class="ot">=&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> p <span class="dt">Command</span> (<span class="dt">Output</span> <span class="dt">T.Text</span>) <span class="dt">IO</span> ()</code></pre></td>
@@ -484,7 +527,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Finally, we add a <code>main</code> function to set it all in motion on port “8000”. The call to <code>withSocketsDo</code> is required on Windows, and is a no-op on other systems, so it’s good form to use it whenever we’re dealing with network code:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>

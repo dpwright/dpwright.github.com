@@ -32,7 +32,9 @@
 <p>This little snippet is useful if you use git-svn – it gives you an alias to get a git commit ID from an SVN revision number. If you work with others who say things like, “I think this problem was introduced in revision 10342” it can come in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global <code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">svn-ref</span> = <span class="st">&quot;!f() { git log --grep </span><span class="dt">\\</span><span class="st">&quot;</span>git-svn-id.*@<span class="ot">$1</span><span class="dt">\\</span><span class="st">&quot; --pretty=%H; }; f&quot;</span></code></pre></td>

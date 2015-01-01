@@ -31,7 +31,9 @@
 
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -44,7 +46,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Definition</span></code></pre></td>
@@ -57,7 +61,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span></code></pre></td>
@@ -70,7 +76,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; elasticTabstops ::</span> <span class="dt">Pandoc</span> <span class="ot">-&gt;</span> <span class="dt">Pandoc</span></code></pre></td>
@@ -83,7 +91,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; ifCodeBlock ::</span> (<span class="dt">Attr</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Block</span>) <span class="ot">-&gt;</span> <span class="dt">Block</span> <span class="ot">-&gt;</span> <span class="dt">Block</span></code></pre></td>
@@ -91,8 +101,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> ifCodeBlock f (<span class="dt">CodeBlock</span> a s)</code></pre></td>
@@ -107,7 +119,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; elasticate ::</span> <span class="dt">Attr</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Block</span></code></pre></td>
@@ -124,8 +138,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     groups                      </code></pre></td>
@@ -160,7 +176,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; countNumTabs ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span></code></pre></td>
@@ -173,7 +191,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; groupMaker ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [(<span class="dt">Int</span>, [<span class="dt">String</span>])] <span class="ot">-&gt;</span> [(<span class="dt">Int</span>, [<span class="dt">String</span>])]</code></pre></td>
@@ -181,8 +201,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> groupMaker l []</code></pre></td>
@@ -191,7 +213,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> groupMaker l ((n, ls)<span class="fu">:</span>gs)</code></pre></td>
@@ -199,8 +223,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">|</span> lts <span class="fu">==</span> n </code></pre></td>
@@ -213,7 +239,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> lts <span class="fu">=</span> countNumTabs l</code></pre></td>

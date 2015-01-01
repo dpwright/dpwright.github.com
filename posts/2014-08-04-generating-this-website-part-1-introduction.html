@@ -30,7 +30,7 @@
 
 
 <div class="sidenote">
-This is part one of the “generating this website” series. To read the rest of the series, go to the series index <a href="../tags/generating%20this%20website.html">here</a>
+<p>This is part one of the “generating this website” series. To read the rest of the series, go to the series index <a href="../tags/generating%20this%20website.html">here</a></p>
 </div>
 <p>I’ve recently migrated this website to a new server, and while I was at it I thought I’d have another shot at giving it a reboot and actually keeping it up-to-date this time. I’m much more experienced in both Haskell and literate programming than I was when last I updated it, so when I was modifying my configuration it suddenly occurred to me that since this site is generated using Haskell, and since Haskell supports literate programming natively, I could very easily make the site “self-hosting” by writing up the configuration itself as a series of blog posts!</p>
 <p>Thus begins this series, unimaginatively named <a href="../tags/generating%20this%20website.html">Generating this Website</a>. To recap, the site is generated using <a href="http://jaspervdj.be/hakyll">Hakyll</a>, a Haskell library for generating static websites. I will write this series assuming basic Haskell knowledge; you should be familiar with standard typeclasses like <code>Monoid</code> and <code>Applicative</code>. Specific knowledge of Hakyll is not required, and if an idiom feels at all obscure I will attempt to explain it as I go. If there’s anything you don’t get, you can always drop me a tweet @<a href="http://twitter.com/danielpwright">danielpwright</a>!</p>
@@ -39,7 +39,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>To begin with, a couple of lines which will grow familiar as this series progresses:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -54,7 +56,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>I’m also going to import <code>liftA2</code> from <code>Control.Applicative</code> here. I use this as a convenience later.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> (liftA2)</code></pre></td>
@@ -65,7 +69,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>Finally, I’ll import the other posts in this series. These supply much of the actual functionality.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span></code></pre></td>
@@ -86,7 +92,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>The main entry point to Hakyll takes a set of <a href="http://jaspervdj.be/hakyll/reference/Hakyll-Core-Rules.html#t:Rules"><code>Rules</code></a> and returns an <code>IO</code> action which generates the site. <code>Rules</code> themselves form a monad, so assuming we have some simple rules:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> templates, images, css,<span class="ot"> static ::</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -97,7 +105,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>We can put them together by simply listing them using <code>do</code>-notation.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; simpleRules ::</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -132,7 +142,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>The rules themselves govern the compilation and generation of files. Perhaps the simplest of these is <code>templates</code>, which compiles all files found in the <code>templates</code> directory and any subdirectories, but doesn’t actually need to output those files anywhere – instead it keeps the compiled versions around for other pages using that template.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> templates <span class="fu">=</span> match <span class="st">&quot;templates/**&quot;</span> <span class="fu">$</span> compile templateCompiler</code></pre></td>
@@ -144,7 +156,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Next up come the images. These are also very simple – simply take the full path of the images, and copy them to the same place in the output directory.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> images <span class="fu">=</span> match <span class="st">&quot;images/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
@@ -162,7 +176,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>For CSS files, Hakyll provides a compressor to speed download times.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> css <span class="fu">=</span> match <span class="st">&quot;css/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
@@ -180,7 +196,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Occasionally, I just want to put some static files up that don’t fit the structure of the rest of the blog. This is particularly useful when I want to upload slides from a talk I’ve given, for example the <a href="../gits-guts">git talk</a> I gave a couple of months ago. The talk itself is maintained in a different repository, so it’s convenient if I can just include that as a submodule and have its files copied automatically. I do this by storing all such content in the <code>static</code> directory, and then copying it when generating the site, stripping the initial <code>static/</code> from the output path.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> static <span class="fu">=</span> match <span class="st">&quot;static/**&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
@@ -200,7 +218,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>In order to do this, we first need to generate the tags for the site, and then we need to pass these into those <code>Rules</code> that make use of them. Generating the tags is quite easy:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; generateTags ::</span> <span class="dt">Rules</span> <span class="dt">Tags</span></code></pre></td>
@@ -216,7 +236,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Having generated the tags, we need to pass them into any rules that need them. We could use <code>do</code>-notation as we did for <code>simpleRules</code> and simply pass the <code>tags</code> parameter to each entry, but here I’m going to use a little <code>Applicative</code> trick which allows me to keep the function point-free, and I think makes it read a little more declaratively.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; taggedRules ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -233,7 +255,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>This trick exploits the fact that <code>(-&gt;)</code>, the type of functions, implements <code>Applicative</code> (in fact being applicative is rather their <em>raison d’être</em> when you think about it), so if we lift the Monadic <code>(&gt;&gt;)</code> operator to act on <em>applications of functions returning a Monad</em> instead of just Monads, we can pass the parameter to the function in once and it will be distributed to each of those functions. In other words:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">posts tags <span class="fu">&gt;&gt;</span> tagIndex tags <span class="fu">&gt;&gt;</span> feed tags ≡ (posts <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> feed) tags</code></pre></td>
@@ -249,7 +273,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Finally we define the entry point to the application. This simply calls Hakyll’s own <code>hakyll</code> function, passing in the rules defined above. First we call the simple, self-standing rules, then we generate the tags and pass them to the tagged rules.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>

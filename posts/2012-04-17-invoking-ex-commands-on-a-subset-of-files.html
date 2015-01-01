@@ -34,7 +34,9 @@
 <p>Yesterday I had a simple problem to solve: for every file containing string SEARCH, I wanted to delete any line matching LINE.  Here’s a couple of ways you could do it using sed:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="kw">read</span> <span class="ot">FILE</span>; <span class="kw">do</span> <span class="kw">sed</span> -i <span class="st">&quot;&quot;</span> <span class="st">&quot;/LINE/d&quot;</span> <span class="ot">$FILE</span><span class="kw">;</span> <span class="kw">done</span></code></pre></td>
@@ -49,7 +51,9 @@
 <p>Just for kicks, though, I thought I’d do it in <code>ex</code> this time.  Here’s how that looks:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="kw">read</span> <span class="ot">FILE</span>; <span class="kw">do</span> <span class="kw">(echo</span> <span class="st">&quot;g/LINE/d&quot;</span><span class="kw">;</span> <span class="kw">echo</span> <span class="st">'wq'</span><span class="kw">)</span> <span class="kw">|</span> <span class="kw">ex</span> -s FILE<span class="kw">;</span> <span class="kw">done</span></code></pre></td>

@@ -32,7 +32,6 @@
 <center>
 <img src="../images/2015-01-01-happy-new-year/nengajou.png" title="明けましておめでとうございます" />
 </center>
-
 <h2 id="年賀状をhaskellで">年賀状をHaskellで</h2>
 <p>上の画像が今年の僕達の年賀状です。</p>
 <p>実は、妻が最初アプリでデザインを考えていたのですが、 画像のダウンロードができず、Pixelmatorで作りなおそうという話がでました。 でも、これってHaskellでできるんじゃないの…？と思い、 試しにやってみることにしました。</p>
@@ -51,7 +50,6 @@
 <center>
 <img src="../images/2015-01-01-happy-new-year/triangles.png" title="５つの三角形" />
 </center>
-
 <p>この下にメッセージをつけます。</p>
 <p>では、実際にどう作ったか振り返ります。</p>
 <h2 id="依存関係">依存関係</h2>
@@ -59,7 +57,9 @@
 <p>下記の<code>cabal</code>設定でインストールしました。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>executable nengajou2015</code></pre></td>
@@ -67,9 +67,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>  main-is:          </code></pre></td>
@@ -132,7 +134,9 @@
 <p><code>arithmoi</code>は最近<code>llvm</code>のバージョンによってエラーになるときがあります。 その場合は、下記のコマンドで<code>cabal install</code>してください。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>$ cabal install --constrain &quot;arithmoi -llvm&quot;</code></pre></td>
@@ -143,7 +147,9 @@
 <p>フォントを<code>svg</code>に変換するため、<code>fontforge</code>が必要です。 Macを使ってたので、まず<a href="https://xquartz.macosforge.org/">XQuartz</a>をインストールしました。 それから、Homebrewで、</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>$ brew install fontforge</code></pre></td>
@@ -156,7 +162,9 @@
 <p><code>LANGUAGE</code>プラグマは、意外と多くなりました。 まず、いつもの<code>OverloadedStrings</code>と、 diagramsのドキュメンテーションに推奨される<code>NoMonomorphismRestriction</code>。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -171,7 +179,9 @@
 <p>フォントを設定するためのデータ構造では、 <code>Functor</code>と<code>Traversable</code>の関数を使いたいと思いました。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE DeriveFunctor #-}</span></code></pre></td>
@@ -188,7 +198,9 @@
 <p>よっし！diagramsをインポートしよ！</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Diagrams.Prelude</span> <span class="kw">hiding</span> ((&lt;.&gt;))</code></pre></td>
@@ -202,7 +214,9 @@
 <p>あ、テキストも書きたいからSVGFontsも必要になるね…</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Graphics.SVGFonts</span></code></pre></td>
@@ -217,7 +231,9 @@
 <p>そのため、システム的なモジュールも必要だね…</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Directory</span></code></pre></td>
@@ -238,8 +254,10 @@
 <p><code>Data.Text</code>を使った方が最適…</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Text</span>    </code></pre></td>
@@ -255,7 +273,9 @@
 <p>え、さっき<code>Traversable</code>って言わなかった？</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Foldable</span> (<span class="dt">Foldable</span>)</code></pre></td>
@@ -269,7 +289,9 @@
 <p>まだだよー</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Arrow</span></code></pre></td>
@@ -283,7 +305,9 @@
 <p>まだだよー</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span></code></pre></td>
@@ -297,9 +321,11 @@
 <p>自分で定義をしたのは一つだけです。それは、フォントを設定するための型です。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Fonts</span> a </code></pre></td>
@@ -332,7 +358,9 @@
 <p>「なぜ多相型で定義する必要があるの？」と思うかもしれませんが、 フォントは自動的に<code>.ttf</code>から<code>.svg</code>に変換できるようにしたいので、 同じストラクチャーで、ロードする前のファイル名と、 準備ができた使える状態のフォントを入れたいと思います。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">newtype</span> <span class="dt">PreparedFont</span> <span class="fu">=</span> <span class="dt">PreparedFont</span> {<span class="ot"> fromPF ::</span> <span class="dt">String</span> }</code></pre></td>
@@ -347,11 +375,12 @@
 <center>
 <img src="../images/2015-01-01-happy-new-year/triangles.png" title="５つの三角形" />
 </center>
-
 <p>この５つの三角形は全部二等辺三角形です！ diagramsは正三角形を作る関数が定義されていますが、 二等辺三角形はないため、自分で定義する必要があります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; isosceles ::</span> <span class="dt">Angle</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -380,7 +409,9 @@
 <p>画像のレイアウトをするため、底辺の長さが必要なときがあります。 それを計算するために下記のユーティリティ関数を使います。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; isoscelesBase ::</span> <span class="dt">Angle</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></code></pre></td>
@@ -396,7 +427,9 @@
 <p>とりあえず、フォントや写真はもう既にロードされていると見なしましょう。 そうすると、下記のようになります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; nengajou ::</span> <span class="dt">Fonts</span> <span class="dt">PreparedFont</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -404,8 +437,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> nengajou fs photo <span class="fu">=</span> </code></pre></td>
@@ -427,7 +462,9 @@
 <p>あとは、ここで使った値を定義するだけです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -435,9 +472,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     θ                 </code></pre></td>
@@ -460,9 +499,11 @@
 <p>まずは、写真や画像についての変数です。<code>θ</code>の値を変更したら、三角形の形を変えられます。 <code>photoHeight</code>は写真全体の高さですが、 <code>imageWidth</code>はできた画像（緑のメイン三角形）の幅となります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     photoShiftedRight </code></pre></td>
@@ -475,9 +516,11 @@
 <p>実はもとの写真では人物は真ん中ではなかったので、 細かいことになりますが、これで調整しています。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     inViewport <span class="fu">=</span> </code></pre></td>
@@ -497,7 +540,9 @@
 <p>画像自体も簡単に説明できます。まず、５つの三角形と合わせるため、 写真を切る必要があります。その切った写真の上に、三角形を載せていきます。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; topImage ::</span> <span class="dt">Angle</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -511,9 +556,11 @@
 <p>切るサイズは、写真の元の高さ✕緑の三角形の底辺の長さです。 それではちょっと幅が見えてしまうので、あと２ピクセルずつ、念の為に切ります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   clippedPhoto </code></pre></td>
@@ -528,8 +575,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   photoHeight         </code></pre></td>
@@ -545,8 +594,10 @@
 <p><code>triangles</code>は、左から右に言うと、</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   triangles </code></pre></td>
@@ -584,12 +635,13 @@
 <center>
 <img src="../images/2015-01-01-happy-new-year/outline-triangles.png" title="Picture of 3 central triangles goes here" />
 </center>
-
 <p>輪郭のみを描いて、下にある写真が見える三角形ですね。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   outlineTriangle a </code></pre></td>
@@ -615,11 +667,12 @@
 <center>
 <img src="../images/2015-01-01-happy-new-year/edge-triangles.png" title="Picture of 2 edge triangles goes here" />
 </center>
-
 <p>この三角形の頂角は真ん中の三角形の反対角度になっています。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   θ<span class="ch">' = (180 @@ deg) ^-^ θ</span></code></pre></td>
@@ -630,8 +683,10 @@
 <p>高度は下の三角形の底辺の半分です。 この値はまた使うので変数に保存しておきましょう。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   bottomTriangleHalfBase </code></pre></td>
@@ -643,8 +698,10 @@
 <p>あとは色と90°の回転です。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   edgeTriangle </code></pre></td>
@@ -672,8 +729,10 @@
 <p><code>outlineTriangle</code>と<code>edgeTriangle</code>の２種類を定義できました。 これで５つの三角形が描けます。まずは真ん中の三角形です。 高度は写真と一緒です。その三角形を、<em>y</em> 軸に鏡映します。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   centralTriangle   </code></pre></td>
@@ -685,8 +744,10 @@
 <p>あとは右側の下の三角形と真っ白の三角形。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   bottomTriangleRight </code></pre></td>
@@ -714,8 +775,10 @@
 <p>最後は左側です。右側を、<em>x</em> 軸に鏡映するだけです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   bottomTriangleLeft </code></pre></td>
@@ -733,7 +796,9 @@
 <p>最初に「型は<em><code>Fonts</code></em>以外は定義しない」と言いましたが、 実は、メッセージを定義するため、今回下記のユーティリティー型を定義しました。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">MessagePart</span></code></pre></td>
@@ -741,9 +806,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">=</span> </code></pre></td>
@@ -804,7 +871,9 @@
 <p>この型があったらメッセージ自体は、ただ<em><code>MessagePart</code></em>のリストになります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; messageParts ::</span> [<span class="dt">MessagePart</span>]</code></pre></td>
@@ -815,8 +884,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   [ <span class="dt">MsgSpace</span> </code></pre></td>
@@ -861,7 +932,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ]</code></pre></td>
@@ -872,7 +945,9 @@
 <p>では、このメッセージをどうやって<em><code>Diagram</code></em>に変換しましょう？</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; message ::</span> <span class="dt">Fonts</span> <span class="dt">PreparedFont</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -889,8 +964,10 @@
 <p><em><code>MessagePart</code></em>を一つ一つ<code>drawMsgPart</code>で描いて、 それから<code>foldr1 (===)</code>で上から下まで並べます。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   drawMsgPart (<span class="dt">MsgSpace</span> ph)        </code></pre></td>
@@ -907,8 +984,10 @@
 <p><code>getRealHeight</code>は、割合の分子から、実際の高さに変換する関数です。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   getRealHeight ph </code></pre></td>
@@ -924,8 +1003,10 @@
 <p><code>text'</code>は、SVGFontsを使ってテキストをレンダーします。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   text' (a, d) f o t </code></pre></td>
@@ -938,9 +1019,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   textPath t f a d </code></pre></td>
@@ -960,7 +1043,9 @@
 <p>写真は簡単です。Diagramsの<code>loadImageEmb</code>関数を呼んで、 エラーが返されたらそのまま出力して停止します。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; loadPhoto ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span>)</code></pre></td>
@@ -977,7 +1062,9 @@
 <p>フォントはもうちょっと複雑なんです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; prepareFonts ::</span> <span class="dt">Fonts</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Fonts</span> <span class="dt">PreparedFont</span>)</code></pre></td>
@@ -985,8 +1072,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> prepareFonts fs <span class="fu">=</span> <span class="kw">do</span> </code></pre></td>
@@ -1002,8 +1091,10 @@
 <p>フォントは<code>.ttf</code>から<code>.svg</code>に変換しないと使えないんです。 変換されたフォントは<code>svg-fonts</code>というディレクトリーに出力します。 まず、そのディレクトリーがない場合は作成しないとダメです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   fontDir        </code></pre></td>
@@ -1016,7 +1107,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     dirExists <span class="ot">&lt;-</span> doesDirectoryExist fontDir</code></pre></td>
@@ -1030,8 +1123,10 @@
 <p>変換自体はfontforgeを使って行います。 もしもう既に変換されたフォントがあるならまた変換する必要はありません。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   fontforge f f' </code></pre></td>
@@ -1044,7 +1139,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="kw">let</span> f' <span class="fu">=</span> fontDir <span class="fu">&lt;/&gt;</span> filter (<span class="fu">/=</span> <span class="ch">' '</span>) (takeBaseName f) <span class="fu">&lt;.&gt;</span> <span class="st">&quot;svg&quot;</span></code></pre></td>
@@ -1070,7 +1167,9 @@
 <p>fontforgeが出すXMLはネームスペースに入っていますが、 SVGFontsがネームスペース無しのXMLしかサポートされていません。 下記の関数はネームスペース宣言を外します。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; stripNamespaceLineFrom ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -1081,9 +1180,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> go </code></pre></td>
@@ -1113,7 +1214,9 @@
 <p>写真とフォントの準備をし、<code>nengajou</code>の関数に渡して<em><code>Diagram</code></em>を作成します。 <code>pad</code>を使って枠を作ります。それから背景を白にしましょう。 最終、Diagramsの<code>mainWith</code>関数を使ってコマンドラインインターフェースが出来上がります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -1130,9 +1233,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     </code></pre></td>
@@ -1152,7 +1257,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="st"># pad 1.1 # bg black</span></code></pre></td>

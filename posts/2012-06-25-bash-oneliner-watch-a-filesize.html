@@ -32,7 +32,9 @@
 <p>Sometimes, when running a long operation modifying a single file, I want to monitor its progress by watching that file’s size increase. Here’s a simple one-liner which will print the incrementing filesize until Ctrl-C is pressed:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">while</span> <span class="kw">true;</span> <span class="kw">do</span> <span class="kw">echo</span> -e -n <span class="st">&quot;\r</span><span class="kw">`ls</span> -l -h FILENAME <span class="kw">|</span> <span class="kw">awk</span> <span class="st">'{ print $5 }'</span><span class="kw">`</span><span class="st">&quot;</span><span class="kw">;</span> <span class="kw">done</span></code></pre></td>

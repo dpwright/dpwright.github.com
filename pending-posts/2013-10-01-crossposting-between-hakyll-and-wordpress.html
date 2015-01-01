@@ -31,7 +31,9 @@
 
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -41,7 +43,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Definition</span></code></pre></td>
@@ -54,7 +58,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Lens</span></code></pre></td>
@@ -70,7 +76,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.IO</span></code></pre></td>
@@ -89,7 +97,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span></code></pre></td>
@@ -105,7 +115,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">System.Console.CmdArgs</span>        (cmdArgs)</code></pre></td>
@@ -118,7 +130,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; trim ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
@@ -131,7 +145,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; hakyllHeaderXF ::</span> <span class="dt">Transform</span></code></pre></td>
@@ -147,7 +163,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; hakyllize ::</span> <span class="dt">StateT</span> (<span class="dt">BlogLiterately</span>, <span class="dt">Pandoc</span>) <span class="dt">IO</span> ()</code></pre></td>
@@ -160,7 +178,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; removeMetadata ::</span> (<span class="dt">BlogLiterately</span>, <span class="dt">Pandoc</span>) <span class="ot">-&gt;</span> (<span class="dt">BlogLiterately</span>, <span class="dt">Pandoc</span>)</code></pre></td>
@@ -173,7 +193,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readAndApplyMetadata ::</span> (<span class="dt">BlogLiterately</span>, <span class="dt">Pandoc</span>) <span class="ot">-&gt;</span> (<span class="dt">BlogLiterately</span>, <span class="dt">Pandoc</span>)</code></pre></td>
@@ -189,7 +211,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; applyOptionsFromMetadata ::</span> [(<span class="dt">String</span>, <span class="dt">String</span>)] <span class="ot">-&gt;</span> <span class="dt">State</span> <span class="dt">BlogLiterately</span> ()</code></pre></td>
@@ -238,7 +262,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; getMetadataTable ::</span> <span class="dt">Pandoc</span> <span class="ot">-&gt;</span> [[<span class="dt">TableCell</span>]]</code></pre></td>
@@ -251,7 +277,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; inlineExtract ::</span> <span class="dt">Inline</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
@@ -270,7 +298,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readMetadata ::</span> <span class="dt">Pandoc</span> <span class="ot">-&gt;</span> [(<span class="dt">String</span>, <span class="dt">String</span>)]</code></pre></td>
@@ -304,7 +334,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; blogLiteratelyVeryCustom ::</span> [<span class="dt">Transform</span>] <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">String</span></code></pre></td>
@@ -332,7 +364,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -366,7 +400,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; writeIdToFile ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">Integer</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -403,7 +439,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; splitHeader ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> (<span class="dt">String</span>, <span class="dt">String</span>)</code></pre></td>
@@ -428,7 +466,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; tagDefined ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></code></pre></td>
@@ -441,7 +481,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; addPostId ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Integer</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>

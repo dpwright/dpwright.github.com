@@ -22,7 +22,6 @@
 <center>
 <img src="/images/2015-01-01-happy-new-year/nengajou.png" title="明けましておめでとうございます" />
 </center>
-
 <h2 id="年賀状をhaskellで">年賀状をHaskellで</h2>
 <p>上の画像が今年の僕達の年賀状です。</p>
 <p>実は、妻が最初アプリでデザインを考えていたのですが、 画像のダウンロードができず、Pixelmatorで作りなおそうという話がでました。 でも、これってHaskellでできるんじゃないの…？と思い、 試しにやってみることにしました。</p>
@@ -41,7 +40,6 @@
 <center>
 <img src="/images/2015-01-01-happy-new-year/triangles.png" title="５つの三角形" />
 </center>
-
 <p>この下にメッセージをつけます。</p>
 <p>では、実際にどう作ったか振り返ります。</p>
 <h2 id="依存関係">依存関係</h2>
@@ -49,7 +47,9 @@
 <p>下記の<code>cabal</code>設定でインストールしました。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>executable nengajou2015</code></pre></td>
@@ -57,9 +57,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>  main-is:          </code></pre></td>
@@ -122,7 +124,9 @@
 <p><code>arithmoi</code>は最近<code>llvm</code>のバージョンによってエラーになるときがあります。 その場合は、下記のコマンドで<code>cabal install</code>してください。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>$ cabal install --constrain &quot;arithmoi -llvm&quot;</code></pre></td>
@@ -133,7 +137,9 @@
 <p>フォントを<code>svg</code>に変換するため、<code>fontforge</code>が必要です。 Macを使ってたので、まず<a href="https://xquartz.macosforge.org/">XQuartz</a>をインストールしました。 それから、Homebrewで、</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre><code>$ brew install fontforge</code></pre></td>
@@ -146,7 +152,9 @@
 <p><code>LANGUAGE</code>プラグマは、意外と多くなりました。 まず、いつもの<code>OverloadedStrings</code>と、 diagramsのドキュメンテーションに推奨される<code>NoMonomorphismRestriction</code>。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -161,7 +169,9 @@
 <p>フォントを設定するためのデータ構造では、 <code>Functor</code>と<code>Traversable</code>の関数を使いたいと思いました。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE DeriveFunctor #-}</span></code></pre></td>
@@ -178,7 +188,9 @@
 <p>よっし！diagramsをインポートしよ！</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Diagrams.Prelude</span> <span class="kw">hiding</span> ((&lt;.&gt;))</code></pre></td>
@@ -192,7 +204,9 @@
 <p>あ、テキストも書きたいからSVGFontsも必要になるね…</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Graphics.SVGFonts</span></code></pre></td>
@@ -207,7 +221,9 @@
 <p>そのため、システム的なモジュールも必要だね…</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Directory</span></code></pre></td>
@@ -228,8 +244,10 @@
 <p><code>Data.Text</code>を使った方が最適…</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Text</span>    </code></pre></td>
@@ -245,7 +263,9 @@
 <p>え、さっき<code>Traversable</code>って言わなかった？</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Foldable</span> (<span class="dt">Foldable</span>)</code></pre></td>
@@ -259,7 +279,9 @@
 <p>まだだよー</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Arrow</span></code></pre></td>
@@ -273,7 +295,9 @@
 <p>まだだよー</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span></code></pre></td>
@@ -287,9 +311,11 @@
 <p>自分で定義をしたのは一つだけです。それは、フォントを設定するための型です。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Fonts</span> a </code></pre></td>
@@ -322,7 +348,9 @@
 <p>「なぜ多相型で定義する必要があるの？」と思うかもしれませんが、 フォントは自動的に<code>.ttf</code>から<code>.svg</code>に変換できるようにしたいので、 同じストラクチャーで、ロードする前のファイル名と、 準備ができた使える状態のフォントを入れたいと思います。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">newtype</span> <span class="dt">PreparedFont</span> <span class="fu">=</span> <span class="dt">PreparedFont</span> {<span class="ot"> fromPF ::</span> <span class="dt">String</span> }</code></pre></td>
@@ -337,11 +365,12 @@
 <center>
 <img src="/images/2015-01-01-happy-new-year/triangles.png" title="５つの三角形" />
 </center>
-
 <p>この５つの三角形は全部二等辺三角形です！ diagramsは正三角形を作る関数が定義されていますが、 二等辺三角形はないため、自分で定義する必要があります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; isosceles ::</span> <span class="dt">Angle</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -370,7 +399,9 @@
 <p>画像のレイアウトをするため、底辺の長さが必要なときがあります。 それを計算するために下記のユーティリティ関数を使います。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; isoscelesBase ::</span> <span class="dt">Angle</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></code></pre></td>
@@ -386,7 +417,9 @@
 <p>とりあえず、フォントや写真はもう既にロードされていると見なしましょう。 そうすると、下記のようになります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; nengajou ::</span> <span class="dt">Fonts</span> <span class="dt">PreparedFont</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -394,8 +427,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> nengajou fs photo <span class="fu">=</span> </code></pre></td>
@@ -417,7 +452,9 @@
 <p>あとは、ここで使った値を定義するだけです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -425,9 +462,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     θ                 </code></pre></td>
@@ -450,9 +489,11 @@
 <p>まずは、写真や画像についての変数です。<code>θ</code>の値を変更したら、三角形の形を変えられます。 <code>photoHeight</code>は写真全体の高さですが、 <code>imageWidth</code>はできた画像（緑のメイン三角形）の幅となります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     photoShiftedRight </code></pre></td>
@@ -465,9 +506,11 @@
 <p>実はもとの写真では人物は真ん中ではなかったので、 細かいことになりますが、これで調整しています。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     inViewport <span class="fu">=</span> </code></pre></td>
@@ -487,7 +530,9 @@
 <p>画像自体も簡単に説明できます。まず、５つの三角形と合わせるため、 写真を切る必要があります。その切った写真の上に、三角形を載せていきます。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; topImage ::</span> <span class="dt">Angle</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -501,9 +546,11 @@
 <p>切るサイズは、写真の元の高さ✕緑の三角形の底辺の長さです。 それではちょっと幅が見えてしまうので、あと２ピクセルずつ、念の為に切ります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   clippedPhoto </code></pre></td>
@@ -518,8 +565,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   photoHeight         </code></pre></td>
@@ -535,8 +584,10 @@
 <p><code>triangles</code>は、左から右に言うと、</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   triangles </code></pre></td>
@@ -574,12 +625,13 @@
 <center>
 <img src="/images/2015-01-01-happy-new-year/outline-triangles.png" title="Picture of 3 central triangles goes here" />
 </center>
-
 <p>輪郭のみを描いて、下にある写真が見える三角形ですね。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   outlineTriangle a </code></pre></td>
@@ -605,11 +657,12 @@
 <center>
 <img src="/images/2015-01-01-happy-new-year/edge-triangles.png" title="Picture of 2 edge triangles goes here" />
 </center>
-
 <p>この三角形の頂角は真ん中の三角形の反対角度になっています。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   θ<span class="ch">&#39; = (180 @@ deg) ^-^ θ</span></code></pre></td>
@@ -620,8 +673,10 @@
 <p>高度は下の三角形の底辺の半分です。 この値はまた使うので変数に保存しておきましょう。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   bottomTriangleHalfBase </code></pre></td>
@@ -633,8 +688,10 @@
 <p>あとは色と90°の回転です。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   edgeTriangle </code></pre></td>
@@ -662,8 +719,10 @@
 <p><code>outlineTriangle</code>と<code>edgeTriangle</code>の２種類を定義できました。 これで５つの三角形が描けます。まずは真ん中の三角形です。 高度は写真と一緒です。その三角形を、<em>y</em> 軸に鏡映します。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   centralTriangle   </code></pre></td>
@@ -675,8 +734,10 @@
 <p>あとは右側の下の三角形と真っ白の三角形。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   bottomTriangleRight </code></pre></td>
@@ -704,8 +765,10 @@
 <p>最後は左側です。右側を、<em>x</em> 軸に鏡映するだけです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   bottomTriangleLeft </code></pre></td>
@@ -723,7 +786,9 @@
 <p>最初に「型は<em><code>Fonts</code></em>以外は定義しない」と言いましたが、 実は、メッセージを定義するため、今回下記のユーティリティー型を定義しました。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">MessagePart</span></code></pre></td>
@@ -731,9 +796,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">=</span> </code></pre></td>
@@ -794,7 +861,9 @@
 <p>この型があったらメッセージ自体は、ただ<em><code>MessagePart</code></em>のリストになります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; messageParts ::</span> [<span class="dt">MessagePart</span>]</code></pre></td>
@@ -805,8 +874,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   [ <span class="dt">MsgSpace</span> </code></pre></td>
@@ -851,7 +922,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ]</code></pre></td>
@@ -862,7 +935,9 @@
 <p>では、このメッセージをどうやって<em><code>Diagram</code></em>に変換しましょう？</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; message ::</span> <span class="dt">Fonts</span> <span class="dt">PreparedFont</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span></code></pre></td>
@@ -879,8 +954,10 @@
 <p><em><code>MessagePart</code></em>を一つ一つ<code>drawMsgPart</code>で描いて、 それから<code>foldr1 (===)</code>で上から下まで並べます。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   drawMsgPart (<span class="dt">MsgSpace</span> ph)        </code></pre></td>
@@ -897,8 +974,10 @@
 <p><code>getRealHeight</code>は、割合の分子から、実際の高さに変換する関数です。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   getRealHeight ph </code></pre></td>
@@ -914,8 +993,10 @@
 <p><code>text'</code>は、SVGFontsを使ってテキストをレンダーします。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   text&#39; (a, d) f o t </code></pre></td>
@@ -928,9 +1009,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   textPath t f a d </code></pre></td>
@@ -950,7 +1033,9 @@
 <p>写真は簡単です。Diagramsの<code>loadImageEmb</code>関数を呼んで、 エラーが返されたらそのまま出力して停止します。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; loadPhoto ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Diagram</span> <span class="dt">B</span> <span class="dt">R2</span>)</code></pre></td>
@@ -967,7 +1052,9 @@
 <p>フォントはもうちょっと複雑なんです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; prepareFonts ::</span> <span class="dt">Fonts</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Fonts</span> <span class="dt">PreparedFont</span>)</code></pre></td>
@@ -975,8 +1062,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> prepareFonts fs <span class="fu">=</span> <span class="kw">do</span> </code></pre></td>
@@ -992,8 +1081,10 @@
 <p>フォントは<code>.ttf</code>から<code>.svg</code>に変換しないと使えないんです。 変換されたフォントは<code>svg-fonts</code>というディレクトリーに出力します。 まず、そのディレクトリーがない場合は作成しないとダメです。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   fontDir        </code></pre></td>
@@ -1006,7 +1097,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     dirExists <span class="ot">&lt;-</span> doesDirectoryExist fontDir</code></pre></td>
@@ -1020,8 +1113,10 @@
 <p>変換自体はfontforgeを使って行います。 もしもう既に変換されたフォントがあるならまた変換する必要はありません。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   fontforge f f&#39; </code></pre></td>
@@ -1034,7 +1129,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="kw">let</span> f&#39; <span class="fu">=</span> fontDir <span class="fu">&lt;/&gt;</span> filter (<span class="fu">/=</span> <span class="ch">&#39; &#39;</span>) (takeBaseName f) <span class="fu">&lt;.&gt;</span> <span class="st">&quot;svg&quot;</span></code></pre></td>
@@ -1060,7 +1157,9 @@
 <p>fontforgeが出すXMLはネームスペースに入っていますが、 SVGFontsがネームスペース無しのXMLしかサポートされていません。 下記の関数はネームスペース宣言を外します。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; stripNamespaceLineFrom ::</span> FilePath <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -1071,9 +1170,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> go </code></pre></td>
@@ -1103,7 +1204,9 @@
 <p>写真とフォントの準備をし、<code>nengajou</code>の関数に渡して<em><code>Diagram</code></em>を作成します。 <code>pad</code>を使って枠を作ります。それから背景を白にしましょう。 最終、Diagramsの<code>mainWith</code>関数を使ってコマンドラインインターフェースが出来上がります。</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -1120,9 +1223,11 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     </code></pre></td>
@@ -1142,7 +1247,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="st"># pad 1.1 # bg black</span></code></pre></td>
@@ -1167,14 +1274,16 @@
 
 
 <div class="sidenote">
-This is part two of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website.html">here</a>
+<p>This is part two of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website.html">here</a></p>
 </div>
 <p>OK, time to dive into arguably the most important part of the website generator – generating the posts themselves! Really, this is what it all comes down to; any other features like tags, rss feeds, crossposting and so on are just window dressing. Generating posts is not actually that hard, but you’ll find it’s one of the most often-tweaked part of your Hakyll setup as most changes you want to make affect posts in some way. Let’s get started!</p>
 <h2 id="preliminaries">Preliminaries</h2>
 <p>We start with our usual <code>OverloadedStrings</code> definition and <code>Hakyll</code> import. Because we’re developing a module now, rather than the main entry point of our program, we also need a module header. This was missing from the last post but will be present in all the remaining modules in this series.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -1192,8 +1301,10 @@ This is part two of the “generating this website” series. To read the rest o
 <p>The following imports give us some extra helper functions which we’ll use throughout our program. These functions (particularly the operators) are so common I almost wish they were part of the standard prelude, but they aren’t so we’ll have to live with a longish import list. I won’t go into too much detail here but as I’ve used explicit imports you can see exactly which functions I’m importing from where.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Monoid</span>         </code></pre></td>
@@ -1225,8 +1336,10 @@ This is part two of the “generating this website” series. To read the rest o
 <p>I’m going to be making use of a few system/date related functions to handle the date specified in the header and rename the file appropriately.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.FilePath</span>     </code></pre></td>
@@ -1250,7 +1363,9 @@ This is part two of the “generating this website” series. To read the rest o
 <p>The <code>Map</code> and <code>Set</code> data structures export function names that clash with those from the standard prelude for working with lists, so I’ll import those qualified here. In fact, I only make use of one function from each (<code>lookup</code> and <code>union</code> respectively), so I could have just imported those functions and had done with it, but it’s common form to import data structures like this qualified, so I’m in the habit of it. It’s also nice to be able to look at code called <code>M.lookup</code> and know straight away that it’s looking up the value in a map and not an association list.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></td>
@@ -1264,8 +1379,10 @@ This is part two of the “generating this website” series. To read the rest o
 <p>Finally some more specific imports. I’ll be overriding some of Pandoc’s default options so I’ll need to bring those into scope. As well as that, I’m going to import the <code>Crossposting</code> module which we’ll cover later in the series.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Definition</span> </code></pre></td>
@@ -1282,7 +1399,9 @@ This is part two of the “generating this website” series. To read the rest o
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Crossposting</span></code></pre></td>
@@ -1305,7 +1424,9 @@ This is part two of the “generating this website” series. To read the rest o
 <p>The compiler itself is just a standard compiler with different reader and writer options, and some pandoc-level transformations:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; customCompiler ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
@@ -1319,7 +1440,9 @@ This is part two of the “generating this website” series. To read the rest o
 <p>Those options are defined in terms of Pandoc’s defaults, provided by the <code>Default</code> typeclass, which allows you to specify a default definition <code>def</code> for any type. First we tell the reader to add <code>readerSmart</code> to its options:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readerOptions ::</span> <span class="dt">ReaderOptions</span></code></pre></td>
@@ -1333,7 +1456,9 @@ This is part two of the “generating this website” series. To read the rest o
 <p>The writer options are manipulated in a similar way, adding MathJax support, syntax highlighting, and literate Haskell.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; writerOptions ::</span> <span class="dt">WriterOptions</span></code></pre></td>
@@ -1341,8 +1466,10 @@ This is part two of the “generating this website” series. To read the rest o
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> writerOptions </code></pre></td>
@@ -1384,7 +1511,9 @@ This is part two of the “generating this website” series. To read the rest o
 <p>Finally, we define <code>pandocTransform</code>, for our post-processing needs. This is just the composition of any pandoc-level filters we want to apply – see the posts for those individual filters for more information.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pandocTransforms ::</span> <span class="dt">Pandoc</span> <span class="ot">-&gt;</span> <span class="dt">Pandoc</span></code></pre></td>
@@ -1400,7 +1529,9 @@ This is part two of the “generating this website” series. To read the rest o
 <p>First, then, the <code>Context</code>, which simply extracts data from the metadata header at the top of the file.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; postCtx ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
@@ -1408,8 +1539,10 @@ This is part two of the “generating this website” series. To read the rest o
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postCtx tags </code></pre></td>
@@ -1438,7 +1571,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p>The <code>Compiler</code> follows standard conventions: run the Pandoc compiler (in this case our <code>customCompiler</code> defined above), apply templates, and fix up the URLs.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; postCompiler ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
@@ -1446,8 +1581,10 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postCompiler tags </code></pre></td>
@@ -1472,7 +1609,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> ctx <span class="fu">=</span> postCtx tags</code></pre></td>
@@ -1484,7 +1623,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p>Finally, our <code>Rules</code> tell Hakyll where to get posts from, how to compile them, and where to put them.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; posts ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -1504,11 +1645,13 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p>This is mostly pretty simple. You can see we generate posts from both the <code>posts</code> and <code>pending-posts</code> directories (the latter are generated, but not included in the index, so I can preview them because I know the URL but they’re not “published” as such). We use the <code>date</code> and <code>title</code> metadata fields to generate a filename and then change its extension to <code>.html</code>. Finally we compiler it with the <code>postCompiler</code> we defined above.</p>
 <p>There’s just one snag… that <code>dateAndTitle</code> function passed to <code>metadataRoute</code> doesn’t actually exist! We’re going to have to write it.</p>
 <h2 id="extracting-the-date-and-title-from-metadata">Extracting the date and title from metadata</h2>
-<p>As mentioned, Hakyll by default expects the date and title to be included in the filename and as such it can just change the extension and have done with it. Because we might be naming files after the modules they define (in the case of Literate Haskell files), a post such as this one would end up with a URL looking like <a href="http://dpwright.com/posts/Posts.html">http://dpwright.com/posts/Posts.html</a>, which would be very odd. Even without this, it’s quite easy to write a post which accidentally has a subtly different title to its filename, which would be confusing.</p>
+<p>As mentioned, Hakyll by default expects the date and title to be included in the filename and as such it can just change the extension and have done with it. Because we might be naming files after the modules they define (in the case of Literate Haskell files), a post such as this one would end up with a URL looking like <a href="http://dpwright.com/posts/Posts.html" class="uri">http://dpwright.com/posts/Posts.html</a>, which would be very odd. Even without this, it’s quite easy to write a post which accidentally has a subtly different title to its filename, which would be confusing.</p>
 <p>Because of this, we’d much rather pull the <code>date</code> and <code>title</code> fields out of the post’s metadata, which ensures consistency and reduces repetition. Unfortunately, Hakyll provides no clear way to do this natively, so we have to make use of its generic functionality for routing based on metadata. We do this using the <code>metadataRoute</code> function, above, which takes as its parameter a function taking a posts <code>Metadata</code> and returning the <code>Routes</code> associated with that metadata, and returns <code>Routes</code> which can be used by the <code>Rules</code> to which is it passed. Its type signature looks like this:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">metadataRoute ::</span> (<span class="dt">Metadata</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span>) <span class="ot">-&gt;</span> <span class="dt">Routes</span></code></pre></td>
@@ -1519,7 +1662,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p>The function we passed to <code>metadataRoute</code> above was <code>dateAndTitle</code>, which we’ll define here.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; dateAndTitle ::</span> <span class="dt">Metadata</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span></code></pre></td>
@@ -1533,9 +1678,11 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> </code></pre></td>
@@ -1578,7 +1725,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p>OK, after that little detour, let’s get back to it! The <code>dateAndTitle</code> function above made use of two helper functions which haven’t actually been defined. The first is <code>readTime</code>, which we use to normalise the date format. It takes a date string and converts it to a <code>UTCTime</code> which we can manipulate.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readTime ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">UTCTime</span></code></pre></td>
@@ -1589,9 +1738,11 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> </code></pre></td>
@@ -1655,7 +1806,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p><code>setBaseName</code> turns a string into a <code>FilePath</code>, which it can then manipulate using Haskell’s native <code>replaceBaseName</code> functionality.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; setBaseName ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span></code></pre></td>
@@ -1670,7 +1823,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p>Another form of content on this blog is that of “pages”, which are basically posts except that they don’t have a date or tags associated with them and they are not indexed or included in feeds. As a result they are super-simple – we don’t need to save a snapshot, or to parse the date or change the filename. Instead I can just compile it with a template designed for the purpose and set the extension. We’ll use the same <code>customCompiler</code> as posts for consistency, but we’ll just pass the <code>defaultContext</code> as we don’t need any of the extra metadata posts use.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pageCompiler ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
@@ -1678,8 +1833,10 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> pageCompiler </code></pre></td>
@@ -1703,7 +1860,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <p>The rules for pages are equally simple – just grab anything from the <code>pages</code> folder, compile it using the <code>pageCompiler</code> and set its extension to <code>html</code>. This is expressed below.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pages ::</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -1743,7 +1902,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 
 
 <div class="sidenote">
-This is part one of the “generating this website” series. To read the rest of the series, go to the series index <a href="/tags/generating%20this%20website.html">here</a>
+<p>This is part one of the “generating this website” series. To read the rest of the series, go to the series index <a href="/tags/generating%20this%20website.html">here</a></p>
 </div>
 <p>I’ve recently migrated this website to a new server, and while I was at it I thought I’d have another shot at giving it a reboot and actually keeping it up-to-date this time. I’m much more experienced in both Haskell and literate programming than I was when last I updated it, so when I was modifying my configuration it suddenly occurred to me that since this site is generated using Haskell, and since Haskell supports literate programming natively, I could very easily make the site “self-hosting” by writing up the configuration itself as a series of blog posts!</p>
 <p>Thus begins this series, unimaginatively named <a href="/tags/generating%20this%20website.html">Generating this Website</a>. To recap, the site is generated using <a href="http://jaspervdj.be/hakyll">Hakyll</a>, a Haskell library for generating static websites. I will write this series assuming basic Haskell knowledge; you should be familiar with standard typeclasses like <code>Monoid</code> and <code>Applicative</code>. Specific knowledge of Hakyll is not required, and if an idiom feels at all obscure I will attempt to explain it as I go. If there’s anything you don’t get, you can always drop me a tweet @<a href="http://twitter.com/danielpwright">danielpwright</a>!</p>
@@ -1752,7 +1911,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>To begin with, a couple of lines which will grow familiar as this series progresses:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -1767,7 +1928,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>I’m also going to import <code>liftA2</code> from <code>Control.Applicative</code> here. I use this as a convenience later.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> (liftA2)</code></pre></td>
@@ -1778,7 +1941,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>Finally, I’ll import the other posts in this series. These supply much of the actual functionality.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span></code></pre></td>
@@ -1799,7 +1964,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>The main entry point to Hakyll takes a set of <a href="http://jaspervdj.be/hakyll/reference/Hakyll-Core-Rules.html#t:Rules"><code>Rules</code></a> and returns an <code>IO</code> action which generates the site. <code>Rules</code> themselves form a monad, so assuming we have some simple rules:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> templates, images, css,<span class="ot"> static ::</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -1810,7 +1977,9 @@ This is part one of the “generating this website” series. To read the rest o
 <p>We can put them together by simply listing them using <code>do</code>-notation.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; simpleRules ::</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -1845,7 +2014,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>The rules themselves govern the compilation and generation of files. Perhaps the simplest of these is <code>templates</code>, which compiles all files found in the <code>templates</code> directory and any subdirectories, but doesn’t actually need to output those files anywhere – instead it keeps the compiled versions around for other pages using that template.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> templates <span class="fu">=</span> match <span class="st">&quot;templates/**&quot;</span> <span class="fu">$</span> compile templateCompiler</code></pre></td>
@@ -1857,7 +2028,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Next up come the images. These are also very simple – simply take the full path of the images, and copy them to the same place in the output directory.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> images <span class="fu">=</span> match <span class="st">&quot;images/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
@@ -1875,7 +2048,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>For CSS files, Hakyll provides a compressor to speed download times.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> css <span class="fu">=</span> match <span class="st">&quot;css/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
@@ -1893,7 +2068,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Occasionally, I just want to put some static files up that don’t fit the structure of the rest of the blog. This is particularly useful when I want to upload slides from a talk I’ve given, for example the <a href="/gits-guts">git talk</a> I gave a couple of months ago. The talk itself is maintained in a different repository, so it’s convenient if I can just include that as a submodule and have its files copied automatically. I do this by storing all such content in the <code>static</code> directory, and then copying it when generating the site, stripping the initial <code>static/</code> from the output path.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> static <span class="fu">=</span> match <span class="st">&quot;static/**&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
@@ -1913,7 +2090,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>In order to do this, we first need to generate the tags for the site, and then we need to pass these into those <code>Rules</code> that make use of them. Generating the tags is quite easy:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; generateTags ::</span> <span class="dt">Rules</span> <span class="dt">Tags</span></code></pre></td>
@@ -1929,7 +2108,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Having generated the tags, we need to pass them into any rules that need them. We could use <code>do</code>-notation as we did for <code>simpleRules</code> and simply pass the <code>tags</code> parameter to each entry, but here I’m going to use a little <code>Applicative</code> trick which allows me to keep the function point-free, and I think makes it read a little more declaratively.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; taggedRules ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></td>
@@ -1946,7 +2127,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>This trick exploits the fact that <code>(-&gt;)</code>, the type of functions, implements <code>Applicative</code> (in fact being applicative is rather their <em>raison d’être</em> when you think about it), so if we lift the Monadic <code>(&gt;&gt;)</code> operator to act on <em>applications of functions returning a Monad</em> instead of just Monads, we can pass the parameter to the function in once and it will be distributed to each of those functions. In other words:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">posts tags <span class="fu">&gt;&gt;</span> tagIndex tags <span class="fu">&gt;&gt;</span> feed tags ≡ (posts <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> feed) tags</code></pre></td>
@@ -1962,7 +2145,9 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>Finally we define the entry point to the application. This simply calls Hakyll’s own <code>hakyll</code> function, passing in the rules defined above. First we call the simple, self-standing rules, then we generate the tags and pass them to the tagged rules.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -2061,17 +2246,14 @@ Read the original article <a href="http://blog.vitei.com/?p=147">here</a>.</p>
 <center>
 <img src="http://blog.vitei.com/wp-content/uploads/2013/08/haskell-pipes2.jpg" alt="Haskell Pipes" />
 </center>
-
 <div class="sidenote">
 Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pipes 4</a>, this article is now rather out-of-date. I leave it up here for posterity, but if you’re new to Pipes you should probably just ignore it and find a more up-to-date tutorial.
 </div>
-
 <p>Since my last post, I’ve really been enjoying Haskell, and in fact a lot of the functional ideas I had formerly been playing with in Clojure I am now exploring in Haskell instead. I will go into more detail on the reasons for that in a future post – for now I just wanted to share a neat bit of code I wrote the other day that I think really demonstrates the kind of concise, readable code Haskell enables.</p>
 <div>
 
 </div>
 <!--more-->
-
 <h2 id="problem-description">Problem description</h2>
 <p>This is a really simple, common requirement: the application requires a TCP server to take requests and perform whatever it is the application does, after which it will respond with some sort of output. Everyone’s had to do it at some point, and there’s a range of ways to implement it – from the hack-it-in-quick interface to some simple utility to the robustness of, say, a web server.</p>
 <p>My requirements were fairly rudimentary, and so this implementation is a pretty simple one. Still, maybe it’ll be a useful starting-point for anyone who wants to get a server up and running quickly.</p>
@@ -2080,7 +2262,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>This server is built around the <code>pipes</code> package, a very nicely-designed framework which allow you to stream data through some sort of pipeline. The <code>pipes-network</code> package, originally written by Paolo Capriotti and now maintained by Renzo Carbonara, provides some useful <code>Producer</code> and <code>Pipe</code> functions which read from and write to a TCP socket respectively, so a lot of the work has already been done for us. Before we start, we will need to install the <code>pipes-network</code> package:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cabal</span> install pipes-network</code></pre></td>
@@ -2091,7 +2275,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>pipes-network</code> delivers and expects to receive its data in <code>ByteString</code> form, rather than a plain <code>String</code>. I wanted to work with <code>Text</code> in my own code. This mix of three different string types can get quite confusing, and I really don’t want to clutter up my code with lots of conversions of literal strings, so let’s make use of the <code>OverloadedStrings</code> LANGUAGE pragma to perform those conversions for us:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
@@ -2103,7 +2289,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Finally, let’s import the modules we need:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Network</span></code></pre></td>
@@ -2150,7 +2338,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The interpreter is a simple, pure function, which simply maps <code>Text</code> to some command type <code>c</code> (defined by the program):</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">Interpreter</span> c <span class="fu">=</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> c</code></pre></td>
@@ -2161,7 +2351,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The handler is slightly more involved. Firstly, I didn’t want it to have to worry about the terminator string, so I would have the server add those itself. This posed a problem though: since the output could potentially be multiple lines, and the action could take a long time to complete, I wanted to stream it out to the socket as it came in, not all in one chunk at the end. But in order to do this, I would have to know whether or not to add the terminator string for a particular piece of output, as it should only be added at the very end. My handler, then, would need to output some information about whether or not it was complete, along with whatever text it needed to deliver so far. This can be accomplished with the following type:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Output</span> t <span class="fu">=</span> <span class="dt">Still</span> t</code></pre></td>
@@ -2188,7 +2380,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Our command handler, then, is expected to read in commands from the interpreter <em>upstream</em> and send its output to the socket <em>downstream</em> – look at the list above again and it should be quite obvious that it is a <code>Pipe</code>! Thus, our <code>Handler</code> definition:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">Handler</span> c <span class="fu">=</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> <span class="dt">ProxyFast</span> c (<span class="dt">Output</span> <span class="dt">T.Text</span>) <span class="dt">IO</span> ()</code></pre></td>
@@ -2202,7 +2396,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Now our types are in place, we’re almost there! Let’s make a simple function to start our server up and set it running first, which I’ll call <code>run</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; run ::</span> <span class="dt">Interpreter</span> c <span class="ot">-&gt;</span> <span class="dt">Handler</span> c <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -2220,7 +2416,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>runProxy</code> expects a function taking <code>()</code> and returning the proxy we want to run. In addition to this, we want to feed the <code>Interpreter</code>, <code>Handler</code>, and active <code>Socket</code> to the proxy to work with. The type signature for our <code>server</code> function, therefore, must be:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; server ::</span> <span class="dt">Interpreter</span> c <span class="ot">-&gt;</span> <span class="dt">Handler</span> c <span class="ot">-&gt;</span> <span class="dt">Socket</span> <span class="ot">-&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Session</span> <span class="dt">ProxyFast</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -2231,7 +2429,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>One thing I love about Haskell is how easy it is to work top-down; you can start with a rough outline of what you want to get done and then fill in the blanks later. Here is the implementation of <code>server</code>, which can be expressed as a composition of proxies representing each part of the process:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> server i h s <span class="fu">=</span> readSocket <span class="fu">&gt;-&gt;</span> interpret <span class="fu">&gt;-&gt;</span> handle <span class="fu">&gt;-&gt;</span> writeSocket</code></pre></td>
@@ -2242,7 +2442,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>This is the sort of expressive power the <code>pipes</code> library gives us – it almost reads like an ASCII diagram describing the required server behaviour! It only remains for us to “fill in the blanks” by defining each of these functions. We can do this in a <code>where</code> clause, and for the most part, each part of the session is itself a composition of simple proxies. I’m going to work from the outside in, beginning with the administrivia of reading data in from the socket and writing results back out to it, and then dealing with the actual interpretation and handling of data at the end. We’ll begin with reading in data from the socket:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -2260,7 +2462,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Writing the data back out is pretty similar – we receive UTF-8 <code>Text</code> and we want to encode it as a <code>ByteString</code> before sending it out through the socket. This time, though, we don’t care about buffering – we can just send text out as it comes in – so we can omit the call to <code>split</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     writeSocket <span class="fu">=</span> mapD encodeUtf8 <span class="fu">&gt;-&gt;</span> socketWriteD s <span class="fu">&gt;-&gt;</span> done</code></pre></td>
@@ -2271,7 +2475,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The reason for the <code>done</code> at the end there is that it turns out that <code>socketWriteD</code> pipes any data it writes to the socket downstream, to ease composition. In order to close off our session, we need a <code>Consumer</code> which will sit there forever, taking data from upstream and ignoring it. Strictly speaking this isn’t necessary, but it allows us to treat our server as a <code>Session</code> rather than a <code>Producer</code>. Its definition is as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     done () <span class="fu">=</span> forever <span class="fu">$</span> request () <span class="fu">&gt;&gt;</span> return ()</code></pre></td>
@@ -2283,7 +2489,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Remember we defined the interpreter as a pure function taking in <code>Text</code> and spitting out <code>Commands</code>? <code>interpret</code>, then, merely needs to convert this pure function into a <code>Pipe</code>, using <code>mapD</code> again:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     interpret <span class="fu">=</span> mapD i</code></pre></td>
@@ -2294,7 +2502,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The handler has the small extra complication of needing to append our terminator string whenever the application tells us it is <code>Done</code>. We can do this by composing the handler function (which is already a pipe) with a small utility function:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     terminator <span class="fu">=</span> <span class="st">&quot;\r\nEND\r\n\r\n&quot;</span></code></pre></td>
@@ -2317,7 +2527,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>split</code> takes the delimiter to split on and returns a <code>Pipe</code> function, which runs a loop passing in the current state of the buffer as its parameter. It starts, of course, with the empty buffer:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; split ::</span> <span class="dt">Proxy</span> p <span class="ot">=&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> p <span class="dt">T.Text</span> <span class="dt">T.Text</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -2332,7 +2544,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The loop itself begins by requesting the latest data from upstream, and appending it to our existing buffer:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -2352,7 +2566,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>We then check whether the delimiter can be found in the newly received text, and if it can we split the entire buffer on the delimiter, send the first part (up to the first delimiter) downstream, and pass the remainder back to the next iteration of the loop. If the delimiter can’t be found, we just loop again with the updated contents of the buffer:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">if</span> d <span class="ot">`T.isInfixOf`</span> a</code></pre></td>
@@ -2382,7 +2598,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>“add” will take as its input a list of integers and return the result of adding them together as its output. “echo” will simply echo the text back out. “quit” will disconnect the client. These commands can be defined as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Command</span> <span class="fu">=</span> <span class="dt">Add</span> [<span class="dt">Integer</span>]</code></pre></td>
@@ -2402,7 +2620,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Firstly we’ll write our interpreter. Of course there’s all sorts of things you could do here – parsing text is one of Haskell’s great strengths! But all I really want is to put the command, followed by a space, followed by its parameters, separated by spaces. A proper interpreter would need to handle syntax/type errors and the like, but for the sake of simplicity I will assume only valid input can be received:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; interpreter ::</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">Command</span></code></pre></td>
@@ -2432,7 +2652,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p><code>safeRead</code> is our nod toward handling unexpected input. Usually, if <code>read</code> receives a string that can’t be parsed as the type we’re looking for (<code>Integer</code> in our case), it will throw an exception. What we’re going to do here is just ignore it by returning the default value of <code>0</code>. Its implementation is as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     safeRead defval x <span class="fu">=</span> maybe defval id (readMaybe x)</code></pre></td>
@@ -2447,7 +2669,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Next up is our command handler. In order to have access to the <code>respond</code> function to pipe output downstream, we have to implement this as a <code>Pipe</code>. For those commands which simply take a simple input and return a simple response, though, it would be nicer to define them as a simpler mapping of the form:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; command ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Command</span> <span class="ot">-&gt;</span> m <span class="dt">T.Text</span></code></pre></td>
@@ -2459,7 +2683,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Let’s define our currently supported commands in terms of this simpler interface:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> command (<span class="dt">Echo</span> t) <span class="fu">=</span> return t</code></pre></td>
@@ -2476,7 +2702,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Our handler itself, then, will be a dispatcher, which can send commands to the appropriate handler if one exists, or pass them off to this simple handler otherwise:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; commandDispatcher ::</span> <span class="dt">Proxy</span> p <span class="ot">=&gt;</span> () <span class="ot">-&gt;</span> <span class="dt">Pipe</span> p <span class="dt">Command</span> (<span class="dt">Output</span> <span class="dt">T.Text</span>) <span class="dt">IO</span> ()</code></pre></td>
@@ -2509,7 +2737,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Finally, we add a <code>main</code> function to set it all in motion on port “8000”. The call to <code>withSocketsDo</code> is required on Windows, and is a no-op on other systems, so it’s good form to use it whenever we’re dealing with network code:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -2559,7 +2789,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>With that caveat out the way, first I’ll import the necessary modules.</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Environment</span></code></pre></td>
@@ -2595,7 +2827,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>The interface I’m aiming for is simple: simply type the name of the script, followed by the title of the blog post. The one slightly tricky thing is that I’d like to be able to write the title either quoted or unquoted, so the following to examples should be the same:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">new-post</span> An example blog post</code></pre></td>
@@ -2609,7 +2843,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>In order to do this, we’re going to “normalise” the arguments, so that whatever the input we’re working with a list of words, broken up by spaces. Haskell provides a couple of helper functions for this: <code>words</code> takes a string and splits it up by spaces (so that you get a list of words out, hence the name), and <code>unwords</code> does the opposite – it joins a list of strings together, putting spaces between each one. To perform the normalisation, we can simply run <code>words</code> followed by <code>unwords</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> normaliseArgs <span class="fu">=</span> words <span class="fu">.</span> unwords</code></pre></td>
@@ -2622,7 +2858,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Having explained the <code>normaliseArgs</code> function, we can look at the implementation of the script itself. The <code>main</code> function gives an overview of how the script will work:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
@@ -2663,7 +2901,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>In most languages, I would start by creating local variables containing the formatted date and title and work from there, but here I’m going to take advantage of Haskell’s <code>where</code> form to write in a more declarative style. We start by declaring the type information:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeFilename ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
@@ -2674,7 +2914,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>So <code>makeFilename</code> is a function which takes in an array of strings, the current time, and a file extension, and returns a string – the filename. Let’s assume for the moment that we’ve already dealt with the nitty gritty of actually generating the string we want to use for our filename. The thing we’d want to return in that case is a concatenation of that filename base with the folder it’s meant to be in, <code>posts</code>, and the file extension. Something like this:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> makeFilename args t ext <span class="fu">=</span> concat [<span class="st">&quot;posts/&quot;</span>, filename_base, ext]</code></pre></td>
@@ -2685,7 +2927,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Seems simple enough, but what is that <code>filename_base</code>? Well, let’s define that right now, using the <code>where</code> form:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
@@ -2712,7 +2956,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Blog posts have a standard header which lists the date and time they were created, the tags associated with that post, and the title. Since both the date and the title are formatted differently in the header to the filename I don’t feel the need to move the generation of those strings into their own function; instead we’ll just create them locally inside the <code>makeHeader</code> function as we did for <code>makeFilename</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeHeader ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
@@ -2740,7 +2986,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>Lastly, we need to launch our editor! You may have noticed in the <code>main</code> function defined above, I had separate <code>launchEditor</code> and <code>launchVim</code> commands. We’ll start with the general <code>launchEditor</code> function, which will launch whatever is defined in <code>$EDITOR</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchEditor ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span></code></pre></td>
@@ -2761,7 +3009,9 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>As it happens, I can fix both of this problems with my editor of choice, vim. I’m not really sure how I could do this in a general way, since all editors use a different set of command-line parameters, so I decided to leave the generic <code>launchEditor</code> as is above and write a new, vim-specific one to get the functionality I want. The result is as follows:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchVim ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span></code></pre></td>
@@ -2786,7 +3036,7 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 <p>As I mentioned, this is my first Haskell program, so I am sure there will be a number of problems with it. If you spot anything particularly bad, please <script type="text/javascript">
 <!--
 h='&#100;&#112;&#x77;&#114;&#x69;&#x67;&#104;&#116;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#100;&#x61;&#110;&#x69;&#x2b;&#98;&#108;&#x6f;&#x67;';e=n+a+h;
-document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>');
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+'contact me'+'<\/'+'a'+'>');
 // -->
 </script><noscript>&#x63;&#x6f;&#110;&#116;&#x61;&#x63;&#116;&#32;&#x6d;&#x65;&#32;&#40;&#100;&#x61;&#110;&#x69;&#x2b;&#98;&#108;&#x6f;&#x67;&#32;&#x61;&#116;&#32;&#100;&#112;&#x77;&#114;&#x69;&#x67;&#104;&#116;&#32;&#100;&#x6f;&#116;&#32;&#x63;&#x6f;&#x6d;&#x29;</noscript> and let me know! You can even suggest modifications to the article by editing it directly <a href="https://github.com/dpwright/dpwright.github.com/edit/source/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs">here</a> and sending them as a pull request. Any feedback is greatly appreciated!</p>
 <p>The biggest thing that sticks out to me is my frequent use of <code>printf</code>, particularly when it comes to generating commands to pass to <code>system</code>. This feels a little like overkill, and I’m sure there must be a better way.</p>
@@ -2812,7 +3062,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 <p>I expect the script, in its current state, will fail in cases where the rebase can’t be done automatically, but for simple day-to-day operations it makes <code>git-svn</code> that bit less painful to use :-)</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">#!/usr/bin/ruby</span></code></pre></td>
@@ -2850,8 +3102,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2860,7 +3114,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
@@ -2880,8 +3136,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2890,7 +3148,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2898,8 +3158,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2916,7 +3178,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
@@ -2930,8 +3194,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2944,7 +3210,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2952,8 +3220,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2966,7 +3236,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
@@ -2980,8 +3252,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -2994,7 +3268,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3002,8 +3278,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3016,7 +3294,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
@@ -3030,8 +3310,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3048,9 +3330,11 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3060,7 +3344,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3068,9 +3354,11 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3080,10 +3368,12 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3094,9 +3384,11 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3106,8 +3398,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3116,7 +3410,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
@@ -3136,8 +3432,10 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
@@ -3150,7 +3448,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
@@ -3176,7 +3476,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 <p>This little snippet is useful if you use git-svn – it gives you an alias to get a git commit ID from an SVN revision number. If you work with others who say things like, “I think this problem was introduced in revision 10342” it can come in pretty handy! Copy and paste it into the <code>[alias]</code> section of your global <code>.gitconfig</code> or your project-specific <code>.git/config</code></p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">svn-ref</span> = <span class="st">&quot;!f() { git log --grep </span><span class="dt">\\</span><span class="st">&quot;</span>git-svn-id.*@<span class="ot">$1</span><span class="dt">\\</span><span class="st">&quot; --pretty=%H; }; f&quot;</span></code></pre></td>
@@ -3203,7 +3505,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'contact me'+'<\/'+'a'+'>')
 <p>I decided to tidy it up a bit and put it into a git alias, thus:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">amend-commit</span> = <span class="st">&quot;!f() { START=</span><span class="kw">`(git</span> symbolic-ref -q HEAD <span class="kw">||</span> <span class="kw">git</span> rev-parse HEAD<span class="kw">)</span> <span class="kw">|</span> <span class="kw">cut</span> -d<span class="st">&quot;/&quot;</span> -f 3<span class="kw">`</span><span class="st">; git checkout -q </span><span class="ot">$1</span><span class="st"> &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD </span><span class="ot">$1</span><span class="st"> </span><span class="ot">$START</span><span class="st">; }; f&quot;</span></code></pre></td>

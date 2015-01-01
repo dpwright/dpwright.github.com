@@ -32,7 +32,9 @@
 <p>This is a handy little alias I’ve been using recently to open all unstaged diffs in a single instance of vim, one tab per file. Add the following to the <code>[alias]</code> section of your <code>~/.gitconfig</code>:</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">dt</span> = <span class="st">&quot;!f() { vim -p </span><span class="ot">$(</span><span class="kw">git</span> diff --name-only<span class="ot">)</span><span class="st"> +</span><span class="dt">\&quot;</span><span class="st">tabdo Gdiff </span><span class="ot">$@</span><span class="dt">\&quot;</span><span class="st"> +tabfirst; }; f&quot;</span></code></pre></td>

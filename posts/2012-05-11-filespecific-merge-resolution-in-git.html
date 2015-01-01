@@ -37,7 +37,9 @@
 <p>Well, after a little bit of digging around on stackoverflow, I found <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">this question</a>, the first answer to which explains how to do exactly that simply and easily. Basically, you have to create a script, which acts as a custom merge driver. Since git’s default behaviour is to leave your copy as-is during a binary merge, all that driver has to do is <code>exit 0</code>:-</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep MY version when there is a conflict</span></code></pre></td>
@@ -57,7 +59,9 @@
 <p>As a convenience, I added a “keep theirs” driver to go with it:-</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep THEIR version when there is a conflict</span></code></pre></td>
@@ -77,7 +81,9 @@
 <p>Once those scripts are in place, it’s simply a matter of defining them in your <code>.git/config</code> file, and then setting which files should use them using <code>.gitattributes</code>:-</p>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-mine&quot;]</span></code></pre></td>
@@ -85,8 +91,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
@@ -99,7 +107,9 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-theirs&quot;]</span></code></pre></td>
@@ -107,8 +117,10 @@
 </tbody>
 </table>
 <table>
+<colgroup>
 <col width="0%" />
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
@@ -123,7 +135,9 @@
 </div>
 <div class="elastic-tabstops">
 <table>
+<colgroup>
 <col width="100%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">*.exe</span> -crlf -diff merge=keep-mine</code></pre></td>
