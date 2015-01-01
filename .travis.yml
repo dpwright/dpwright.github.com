@@ -1,4 +1,5 @@
 language: haskell
+ghc: 7.8
 branches:
   only:
     - source
@@ -7,17 +8,17 @@ env:
     - secure: "Jc7XHdzAuXpQHX9w5H8ij8u/c4+eLSlyPTv+gT7Yjwf4n1xUwoUujHG5RoFrTUUUuNSc5qtsCBUXcaYHaF1yFWfmCuhNGc6H5VszFy8keXr4LBmtn8pIoKRSqs4EJ+NDp3v8fz/9znCzUHcaCPJFHET2pN7G8UwV/WpGT2JevDw="
 install:
   - cabal install --only-dependencies
-  - cabal build site
 before_script:
   - cd _site
   - git checkout master
   - git pull origin master
+  - rm -rf *
   - cd ..
 script: cabal run site build
 after_script:
   - cd _site
   - git status
-  - git add --all
+  - git add -A
   - git config --global user.email "dani@dpwright.com"
   - git config --global user.name "Daniel P. Wright"
   - git commit -m "snapshot $(date '+%m/%d/%y %H:%M')"
