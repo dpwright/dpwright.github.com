@@ -14,6 +14,9 @@ executable site
                        containers,
                        filepath,
                        hakyll,
+                       -- `hakyll watch` with versions of snap-core
+                       -- earlier than 0.9.6.4 can't serve unicode paths
+                       snap-core >= 0.9.6.4,
                        hashable,
                        old-locale,
                        pandoc,
