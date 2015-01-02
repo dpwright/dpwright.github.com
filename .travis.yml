@@ -21,6 +21,6 @@ after_script:
   - git add -A
   - git config --global user.email "dani@dpwright.com"
   - git config --global user.name "Daniel P. Wright"
-  - git commit -m "snapshot $(date '+%m/%d/%y %H:%M')"
+  - git commit -m "Snapshot $(date '+%m/%d/%y %H:%M')"
   - git push "$REPO_URL" master | grep -v http
   - cd ..
