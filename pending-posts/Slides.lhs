@@ -49,7 +49,7 @@ As always, we begin by specifying `OverloadedStrings` and importing `Hakyll`.
 
 Monoid's `mappend` operator is also useful to have.
 
-> import Data.Monoid   ((<>))
+> import Data.Monoid ((<>))
 
 We'll be making use of a custom pandoc compiler to actually output the slides,
 so we'll need to bring the appropriate pandoc options into scope.
@@ -161,4 +161,4 @@ difficult.  All that can be done with a bit of CSS cleverness, though, with no
 special support from Hakyll itself.
 
 [pandocs-slides]: https://hackage.haskell.org/package/pandoc-1.13/docs/Text-Pandoc-Options.html#t:HTMLSlideVariant
-[posts]:          #todo
+[posts]:          /posts/2014-09-29-generating-this-website-part-2-posts.html
