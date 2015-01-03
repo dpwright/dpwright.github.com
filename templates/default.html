@@ -5,7 +5,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - $title$</title>
+        <title>Wright Access$if(title)$ - $title$$endif$</title>
         <link rel="stylesheet" type="text/css" href="/css/default.css" />
         <link rel="stylesheet" type="text/css" href="/css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -24,7 +24,9 @@
         </div>
 
         <div id="content">
-            <h1 class="title">$title$</h1>
+            $if(title)$
+              <h1 class="title">$title$</h1>
+            $endif$
             $if(subtitle)$
               <h2 class="subtitle">$subtitle$</h1>
             $endif$
