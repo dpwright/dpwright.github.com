@@ -44,8 +44,14 @@ title: Generating this website part x: Indexing
 > index :: Tags -> Rules ()
 > index tags = create ["index.html"] $ do
 >   route idRoute
->   compile $ indexCompiler tags "posts/*" baseContext
->   where baseContext = constField "title" "" <> defaultContext
+>   compile $ indexCompiler tags "posts/*" indexContext
+
+> indexContext :: Context String
+> indexContext 	= bodyField     "body"
+>              	<> metadataField
+>              	<> urlField      "url"
+>              	<> pathField     "path"
+>              	<> missingField
 
 Tag index
 ---------
