@@ -103,7 +103,8 @@ The compiler itself is just a standard compiler with different reader and writer
 options, and some pandoc-level transformations:
 
 > customCompiler :: Compiler (Item String)
-> customCompiler = pandocCompilerWithTransform readerOptions writerOptions pandocTransforms
+> customCompiler = 	pandocCompilerWithTransform
+>   readerOptions writerOptions pandocTransforms
 
 Those options are defined in terms of Pandoc's defaults, provided by the
 `Default` typeclass, which allows you to specify a default definition `def` for
@@ -116,11 +117,11 @@ The writer options are manipulated in a similar way, adding MathJax support,
 syntax highlighting, and literate Haskell.
 
 > writerOptions :: WriterOptions
-> writerOptions 	= def
->               	{ writerHTMLMathMethod = MathJax ""
->               	, writerHighlight      = True
->               	, writerExtensions     = extensions
->               	}
+> writerOptions = def
+>   { writerHTMLMathMethod = MathJax ""
+>   , writerHighlight      = True
+>   , writerExtensions     = extensions
+>   }
 >   where extensions 	= writerExtensions def `S.union` S.fromList
 >                    	[ Ext_literate_haskell
 >                    	]
@@ -158,10 +159,10 @@ First, then, the `Context`, which simply extracts data from the metadata header
 at the top of the file.
 
 > postCtx :: Tags -> Context String
-> postCtx tags 	= dateField "date" "%e %B, %Y"
->              	<> tagsField "tags" tags
->              	<> crosspostField "xp"
->              	<> defaultContext
+> postCtx tags 	 =  	dateField "date" "%e %B, %Y"
+>              	 <> 	tagsField "tags" tags
+>              	 <> 	crosspostField "xp"
+>              	 <> 	defaultContext
 
 As well as the `defaultContext`, which gives us some common fields such as
 `title`, we make use of the `date`, `tags`, and `xp` fields.  The first two
@@ -183,11 +184,11 @@ The `Compiler` follows standard conventions: run the Pandoc compiler (in this
 case our `customCompiler` defined above), apply templates, and fix up the URLs.
 
 > postCompiler :: Tags -> Compiler (Item String)
-> postCompiler tags 	= customCompiler
->                   	>>= loadAndApplyTemplate "templates/post.html"    ctx
->                   	>>= saveSnapshot "content"
->                   	>>= loadAndApplyTemplate "templates/default.html" ctx
->                   	>>= relativizeUrls
+> postCompiler tags = customCompiler
+>   >>= loadAndApplyTemplate "templates/post.html"    ctx
+>   >>= saveSnapshot "content"
+>   >>= loadAndApplyTemplate "templates/default.html" ctx
+>   >>= relativizeUrls
 >   where ctx = postCtx tags
 
 Hang on, what's that `saveSnapshot` in the middle there?  I never mentioned
@@ -258,23 +259,25 @@ define here.
 
 > dateAndTitle :: Metadata -> Routes
 > dateAndTitle meta = fromMaybe idRoute $
->   constructName <$> getField "title" <*> getField "date"
->   where 	getField          	= (`M.lookup` meta)
->         	constructName t d 	= setBaseName $ date d ++ "-" ++ title t
->         	date              	= formatTime defaultTimeLocale "%Y-%m-%d" . readTime
->         	title             	= map toLower . intercalate "-" . map (filter isAlphaNum) . words
+>   mkName <$> getField "title" <*> getField "date"
+>   where 	mkName t d 	= 	setBaseName $ date d ++ "-" ++ title t
+>         	getField   	= 	(`M.lookup` meta)
+>         	date       	= 	formatTime defaultTimeLocale
+>         	           	  	"%Y-%m-%d" . readTime
+>         	title      	= 	map toLower . intercalate "-"
+>         	           	. 	map (filter isAlphaNum) . words
 
 There's a lot going on in this definition so we'll go through it carefully.
 
 - We begin with a call to `fromMaybe` passing `idRoute` as the fallback.  This
   means that what follows might fail, and should it fail we'll just use the
   filename as-is (falling back on Hakyll's default behaviour).
-- `constructName` is called in applicative style, passing two calls to
+- `mkName` is called in applicative style, passing two calls to
   `getField` (defined locally).  We know that `Maybe` forms an `Applicative`,
   and that we are expecting a `Maybe` here as the second parameter to
   `fromMaybe`.  So we can infer what will happen here: it will try to get the
   `title` and `date` fields, and if either of them fail it will return
-  `Nothing`, otherwise it will pass them both to `constructName`.
+  `Nothing`, otherwise it will pass them both to `mkName`.
     - If you are familiar with applicative style this will have been immediately
       obvious.  If not, it is worth reading through the previous bullet-point
       and associated code a few times until you get a feeling for what's
@@ -285,7 +288,7 @@ There's a lot going on in this definition so we'll go through it carefully.
 - Moving onto the local definitions: `getField` is simply a shortcut for calling
   `Map`'s `lookup` function in order to get the respective fields out of the
   passed `Metadata`.
-- `constructName` takes the title and the date as parameters, calls the `date`
+- `mkName` takes the title and the date as parameters, calls the `date`
   and `title` functions in order to turn them into strings, and then sticks them
   together with a `-`.  Finally it calls `setBaseName` (defined below), which
   works similarly to Hakyll's native `setExtension` except that, obviously, it
@@ -335,18 +338,18 @@ first is `readTime`, which we use to normalise the date format.  It takes a date
 string and converts it to a `UTCTime` which we can manipulate.
 
 > readTime :: String -> UTCTime
-> readTime t = fromMaybe empty' . msum $ attempts
->   where 	attempts 	= [parseTime defaultTimeLocale fmt t | fmt <- formats]
->         	empty'   	= error $ "Could not parse date field: " ++ t
->         	formats  	= [ "%a, %d %b %Y %H:%M:%S %Z"
->         	         	  , "%Y-%m-%dT%H:%M:%S%Z"
->         	         	  , "%Y-%m-%d %H:%M:%S%Z"
->         	         	  , "%Y-%m-%d %H:%M"
->         	         	  , "%Y-%m-%d"
->         	         	  , "%B %e, %Y %l:%M %p"
->         	         	  , "%B %e, %Y"
->         	         	  , "%b %d, %Y"
->         	         	  ]
+> readTime t = fromMaybe empty' . msum $ attempts where
+>   attempts 	= [parseTime defaultTimeLocale fmt t | fmt <- formats]
+>   empty'   	= error $ "Could not parse date field: " ++ t
+>   formats  	= [ "%a, %d %b %Y %H:%M:%S %Z"
+>            	  , "%Y-%m-%dT%H:%M:%S%Z"
+>            	  , "%Y-%m-%d %H:%M:%S%Z"
+>            	  , "%Y-%m-%d %H:%M"
+>            	  , "%Y-%m-%d"
+>            	  , "%B %e, %Y %l:%M %p"
+>            	  , "%B %e, %Y"
+>            	  , "%b %d, %Y"
+>            	  ]
 
 The basic idea for the implementation is taken from Hakyll itself, from its
 `getItemUTC` which is defined in [`Hakyll.Web.Template.Context`][hwtc].
@@ -361,7 +364,8 @@ doesn't really matter.
 using Haskell's native `replaceBaseName` functionality.
 
 > setBaseName :: String -> Routes
-> setBaseName basename = customRoute $ (`replaceBaseName` basename) . toFilePath
+> setBaseName basename = customRoute $
+>   (`replaceBaseName` basename) . toFilePath
 
 Pages
 -----
@@ -376,10 +380,10 @@ but we'll just pass the `defaultContext` as we don't need any of the extra
 metadata posts use.
 
 > pageCompiler :: Compiler (Item String)
-> pageCompiler 	= customCompiler
->              	>>= loadAndApplyTemplate "templates/page.html"    defaultContext
->              	>>= loadAndApplyTemplate "templates/default.html" defaultContext
->              	>>= relativizeUrls
+> pageCompiler = customCompiler
+>   >>= loadAndApplyTemplate "templates/page.html"    defaultContext
+>   >>= loadAndApplyTemplate "templates/default.html" defaultContext
+>   >>= relativizeUrls
 
 The rules for pages are equally simple -- just grab anything from the `pages`
 folder, compile it using the `pageCompiler` and set its extension to `html`.
