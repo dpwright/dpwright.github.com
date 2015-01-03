@@ -24,7 +24,7 @@ title: Generating this website part x: Indexing
 >          	-> 	([Item String] -> Compiler [Item String])
 >          	-> 	Compiler String
 > postList tags pattern sortFilter = do
->   ps      	<- sortFilter =<< loadAll pattern
+>   ps      	<- sortFilter =<< loadAll (pattern .&&. hasNoVersion)
 >   itemTpl 	<- loadBody "templates/post-item.html"
 >   applyTemplateList itemTpl (itemCtx tags) ps
 >
