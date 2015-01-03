@@ -52,7 +52,7 @@ importing from where.
 I'm going to be making use of a few system/date related functions to handle the
 date specified in the header and rename the file appropriately.
 
-> import System.FilePath     	(replaceBaseName)
+> import System.FilePath     	(replaceBaseName, takeDirectory, takeBaseName, (</>))
 > import System.Locale       	(defaultTimeLocale)
 > import Data.Time.Clock     	(UTCTime (..))
 > import Data.Time.Format    	(formatTime, parseTime)
@@ -204,18 +204,30 @@ and where to put them.
 
 > posts :: Tags -> Rules ()
 > posts tags = match ("posts/*" .||. "pending-posts/*") $ do
->   route $ metadataRoute dateAndTitle `composeRoutes` setExtension ".html"
+>   route $ 	metadataRoute dateAndTitle `composeRoutes`
+>           	customRoute simplifyURL
 >   compile $ postCompiler tags
 
 This is mostly pretty simple.  You can see we generate posts from both the
 `posts` and `pending-posts` directories (the latter are generated, but not
 included in the index, so I can preview them because I know the URL but they're
 not "published" as such).  We use the `date` and `title` metadata fields to
-generate a filename and then change its extension to `.html`.  Finally we
-compiler it with the `postCompiler` we defined above.
+generate a filename and then from that create a simplified URL.  Finally we
+compile it with the `postCompiler` we defined above.
 
-There's just one snag... that `dateAndTitle` function passed to `metadataRoute`
-doesn't actually exist!  We're going to have to write it.
+I took the idea (and the code) for the simplified URL route from [Yann
+Esposito's Hakyll setup][yehs].  Instead of `post-name.html`, it outputs a
+file to `post-name/index.html`, allowing us to drop the `.html` part when
+visiting the page in the browser.  It is defined as follows.
+
+> simplifyURL :: Identifier -> FilePath
+> simplifyURL ident =
+>   takeDirectory p </> takeBaseName p </> "index.html"
+>   where p = toFilePath ident
+
+That all fits together quite nicely.  There's just one snag... that
+`dateAndTitle` function passed to `metadataRoute` doesn't actually exist!
+We're going to have to write it.
 
 Extracting the date and title from metadata
 -------------------------------------------
@@ -392,3 +404,4 @@ which we'll go about adding special features one at a time.
 
 [generating-this-website]: http://www.dpwright.com/tags/generating%20this%20website.html
 [hwtc]: https://hackage.haskell.org/package/hakyll-4.2.2.0/docs/src/Hakyll-Web-Template-Context.html
+[yehs]: http://yannesposito.com/Scratch/en/blog/Hakyll-setup/
