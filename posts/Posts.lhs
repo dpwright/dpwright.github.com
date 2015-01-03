@@ -52,7 +52,8 @@ importing from where.
 I'm going to be making use of a few system/date related functions to handle the
 date specified in the header and rename the file appropriately.
 
-> import System.FilePath     	(replaceBaseName, takeDirectory, takeBaseName, (</>))
+> import System.FilePath     	(replaceBaseName, takeDirectory,
+>                            	 takeBaseName, (</>))
 > import System.Locale       	(defaultTimeLocale)
 > import Data.Time.Clock     	(UTCTime (..))
 > import Data.Time.Format    	(formatTime, parseTime)
@@ -70,12 +71,17 @@ association list.
 > import qualified Data.Set as S
 
 Finally some more specific imports.  I'll be overriding some of Pandoc's
-default options so I'll need to bring those into scope.  As well as that, I'm
-going to import the `Crossposting` module which we'll cover later in the series.
+default options so I'll need to bring those into scope.
 
 > import Text.Pandoc.Definition 	(Pandoc(..))
-> import Text.Pandoc.Options    	(ReaderOptions(..), WriterOptions (..),
->                               	Extension (..), HTMLMathMethod(..), def)
+> import Text.Pandoc.Options    	(ReaderOptions(..),
+>                               	 WriterOptions (..),
+>                               	 Extension (..),
+>                               	 HTMLMathMethod(..), def)
+
+As well as that, I'm going to import the `Crossposting` and `ElasticTabstops`
+modules which we'll cover later in the series.
+
 > import Crossposting
 > import ElasticTabstops
 
@@ -381,9 +387,10 @@ metadata posts use.
 
 > pageCompiler :: Compiler (Item String)
 > pageCompiler = customCompiler
->   >>= loadAndApplyTemplate "templates/page.html"    defaultContext
->   >>= loadAndApplyTemplate "templates/default.html" defaultContext
+>   >>= loadAndApplyTemplate "templates/page.html"    	ctx
+>   >>= loadAndApplyTemplate "templates/default.html" 	ctx
 >   >>= relativizeUrls
+>   where ctx = defaultContext
 
 The rules for pages are equally simple -- just grab anything from the `pages`
 folder, compile it using the `pageCompiler` and set its extension to `html`.
