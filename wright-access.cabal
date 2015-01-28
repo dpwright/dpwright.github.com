@@ -69,6 +69,7 @@ executable nengajou2015
                        directory,
                        filepath,
                        process,
+                       vector-space < 0.9,
                        SVGFonts
   hs-source-dirs:      pending-posts, posts
   default-language:    Haskell2010
