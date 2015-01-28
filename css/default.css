@@ -184,6 +184,10 @@ td.postdate {
     width: 600px;
 }
 
+.elastic-tabstops {
+    overflow-x: auto;
+}
+
 .elastic-tabstops > table > tbody > tr {
     margin: 0px;
     padding: 0px;
@@ -203,9 +207,5 @@ td.postdate {
 @media screen and (max-device-width: 480px) {
     body {
         -webkit-text-size-adjust: none;
-    }
-
-    .elastic-tabstops {
-        overflow-x: auto;
     }
 }
