@@ -22,7 +22,9 @@
         </div>
 
         <div id="content">
-            <h1 class="title">Generating this website part x: Indexing</h1>
+            
+              <h1 class="title">Generating this website part x: Indexing</h1>
+            
             
 
             <div class="info">28 July, 2014</div>
@@ -42,7 +44,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Indexing</span> <span class="kw">where</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Hakyll</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -50,14 +52,17 @@
 <div class="elastic-tabstops">
 <table>
 <colgroup>
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Data.Monoid</span>         ((&lt;&gt;))</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Monoid</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;&gt;</span>))</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Control.Applicative</span> ((&lt;$&gt;))</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>))</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -86,14 +91,25 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; itemCtx ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> itemCtx tags </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> tagsField <span class="st">&quot;tags&quot;</span> tags</code></pre></td>
+</tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> itemCtx tags <span class="fu">=</span> tagsField <span class="st">&quot;tags&quot;</span> tags</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             <span class="fu">&lt;&gt;</span> dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             <span class="fu">&lt;&gt;</span> defaultContext</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> defaultContext</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -101,71 +117,140 @@
 <div class="elastic-tabstops">
 <table>
 <colgroup>
+<col width="0%" />
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; postList ::</span> <span class="dt">Tags</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postList </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Tags</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="ot">-&gt;</span> <span class="dt">Pattern</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Pattern</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="ot">-&gt;</span> ([<span class="dt">Item</span> <span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">Compiler</span> [<span class="dt">Item</span> <span class="dt">String</span>])</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">([<span class="dt">Item</span> <span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">Compiler</span> [<span class="dt">Item</span> <span class="dt">String</span>])</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Compiler</span> <span class="dt">String</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postList tags pattern sortFilter <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ps      <span class="ot">&lt;-</span> sortFilter <span class="fu">=&lt;&lt;</span> loadAll pattern</code></pre></td>
-</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   itemTpl <span class="ot">&lt;-</span> loadBody <span class="st">&quot;templates/post-item.html&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ps      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">&lt;-</span> sortFilter <span class="fu">=&lt;&lt;</span> loadAll pattern</code></pre></td>
 </tr>
 <tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   itemTpl </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">&lt;-</span> loadBody <span class="st">&quot;templates/post-item.html&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   applyTemplateList itemTpl (itemCtx tags) ps</code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; indexCtx ::</span> <span class="dt">Context</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexCtx base list <span class="fu">=</span> constField <span class="st">&quot;posts&quot;</span> list <span class="fu">&lt;&gt;</span> base</code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; indexCompiler ::</span> <span class="dt">Tags</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexCompiler </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Tags</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               <span class="ot">-&gt;</span> <span class="dt">Pattern</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Pattern</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               <span class="ot">-&gt;</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               <span class="ot">-&gt;</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexCompiler tags pattern baseCtx <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ctx <span class="ot">&lt;-</span> indexCtx baseCtx <span class="fu">&lt;$&gt;</span> postList tags pattern recentFirst</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   makeItem <span class="st">&quot;&quot;</span> <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/archive.html&quot;</span> ctx</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   makeItem <span class="st">&quot;&quot;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/archive.html&quot;</span> ctx</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> ctx</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> ctx</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -186,10 +271,47 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route idRoute</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags <span class="st">&quot;posts/*&quot;</span> baseContext</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags <span class="st">&quot;posts/*&quot;</span> indexContext</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; indexContext ::</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexContext </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> bodyField     <span class="st">&quot;body&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> metadataField</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> baseContext <span class="fu">=</span> constField <span class="st">&quot;title&quot;</span> <span class="st">&quot;&quot;</span> <span class="fu">&lt;&gt;</span> defaultContext</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> urlField      <span class="st">&quot;url&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> pathField     <span class="st">&quot;path&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> missingField</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -214,39 +336,63 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> makeItem <span class="st">&quot;&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/tags.html&quot;</span>    tagsCtx</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/tags.html&quot;</span>    tagsCtx</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> tagsCtx</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> tagsCtx</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">tagsCtx </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> constField <span class="st">&quot;title&quot;</span> <span class="st">&quot;tags&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> tagsCtx <span class="fu">=</span> constField <span class="st">&quot;title&quot;</span> <span class="st">&quot;tags&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> tagCloudField <span class="st">&quot;tagCloud&quot;</span> <span class="dv">100</span> <span class="dv">500</span> (shuffle tags)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                <span class="fu">&lt;&gt;</span> tagCloudField <span class="st">&quot;tagCloud&quot;</span> <span class="dv">100</span> <span class="dv">500</span> (shuffle tags)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> defaultContext</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                <span class="fu">&lt;&gt;</span> defaultContext</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">shuffle </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> sortTagsBy <span class="fu">.</span> comparing <span class="fu">$</span> hash <span class="fu">.</span> fst</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         shuffle <span class="fu">=</span> sortTagsBy <span class="fu">.</span> comparing <span class="fu">$</span> hash <span class="fu">.</span> fst</code></pre></td>
-</tr>
-<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; tagIndex ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> tagIndex tags <span class="fu">=</span> tagsRules tags <span class="fu">$</span> \_ pattern <span class="ot">-&gt;</span> <span class="kw">do</span></code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route idRoute</code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags pattern defaultContext</code></pre></td>
 </tr>
 </tbody>

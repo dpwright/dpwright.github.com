@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - How to extract an intention-revealing name using Vim</title>
+        <title>Wright Access - Updating git branches you're not on</title>
         <link rel="stylesheet" type="text/css" href="../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -23,16 +23,17 @@
 
         <div id="content">
             
-              <h1 class="title">How to extract an intention-revealing name using Vim</h1>
+              <h1 class="title">Updating git branches you're not on</h1>
             
             
 
-            <div class="info"> 3 May, 2012</div>
+            <div class="info">27 January, 2015</div>
 
 
 
-<blockquote>
-<p>This method has a <a href="http://c2.com/cgi/wiki?MagicNumber">magic number</a>:</p>
+<p>Do you use <code>git</code>?</p>
+<p>Have you ever been on a feature branch and wanted to pull all the upstream changes into your <code>master</code> branch before rebasing onto that? Of course you have.</p>
+<p>If you’re sick of doing this:</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -40,18 +41,21 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time</code></pre></td>
+<td align="left"><pre><code>$ git checkout master</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / <span class="dv">1000</span></code></pre></td>
+<td align="left"><pre><code>$ git pull</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">end</span></code></pre></td>
+<td align="left"><pre><code>$ git checkout feature-branch</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>$ git rebase master</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Let’s extract that to an <a href="http://c2.com/cgi/wiki?IdentifiersRevealIntent">intention-revealing name</a>. We’ll type</p>
+<p>Add the following lines to your <code>.gitconfig</code>:</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -59,18 +63,18 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="vim"><code>   /1000&lt;Enter&gt;                           # Find the number we want to extract</code></pre></td>
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[alias]</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="vim"><code>   cwmilliseconds_per_second&lt;Esc&gt;         # Replace the number with a variable name</code></pre></td>
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    remote-for-branch </span><span class="ot">=</span><span class="st"> &quot;!f() { git for-each-ref --format='%(upstream:short)' `for b in $@</span><span class="co">; do echo refs/heads/$b; done` | sed 's:/.*$::'; }; f&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="vim"><code>   O&lt;Ctrl+A&gt; = &lt;Esc&gt;p                     # Assign the replaced number to the variable</code></pre></td>
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    sync </span><span class="ot">=</span><span class="st"> &quot;!f() { for b in $@</span><span class="co">; do git fetch `git remote-for-branch $b` $b:$b; done }; f&quot;</span></code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The result:</p>
+<p>Now you can do this!</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -78,27 +82,17 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">def</span> wait_time</code></pre></td>
+<td align="left"><pre><code>$ git sync master</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">     milliseconds_per_second = <span class="dv">1000</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">     <span class="ot">@env</span>[<span class="dt">QUEUE_WAIT_HEADER</span>].to_i / milliseconds_per_second</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">   <span class="kw">end</span></code></pre></td>
+<td align="left"><pre><code>$ git rebase master</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-</blockquote>
-<div class="quote-attribution">
-– thoughtbot, <cite><a href="http://robots.thoughtbot.com/post/22258289125/how-to-extract-an-intention-revealing-name-using-vim">How to extract an intention-revealing name using Vim</a></cite>
-</div>
-<p>Nice vim tip for getting rid of magic numbers in code.</p>
+<p>Thanks to <a href="http://stackoverflow.com/a/9753364/1004609">this Stack Overflow answer</a> for the technique, which I just wrapped up in an alias to make it easier to use.</p>
 
-<div class="tagsinfo">Tagged with: <a href="../tags/vim.html">vim</a></div>
+<div class="tagsinfo">Tagged with: <a href="../tags/git.html">git</a>, <a href="../tags/alias.html">alias</a></div>
 
         </div>
         <div id="footer">

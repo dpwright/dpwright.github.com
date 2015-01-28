@@ -8,8 +8,82 @@
         <name>Daniel P. Wright</name>
         <email>dani@dpwright.com</email>
     </author>
-    <updated>2015-01-01T00:00:00Z</updated>
+    <updated>2015-01-27T18:12:23Z</updated>
     <entry>
+    <title>Updating git branches you're not on</title>
+    <link href="http://dpwright.com/posts/2015-01-27-updating-git-branches-youre-not-on.html" />
+    <id>http://dpwright.com/posts/2015-01-27-updating-git-branches-youre-not-on.html</id>
+    <published>2015-01-27T18:12:23Z</published>
+    <updated>2015-01-27T18:12:23Z</updated>
+    <summary type="html"><![CDATA[<div class="info">27 January, 2015</div>
+
+
+
+<p>Do you use <code>git</code>?</p>
+<p>Have you ever been on a feature branch and wanted to pull all the upstream changes into your <code>master</code> branch before rebasing onto that? Of course you have.</p>
+<p>If you’re sick of doing this:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre><code>$ git checkout master</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>$ git pull</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre><code>$ git checkout feature-branch</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>$ git rebase master</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Add the following lines to your <code>.gitconfig</code>:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[alias]</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    remote-for-branch </span><span class="ot">=</span><span class="st"> &quot;!f() { git for-each-ref --format=&#39;%(upstream:short)&#39; `for b in $@</span><span class="co">; do echo refs/heads/$b; done` | sed &#39;s:/.*$::&#39;; }; f&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    sync </span><span class="ot">=</span><span class="st"> &quot;!f() { for b in $@</span><span class="co">; do git fetch `git remote-for-branch $b` $b:$b; done }; f&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now you can do this!</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre><code>$ git sync master</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>$ git rebase master</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Thanks to <a href="http://stackoverflow.com/a/9753364/1004609">this Stack Overflow answer</a> for the technique, which I just wrapped up in an alias to make it easier to use.</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/git.html">git</a>, <a href="/tags/alias.html">alias</a></div>
+]]></summary>
+</entry>
+<entry>
     <title>あけましておめでとうございます</title>
     <link href="http://dpwright.com/posts/2015-01-01-%E3%81%82%E3%81%91%E3%81%BE%E3%81%97%E3%81%A6%E3%81%8A%E3%82%81%E3%81%A7%E3%81%A8%E3%81%86%E3%81%94%E3%81%96%E3%81%84%E3%81%BE%E3%81%99.html" />
     <id>http://dpwright.com/posts/2015-01-01-%E3%81%82%E3%81%91%E3%81%BE%E3%81%97%E3%81%A6%E3%81%8A%E3%82%81%E3%81%A7%E3%81%A8%E3%81%86%E3%81%94%E3%81%96%E3%81%84%E3%81%BE%E3%81%99.html</id>
@@ -3488,36 +3562,6 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+'cont
 </div>
 
 <div class="tagsinfo">Tagged with: <a href="/tags/alias.html">alias</a>, <a href="/tags/git.html">git</a>, <a href="/tags/git-svn.html">git-svn</a>, <a href="/tags/subversion.html">subversion</a></div>
-]]></summary>
-</entry>
-<entry>
-    <title>Git alias to amend old commits</title>
-    <link href="http://dpwright.com/posts/2012-06-26-git-alias-to-amend-old-commits.html" />
-    <id>http://dpwright.com/posts/2012-06-26-git-alias-to-amend-old-commits.html</id>
-    <published>2012-06-26T00:00:00Z</published>
-    <updated>2012-06-26T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<div class="info">26 June, 2012</div>
-
-
-
-<p><code>git commit --amend</code> is a useful little command for fixing mistakes in log messages just after you’ve made a commit, but sometimes you don’t realise your error until a few commits down the line, by which time it’s too late. You have to reset to the earlier version, amend the commit message, and then rebase all your commits since then on top of the new, amended commit.</p>
-<p>Earlier today, in #git on freenode, somebody who went by the name of constant mentioned that they wanted to do this in one command. Another member of the chat, frogsonwheels, suggested a solution which essentially did as described above in a series of git commands strung together using <code>&amp;amp;&amp;amp;</code>.</p>
-<p>I decided to tidy it up a bit and put it into a git alias, thus:</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">amend-commit</span> = <span class="st">&quot;!f() { START=</span><span class="kw">`(git</span> symbolic-ref -q HEAD <span class="kw">||</span> <span class="kw">git</span> rev-parse HEAD<span class="kw">)</span> <span class="kw">|</span> <span class="kw">cut</span> -d<span class="st">&quot;/&quot;</span> -f 3<span class="kw">`</span><span class="st">; git checkout -q </span><span class="ot">$1</span><span class="st"> &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD </span><span class="ot">$1</span><span class="st"> </span><span class="ot">$START</span><span class="st">; }; f&quot;</span></code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Note that this is still doing the rebase mentioned above, it’s just automatin the steps a little bit. These means that all the usual warnings regarding rebase apply: don’t run this command on a commit which has already been published. Also, this rebases the currently checked out branch/revision, which means if any other branches have been made based off the amended commit <em>or any commit since</em>, those branches won’t be rebased and you’ll have to rebase them automatically once you’ve done the amend-commit. You can usually tell if this is the case pretty easily by inspecting the output of <code>git log --graph --oneline --decorate</code>.</p>
-
-<div class="tagsinfo">Tagged with: <a href="/tags/alias.html">alias</a>, <a href="/tags/git.html">git</a></div>
 ]]></summary>
 </entry>
 
