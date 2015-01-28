@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'Computer Modern Concrete';
 	src: url('cmunorm.eot');
-	src: url('cmunorm.svg#cmunorm') format('svg'),
-		 url('cmunorm.eot?#iefix') format('embedded-opentype'),
+	src: url('cmunorm.eot?#iefix') format('embedded-opentype'),
 		 url('cmunorm.woff') format('woff'),
-		 url('cmunorm.ttf') format('truetype');
+		 url('cmunorm.ttf') format('truetype'),
+		 url('cmunorm.svg#cmunorm') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -13,10 +13,10 @@
 @font-face {
 	font-family: 'Computer Modern Concrete';
 	src: url('cmunobx.eot');
-	src: url('cmunobx.svg#cmunobx') format('svg'),
-		 url('cmunobx.eot?#iefix') format('embedded-opentype'),
+	src: url('cmunobx.eot?#iefix') format('embedded-opentype'),
 		 url('cmunobx.woff') format('woff'),
-		 url('cmunobx.ttf') format('truetype');
+		 url('cmunobx.ttf') format('truetype'),
+		 url('cmunobx.svg#cmunobx') format('svg');
 	font-weight: bold;
 	font-style: normal;
 }
@@ -25,10 +25,10 @@
 @font-face {
 	font-family: 'Computer Modern Concrete';
 	src: url('cmunoti.eot');
-	src: url('cmunoti.svg#cmunoti') format('svg'),
-		 url('cmunoti.eot?#iefix') format('embedded-opentype'),
+	src: url('cmunoti.eot?#iefix') format('embedded-opentype'),
 		 url('cmunoti.woff') format('woff'),
-		 url('cmunoti.ttf') format('truetype');
+		 url('cmunoti.ttf') format('truetype'),
+		 url('cmunoti.svg#cmunoti') format('svg');
 	font-weight: normal;
 	font-style: italic;
 }
@@ -37,10 +37,10 @@
 @font-face {
 	font-family: 'Computer Modern Concrete';
 	src: url('cmunobi.eot');
-	src: url('cmunobi.svg#cmunobi') format('svg'),
-		 url('cmunobi.eot?#iefix') format('embedded-opentype'),
+	src: url('cmunobi.eot?#iefix') format('embedded-opentype'),
 		 url('cmunobi.woff') format('woff'),
 		 url('cmunobi.ttf') format('truetype'),
+		 url('cmunobi.svg#cmunobi') format('svg');
 	font-weight: bold;
 	font-style: italic;
 }
