@@ -54,13 +54,18 @@ Monoid's `mappend` operator is also useful to have.
 We'll be making use of a custom pandoc compiler to actually output the slides,
 so we'll need to bring the appropriate pandoc options into scope.
 
-> import Text.Pandoc.Options (WriterOptions (..), HTMLSlideVariant(..))
+> import Text.Pandoc.Options (	WriterOptions (..),
+>                             	HTMLSlideVariant(..))
 
 I'm also going to import the `Posts` module as the compiler I use for generating
 slideshows will be similar to the one used for generating standard blog posts,
 so I'll want to reuse that.
 
 > import Posts
+
+And finally, we need access to `Data.Map` to work with metadata
+
+> import qualified Data.Map as M
 
 Locating slideshow files
 ------------------------
@@ -70,33 +75,36 @@ and where to put them.  The requirements outlined above essentially specify two
 alternatives:
 
 * Files in the `posts` directory which *must* contain the `slides` metadata
-  field.
+  field (otherwise they won't be recognised as slideshows).
 * Files in the `slides` directory which *may* contain a `slides` field (and if
   not default to `RevealJSSlides`.
 
-Let's approach these in order.  Firstly, the slides in the `posts` directory:
-
-<div class="sidenote">
-TODO: The following code doesn't actually work yet, so it is commented out.  I
-am still looking for a good way to make Rules depend on metadata rather than
-just the filename.
-</div>
-
->-- slideshowPosts :: Rules ()
->-- slideshowPosts = do
->--   ids <- getMatches "posts/*"
->--   forM_ ids $ \ident -> do
->--     slides <- getMetadataField ident "slides"
->--     case slides of
->--       Nothing -> return ()
->--       Just s  -> rulesExtraDependencies [IdentifierDependency ident] $ do
->--         undefined
-
-Next the slides in the `slides` directory.
+The easiest of the two is the latter -- just match the files and compile them.
 
 > slideshows :: Rules ()
 > slideshows = match "slides/*" $ do
 >   route $ setExtension ".html"
+>   compileSlideshow
+
+Picking out those posts which contain a `slides` metadata field requires the
+`matchMetadata`function which was introduced in hakyll 4.6.4.0.  We use
+`version` to keep slides distinct from normal posts, allowing both to be built
+and preventing slideshows from being indexed.  After that, we compile the
+slideshow as above.
+
+> slideshowPosts :: Rules ()
+> slideshowPosts =
+>   matchMetadata "posts/*" isSlideshow . version "slideshow" $
+>   do 	route $ setExtension ".html"
+>      	compileSlideshow
+>   where
+>     isSlideshow = maybe False (const True) . M.lookup "slides"
+
+The `compileSlideshow` rule extracts the `slides` metadata in order to decide
+which type of slideshow to generate, then passes it to `slidesCompiler`.
+
+> compileSlideshow :: Rules ()
+> compileSlideshow =
 >   compile $ getUnderlying
 >     >>= (`getMetadataField` "slides")
 >     >>= slidesCompiler . maybe SlidySlides read
@@ -105,13 +113,13 @@ Next the slides in the `slides` directory.
 Generating the slideshows
 -------------------------
 
-Now that we know which files we should be creating slideshows for, we need a
-compiler to do the actual generation!  As usual, we start with the context,
-which is very simple -- just attach a date to the default context.
+Now that we know which files we should be creating slideshows for, we're ready
+to do the actual generation!  As usual, we start with the context, which is
+very simple -- just attach a date to the default context.
 
 > slidesCtx :: Context String
-> slidesCtx = dateField "date" "%e %B, %Y"
->          <> defaultContext
+> slidesCtx 	= 	dateField "date" "%e %B, %Y"
+>          	<> 	defaultContext
 
 Pandoc supports a variety of different slideshow formats, and I haven't settled
 on one in particular, so I'll add support for them individually as I try them
@@ -119,13 +127,13 @@ out.  Each slideshow engine requires a different template, so we'll make a quick
 lookup for that.
 
 > slidesTemplate :: HTMLSlideVariant -> Identifier
-> slidesTemplate RevealJsSlides = "templates/slides/reveal.js.html"
-> slidesTemplate S5Slides       = "templates/slides/s5.html"
-> slidesTemplate SlidySlides    = "templates/slides/slidy.html"
+> slidesTemplate RevealJsSlides 	= "templates/slides/reveal.js.html"
+> slidesTemplate S5Slides       	= "templates/slides/s5.html"
+> slidesTemplate SlidySlides    	= "templates/slides/slidy.html"
+> slidesTemplate s              	= error $ "Unsupported slide variant: " ++ show s
 
-Note that this is a partial function -- I haven't added support for all the
-slideshow engines yet so if you try to use one without a template the Hakyll
-build will fail.
+The final clause covers the case where I haven't yet added support for one of
+Pandoc's supported slideshow formats.
 
 Another difference between the various HTML slideshow engines is which HTML they
 expect to be working with!  Reveal.js expects HTML 5, while the others I've
@@ -133,21 +141,23 @@ tried all work better with HTML 4 source.  I've made a quick lookup for that as
 well.
 
 > slidesExpectHTML5 :: HTMLSlideVariant -> Bool
-> slidesExpectHTML5 RevealJsSlides = True
-> slidesExpectHTML5 _              = False
+> slidesExpectHTML5 RevealJsSlides 	= True
+> slidesExpectHTML5 _              	= False
 
 Finally, the compiler itself!  This takes a standard pandoc compiler, adds the
 `readerOptions` and `writerOptions` we defined in the entry on standard
 [posts], and then customizes them with slideshow-specific functionality.
 
 > slidesCompiler :: HTMLSlideVariant -> Compiler (Item String)
-> slidesCompiler sv = pandocCompilerWith readerOptions slideWriterOpts
->                 >>= loadAndApplyTemplate (slidesTemplate sv) slidesCtx
->   where slideWriterOpts = writerOptions
->                         { writerSlideVariant = sv
->                         , writerHtml5        = slidesExpectHTML5 sv
->                         , writerIncremental  = True
->                         }
+> slidesCompiler sv =
+>   pandocCompilerWith readerOptions slideWriterOpts
+>   >>= loadAndApplyTemplate (slidesTemplate sv) slidesCtx
+>   where
+>     slideWriterOpts 	= writerOptions	
+>                     	{ writerSlideVariant 	= sv
+>                     	, writerHtml5        	= slidesExpectHTML5 sv
+>                     	, writerIncremental  	= True
+>                     	}	
 
 Added extras
 ------------
@@ -161,4 +171,4 @@ difficult.  All that can be done with a bit of CSS cleverness, though, with no
 special support from Hakyll itself.
 
 [pandocs-slides]: https://hackage.haskell.org/package/pandoc-1.13/docs/Text-Pandoc-Options.html#t:HTMLSlideVariant
-[posts]:          /posts/2014-09-29-generating-this-website-part-2-posts.html
+[posts]:          /posts/2014-09-29-generating-this-website-part-2-posts
