@@ -41,3 +41,5 @@ title: Generating this website part x: Elastic Tabstops
 >   | lts == n 	= (n, l:ls):gs
 >   | otherwise	= (lts, [l]):(n, ls):gs
 >   where lts = countNumTabs l
+
+[elastic-tabstops]: http://nickgravgaard.com/elastictabstops/
