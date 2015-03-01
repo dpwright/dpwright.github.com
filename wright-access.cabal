@@ -13,7 +13,8 @@ executable site
   build-depends:       base >=4.6 && <4.8,
                        containers,
                        filepath,
-                       hakyll,
+                       -- `matchMetadata` was introduced in hakyll 4.6.4.0
+                       hakyll >= 4.6.4,
                        -- `hakyll watch` with versions of snap-core
                        -- earlier than 0.9.6.4 can't serve unicode paths
                        snap-core >= 0.9.6.4,
