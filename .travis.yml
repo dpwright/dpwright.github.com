@@ -15,7 +15,7 @@ before_script:
   - rm -rf *
   - cd ..
 script: cabal run site build
-after_script:
+after_success:
   - cd _site
   - git status
   - git add -A
