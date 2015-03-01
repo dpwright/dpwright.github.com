@@ -9,14 +9,17 @@ title: Generating this website part x: Indexing
 > import Hakyll
 
 > import Data.Monoid         	((<>))
-> import Control.Applicative 	((<$>))
+> import Control.Applicative 	((<$>), empty)
+> import Control.Monad
 
 > import Data.Hashable
+> import Data.Maybe
 > import Data.Ord
 
 > itemCtx :: Tags -> Context String
 > itemCtx tags 	= tagsField "tags" tags
 >              	<> dateField "date" "%e %B, %Y"
+>              	<> urlField' "url"
 >              	<> defaultContext
 
 > postList 	:: 	Tags
@@ -49,9 +52,16 @@ title: Generating this website part x: Indexing
 > indexContext :: Context String
 > indexContext 	= bodyField     "body"
 >              	<> metadataField
->              	<> urlField      "url"
+>              	<> urlField'     "url"
 >              	<> pathField     "path"
 >              	<> missingField
+
+> urlField' :: String -> Context a
+> urlField' key = field key $
+>   fmap (maybe empty normaliseURL) . getRoute . itemIdentifier
+>   where
+>     normaliseURL url 	= toUrl . fromMaybe url
+>                      	$ needlePrefix "index.html" url
 
 Tag index
 ---------
