@@ -87,6 +87,9 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Slides</span></code></pre></td>
 </tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">OutdatedURLs</span></code></pre></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -246,7 +249,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; taggedRules ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> taggedRules <span class="fu">=</span> posts <span class="fu">&amp;</span> index <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> tagCloud <span class="fu">&amp;</span> feed</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> taggedRules <span class="fu">=</span> posts <span class="fu">&amp;</span> outdatedURLs <span class="fu">&amp;</span> index <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> tagCloud <span class="fu">&amp;</span> feed</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> (<span class="fu">&amp;</span>) <span class="fu">=</span> liftA2 (<span class="fu">&gt;&gt;</span>)</code></pre></td>

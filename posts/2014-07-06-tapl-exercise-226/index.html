@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
+        <title>Wright Access - TaPL Exercise 2.2.6</title>
+        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../../pages/about.html"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            
+              <h1 class="title">TaPL Exercise 2.2.6</h1>
+            
+            
+
+            <div class="info"> 6 July, 2014</div>
+
+
+
+<blockquote>
+<p>Suppose we are given a relation <span class="math">\(R\)</span> on a set <span class="math">\(S\)</span>. Define the relation <span class="math">\(R^{\prime}\)</span> as follows:</p>
+<p><span class="math">\[
+R^{\prime} = R \cup \left\{ (s, s) | s \in S \right\}
+\]</span></p>
+<p>That is, <span class="math">\(R^{\prime}\)</span> contains all the pairs in <span class="math">\(R\)</span> plus all pairs of the form <span class="math">\((s, s)\)</span>. Show that <span class="math">\(R^{\prime}\)</span> is the reflexive closure of <span class="math">\(R\)</span>.</p>
+</blockquote>
+<p>The reflexive closure is defined as the smallest reflexive relation that contains <span class="math">\(R\)</span>. So I need to prove:</p>
+<ol style="list-style-type: decimal">
+<li>That the relation <span class="math">\(R^{\prime}\)</span> contains <span class="math">\(R\)</span>;</li>
+<li>That it is reflexive;</li>
+<li>That it is the smallest relation satisfying the above two properties.</li>
+</ol>
+<p>The first property is given in the definition of <span class="math">\(R^{\prime}\)</span>; <span class="math">\(R^{\prime}\)</span> is formed by the union of <span class="math">\(R\)</span> and some other relation, so it must contain <span class="math">\(R\)</span>.</p>
+<p>To understand the second property we must consider what is meant by the term <em>reflexive</em>; luckily this is given to us by definition 2.2.1 in the text:</p>
+<blockquote>
+<p>A binary relation <span class="math">\(R\)</span> on a set <span class="math">\(S\)</span> is <em>reflexive</em> if <span class="math">\(R\)</span> relates every element of <span class="math">\(S\)</span> to itself – that is, <span class="math">\(s R s\)</span> (or <span class="math">\((s, s) \in R\)</span>) for all <span class="math">\(s \in S\)</span>.</p>
+</blockquote>
+<p>So, for <span class="math">\(R^{\prime}\)</span> to be reflexive, the following must hold:</p>
+<p><span class="math">\[
+\forall s \in S: (s, s) \in R
+\]</span></p>
+<p>or in other words, it must contain the relations:</p>
+<p><span class="math">\[
+\left\{ (s, s) | s \in S \right\}
+\]</span></p>
+<p>which, as fortune would have it, is <em>also</em> given in the definition of <span class="math">\(R^{\prime}\)</span>, so the second property turns out to be as trivially true as the first.</p>
+<p>That leaves only one thing left to prove, which is that <span class="math">\(R^{\prime}\)</span> is the smallest relation satisfying the above two properties. Well, let’s consider a relation <span class="math">\(R^{\prime\prime}\)</span> that satisfies the first two properties but is smaller than <span class="math">\(R^{\prime}\)</span>. In order for <span class="math">\(R^{\prime\prime}\)</span> to be smaller than <span class="math">\(R^{\prime}\)</span>, there must be some <span class="math">\(x\)</span> where <span class="math">\(x \in R^{\prime}\)</span> and <span class="math">\(x \not \in R^{\prime\prime}\)</span>. But, in order to satisfy the first two properties, for every <span class="math">\(x\)</span> in <span class="math">\(R^{\prime\prime}\)</span>, either <span class="math">\(x \in R\)</span> or <span class="math">\(x \in \left\{ (s, s) | s \in S \right\}\)</span>. Since <span class="math">\(R^{\prime}\)</span> is the union of these two sets by definition, there can be no <span class="math">\(x \not \in R^{\prime}\)</span> which is in either set, thus there can be no <span class="math">\(R^{\prime\prime}\)</span> smaller than <span class="math">\(R^{\prime}\)</span> which is a reflexive relation containing <span class="math">\(R\)</span>.</p>
+
+<div class="tagsinfo">Tagged with: <a href="../../tags/maths.html">maths</a>, <a href="../../tags/pl.html">pl</a>, <a href="../../tags/TaPL.html">TaPL</a></div>
+
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>

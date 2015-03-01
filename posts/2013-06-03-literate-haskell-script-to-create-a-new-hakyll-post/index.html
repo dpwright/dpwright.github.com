@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
+        <title>Wright Access - (Literate) Haskell script to create a new Hakyll post</title>
+        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../../pages/about.html"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            
+              <h1 class="title">(Literate) Haskell script to create a new Hakyll post</h1>
+            
+            
+
+            <div class="info"> 3 June, 2013</div>
+
+
+
+<p>This is my first post after quite a long absence. A lot has happened:</p>
+<ul>
+<li>I got married.</li>
+<li>I’ve spent a lot of time with functional programming languages, particularly <a href="http://clojure.org">Clojure</a>, which I used to create the website we used to manage the aforementioned wedding.</li>
+<li>I’ve switched this blog from <a href="http://jekyllrb.com">Jekyll</a> to <a href="http://jaspervdj.be/hakyll">Hakyll</a> (And thus its configuration from Ruby to Haskell).</li>
+</ul>
+<p>It is about this last point that I intend to write now. I will spare you the usual introduction about what Haskell is, as there are plenty of resources from which you could glean that. I will talk a little bit about why I decided to make the switch though, before walking through a little helper utility which I hope will come in handy.</p>
+<h2 id="from-jekyll-to-hakyll">From Jekyll to Hakyll</h2>
+<p>Although I had enjoyed setting up and using Jekyll, I was starting to get a little fed up of it – through no fault of its own, really. In the interests of getting up and running quickly, I used <a href="http://octopress.org">Octopress</a> to get started, downloaded a <a href="https://github.com/kui/k-ui-octopress-theme">nice, minimal theme</a> by <a href="http://k-ui.jp">k-ui</a> (from which my current theme still draws influence), and started tweaking it to fit my needs.</p>
+<p>The problem was, I had downloaded this big system that did everything for me, and I soon came across problems I didn’t know how to solve. Probably if I’d taken more time with Jekyll I could have figured it out, but I ended up neglecting the site for quite a while to work on the wedding site, and by the time I got back to it I was looking for something new.</p>
+<p>I considered writing my own, probably in Clojure, but then I came across Hakyll and thought it would give me the excuse I’ve been looking for to give Haskell a try. It offers less “out of the box” than Octopress did (not sure about Jekyll), so I have to set up quite a lot of the basic stuff myself, which means that I come out understanding it much better. Well, that’s the idea, anyway.</p>
+<p>One of the things I did like about Octopress, though, was that it came with some useful shortcuts. I don’t really want to have to look up the date and write it out every time I write a new post; I’d rather just say “new post”, give it a title, and start writing. As far as I can tell, Hakyll doesn’t provide this functionality – nor should it, necessarily; its job is to compile my site.</p>
+<p>So I thought this would be an opportunity to have a go at writing a simple utility in Haskell that isn’t just a glorified configuration file. Really this sort of thing would usually be the job of a shell script, so it may be somewhat outside of Haskell’s usual problem domain, but I figured I’d give it a go.</p>
+<h2 id="literate-haskell">Literate Haskell</h2>
+<p>This is one feature of Haskell that is pretty interesting: there is language support for writing “literate” Haskell files; that is, files which read like documentation with the occasional code snippet, but those code snippets can be compiled.</p>
+<p>This way of writing code has become fairly popular recently, with Literate Python and Literate Coffeescript among others, but Haskell supports it natively. The idea has some heritage; Miranda, an earlier functional language from which Haskell draws a lot of ideas, supports it, and the idea was first implemented by Donald Knuth in the form of WEB/CWEB.</p>
+<p>Intrigued by the idea, I decided to write the “new post” script in a literate style, and the result is this blog post! You can copy and paste this page directly (either from the html or the markdown source), and the compiler will ignore the blog post and compile the included code. Lines beginning with “bird markers” (&gt; symbols at the start of lines, like quoted messages in an email) are interpreted by the compiler as part of the source code; anything else is ignored.</p>
+<p>This will seem like a pointless reiteration for anyone familiar with the concept, but I’m just going to state it as a paragraph on its own for anyone not paying attention who hasn’t quite twigged how cool this is:</p>
+<p>Having written this blog post as a literate Haskell script, whenever I want to write a new blog post, I literally <em>run this blog post</em>.</p>
+<h2 id="the-script">The script</h2>
+<p>Haskell’s literate programming system doesn’t allow code to be written out-of-order, so I will go through this step-by-step. Bear in mind that this is my first piece of “proper” Haskell code; it might be really bad! If you are a beginner like me you should probably try to find some more informed sources before you copy any of this stuff. If you know what you’re doing and you spot any silly mistakes / poor style, please let me know, or even submit a pull request on github and show me what’s wrong with it! I am writing this post to learn, not to teach.</p>
+<p>With that caveat out the way, first I’ll import the necessary modules.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Environment</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Format</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.LocalTime</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Printf</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Cmd</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Exit</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We need <code>System.Environment</code> for getArgs, which returns us a list of command-line arguments. The <code>Data.Char</code> and <code>Data.List</code> libraries will come in handy when we want to manipulate strings and lists, as we will need to do to generate titles appropriately. The <code>System.Locale</code>, <code>Data.Time.Format</code> and <code>Data.Time.LocalTime</code> modules are required for dealing with dates and times. Finally I use <code>Text.Printf</code> to generate the command I’m going to run to write the actual post, and <code>System.Cmd</code> and <code>System.Exit</code> to run it.</p>
+<p>The interface I’m aiming for is simple: simply type the name of the script, followed by the title of the blog post. The one slightly tricky thing is that I’d like to be able to write the title either quoted or unquoted, so the following to examples should be the same:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">new-post</span> An example blog post</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">new-post</span> <span class="st">&quot;An example blog post&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In order to do this, we’re going to “normalise” the arguments, so that whatever the input we’re working with a list of words, broken up by spaces. Haskell provides a couple of helper functions for this: <code>words</code> takes a string and splits it up by spaces (so that you get a list of words out, hence the name), and <code>unwords</code> does the opposite – it joins a list of strings together, putting spaces between each one. To perform the normalisation, we can simply run <code>words</code> followed by <code>unwords</code>:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> normaliseArgs <span class="fu">=</span> words <span class="fu">.</span> unwords</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The way this function works is quite clever. Mathematically speaking, functions can be <a href="http://en.wikipedia.org/wiki/Function_composition">composed</a> to create new functions which are equivalent to running the second function on the output of the first. Haskell supports this property directly using the <code>.</code> syntax. Here we define <code>normaliseArgs</code> as the <em>composition</em> of <code>words</code> and <code>unwords</code>. Interestingly, doing it this way we don’t have to worry about the inputs and outputs of the function: we simply declaratively state the relationship between the functions.</p>
+<p>It is generally seen as good form to explicitly state the input and output types for top-level function definitions, however I have chosen not to here, because it feels natural that they should match those of <code>words</code> and <code>unwords</code>. Experienced Haskellers will be able to tell me if I’m in the wrong.</p>
+<p>Having explained the <code>normaliseArgs</code> function, we can look at the implementation of the script itself. The <code>main</code> function gives an overview of how the script will work:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; main ::</span> <span class="dt">IO</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   args <span class="ot">&lt;-</span> getArgs</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   time <span class="ot">&lt;-</span> getZonedTime</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> normalisedArgs <span class="fu">=</span> normaliseArgs args</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> header         <span class="fu">=</span> makeHeader normalisedArgs time</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> filename       <span class="fu">=</span> makeFilename normalisedArgs time <span class="st">&quot;.md&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   launchVim filename header</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="co">-- or, if you don't use vim: launchEditor filename header</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   return ()</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>All in all, it’s a very basic script. We read the arguments and the time from the <code>IO</code> monad, generate our header and filename, and then launch our editor of choice with the header text already prepared.</p>
+<p>That <code>return</code> at the end is a bit of a <em>faux amis</em>. Our <code>main</code> function is defined as returning <code>IO ()</code>, but the command we use to launch our editor will return an <code>ExitCode</code>. <code>return</code> simply lets us set the return value for the <code>do</code> block – it does <em>not</em> exit early as one might expect.</p>
+<p>Let’s start by generating the filename. The filename will be the date, followed by the title (all in lower-case and with hyphens replacing spaces), and finally the file extension. These files all belong in the <code>posts/</code> directory.</p>
+<p>In most languages, I would start by creating local variables containing the formatted date and title and work from there, but here I’m going to take advantage of Haskell’s <code>where</code> form to write in a more declarative style. We start by declaring the type information:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeFilename ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So <code>makeFilename</code> is a function which takes in an array of strings, the current time, and a file extension, and returns a string – the filename. Let’s assume for the moment that we’ve already dealt with the nitty gritty of actually generating the string we want to use for our filename. The thing we’d want to return in that case is a concatenation of that filename base with the folder it’s meant to be in, <code>posts</code>, and the file extension. Something like this:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> makeFilename args t ext <span class="fu">=</span> concat [<span class="st">&quot;posts/&quot;</span>, filename_base, ext]</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Seems simple enough, but what is that <code>filename_base</code>? Well, let’s define that right now, using the <code>where</code> form:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     filename_base <span class="fu">=</span> intercalate <span class="st">&quot;-&quot;</span> [date, title]</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     date          <span class="fu">=</span> formatTime defaultTimeLocale <span class="st">&quot;%Y-%m-%d&quot;</span> t</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     title         <span class="fu">=</span> map toLower joinedArgs</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     joinedArgs    <span class="fu">=</span> intercalate <span class="st">&quot;-&quot;</span> args</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>filename_base</code> is the string formed by putting “-” between <code>date</code> and <code>title</code>, where <code>date</code> is the date as formatted by <code>formatTime</code>, and <code>title</code> is the arguments joined together and made lower-case.</p>
+<p>You’ll notice that these variables are declared in pretty much the opposite order to that which you’d use in most languages. In fact, the order doesn’t matter: I could shuffle those lines around and it would still work. In a sense it’s less that you’re “putting a value into a variable” and more that you’re defining what that variable <em>is</em>, in terms of other variables which may or may not have been defined yet.</p>
+<p>Writing it this way feels strange at first, but it is closer to the way equations are usually expressed in mathematics so in that sense it feels natural. The first paragraph following the code reads like a description of the variables, whereas the imperative equivalent (first call <code>formatTime</code> and put the result in <code>date</code>, then lower-case the title…) reads like a series of instructions.</p>
+<p>Haskell also provides the <code>let</code> form which allows you to define variables before you use them. Deciding when it would be appropriate to use <code>where</code> and when to use <code>let</code> is something that I hope will become easier with experience; for now I just use what I feel like (which generally means I tend to favour <code>where</code> since it’s new and shiny!)</p>
+<p>Blog posts have a standard header which lists the date and time they were created, the tags associated with that post, and the title. Since both the date and the title are formatted differently in the header to the filename I don’t feel the need to move the generation of those strings into their own function; instead we’ll just create them locally inside the <code>makeHeader</code> function as we did for <code>makeFilename</code>:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeHeader ::</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">ZonedTime</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> makeHeader args t <span class="fu">=</span> printf headerFormat date title</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     headerFormat  <span class="fu">=</span> <span class="st">&quot;---\ndate: %s\ntags: \ntitle: %s\n---\n\n&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     title         <span class="fu">=</span> unwords args</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     date          <span class="fu">=</span> formatTime defaultTimeLocale <span class="st">&quot;%Y-%m-%d %H:%M:%S&quot;</span> t</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>I’m using <code>printf</code> to do my string formatting largely because I’m familiar with it from C. There are other modules, such as <code>Text.Format</code>, which may be more appropriate, but for now I’m happy using this and it seems to do the job.</p>
+<p><code>unwords</code> makes a fresh appearance here to join the arguments back up and form the title. It is perhaps wasteful to do this again after having done it as part of <code>normaliseArgs</code>, but not having to keep hold of various forms of the arguments and the title does keep the code quite simple and easy to read.</p>
+<p>Lastly, we need to launch our editor! You may have noticed in the <code>main</code> function defined above, I had separate <code>launchEditor</code> and <code>launchVim</code> commands. We’ll start with the general <code>launchEditor</code> function, which will launch whatever is defined in <code>$EDITOR</code>:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchEditor ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> launchEditor filename header <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   writeFile filename header</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   system <span class="fu">$</span> printf <span class="st">&quot;$EDITOR \&quot;%s\&quot;&quot;</span> filename</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This is fine, and works, but it has two issues which bother me. Firstly, it generates the file and then opens it – meaning that if I change my mind and decide to quit the editor without saving, the file is left over. Secondly, the cursor begins at the start of the file, rather than where I’d like to start editing.</p>
+<p>As it happens, I can fix both of this problems with my editor of choice, vim. I’m not really sure how I could do this in a general way, since all editors use a different set of command-line parameters, so I decided to leave the generic <code>launchEditor</code> as is above and write a new, vim-specific one to get the functionality I want. The result is as follows:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; launchVim ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ExitCode</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> launchVim filename header <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   system <span class="fu">$</span> printf vimCmdFormat header filename</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     vimCmdFormat <span class="fu">=</span> <span class="st">&quot;vim '+let @c=\&quot;%s\&quot;' '+put! c' '+normal 3G$' \&quot;%s\&quot;&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The haskell is pretty much the same; I’ve just changed the format string I pass to <code>printf</code>, and removed the call to <code>writeFile</code> since I’ll be sending my content directly into vim now. The way I do this is to load the content into one of vim’s registers (<code>+let @c=...</code>), then, having launched vim, pasting the contents of that register back out into the file (<code>+put! c</code>). Finally I position the cursor using normal-mode keybindings, and then pass the filename.</p>
+<h2 id="caveats-and-issues">Caveats and Issues</h2>
+<p>As I mentioned, this is my first Haskell program, so I am sure there will be a number of problems with it. If you spot anything particularly bad, please <script type="text/javascript">
+<!--
+h='&#100;&#112;&#x77;&#114;&#x69;&#x67;&#104;&#116;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#100;&#x61;&#110;&#x69;&#x2b;&#98;&#108;&#x6f;&#x67;';e=n+a+h;
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+'contact me'+'<\/'+'a'+'>');
+// -->
+</script><noscript>contact me (dani+blog at dpwright dot com)</noscript> and let me know! You can even suggest modifications to the article by editing it directly <a href="https://github.com/dpwright/dpwright.github.com/edit/source/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs">here</a> and sending them as a pull request. Any feedback is greatly appreciated!</p>
+<p>The biggest thing that sticks out to me is my frequent use of <code>printf</code>, particularly when it comes to generating commands to pass to <code>system</code>. This feels a little like overkill, and I’m sure there must be a better way.</p>
+<p>Another problem is that punctuation in blog titles won’t be handled well. The filename generator simply makes everything lower-case and adds hyphens; it should perhaps strip out any characters which are not URL-friendly, too. The call to vim is worse – since it passes the header text as a command-line parameter, it must keep the title as-is, but will break if the title contains quotation marks. The only solution I can think of for this is to write the header text to a temporary file and then read it in from vim, but I’ll leave that as an exercise for the reader and just avoid using quotation marks in my blog posts for now ;-)</p>
+<h2 id="in-summary">In Summary</h2>
+<p><img src="http://cdn.memegenerator.net/instances/400x/38355687.jpg" alt="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" /> </p>
+
+<div class="tagsinfo">Tagged with: <a href="../../tags/literate-programs.html">literate-programs</a>, <a href="../../tags/functional-programming.html">functional-programming</a>, <a href="../../tags/haskell.html">haskell</a>, <a href="../../tags/hakyll.html">hakyll</a></div>
+
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>
