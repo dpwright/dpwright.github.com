@@ -79,11 +79,17 @@
 <div class="elastic-tabstops">
 <table>
 <colgroup>
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Options</span> (<span class="dt">WriterOptions</span> (..), <span class="dt">HTMLSlideVariant</span>(..))</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Options</span> (</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">WriterOptions</span> (<span class="fu">..</span>),</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                             </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">HTMLSlideVariant</span>(<span class="fu">..</span>))</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -101,16 +107,7 @@
 </tbody>
 </table>
 </div>
-<h2 id="locating-slideshow-files">Locating slideshow files</h2>
-<p>The first step is to create some Hakyll <code>Rules</code> specifying which files to match and where to put them. The requirements outlined above essentially specify two alternatives:</p>
-<ul>
-<li>Files in the <code>posts</code> directory which <em>must</em> contain the <code>slides</code> metadata field.</li>
-<li>Files in the <code>slides</code> directory which <em>may</em> contain a <code>slides</code> field (and if not default to <code>RevealJSSlides</code>.</li>
-</ul>
-<p>Let’s approach these in order. Firstly, the slides in the <code>posts</code> directory:</p>
-<div class="sidenote">
-<p>TODO: The following code doesn’t actually work yet, so it is commented out. I am still looking for a good way to make Rules depend on metadata rather than just the filename.</p>
-</div>
+<p>And finally, we need access to <code>Data.Map</code> to work with metadata</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -118,36 +115,18 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">-- slideshowPosts :: Rules ()</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">-- slideshowPosts = do</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--   ids &lt;- getMatches &quot;posts/*&quot;</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--   forM_ ids $ \ident -&gt; do</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--     slides &lt;- getMetadataField ident &quot;slides&quot;</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--     case slides of</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--       Nothing -&gt; return ()</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--       Just s  -&gt; rulesExtraDependencies [IdentifierDependency ident] $ do</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--         undefined</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Next the slides in the <code>slides</code> directory.</p>
+<h2 id="locating-slideshow-files">Locating slideshow files</h2>
+<p>The first step is to create some Hakyll <code>Rules</code> specifying which files to match and where to put them. The requirements outlined above essentially specify two alternatives:</p>
+<ul>
+<li>Files in the <code>posts</code> directory which <em>must</em> contain the <code>slides</code> metadata field (otherwise they won’t be recognised as slideshows).</li>
+<li>Files in the <code>slides</code> directory which <em>may</em> contain a <code>slides</code> field (and if not default to <code>RevealJSSlides</code>.</li>
+</ul>
+<p>The easiest of the two is the latter – just match the files and compile them.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -164,22 +143,89 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> setExtension <span class="st">&quot;.html&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> getUnderlying</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compileSlideshow</code></pre></td>
 </tr>
+</tbody>
+</table>
+</div>
+<p>Picking out those posts which contain a <code>slides</code> metadata field requires the <code>matchMetadata</code>function which was introduced in hakyll 4.6.4.0. We use <code>version</code> to keep slides distinct from normal posts, allowing both to be built and preventing slideshows from being indexed. After that, we compile the slideshow as above.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> (<span class="ot">`getMetadataField`</span> <span class="st">&quot;slides&quot;</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slideshowPosts ::</span> <span class="dt">Rules</span> ()</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> slidesCompiler <span class="fu">.</span> maybe <span class="dt">SlidySlides</span> read</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slideshowPosts <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   matchMetadata <span class="st">&quot;posts/*&quot;</span> isSlideshow <span class="fu">.</span> version <span class="st">&quot;slideshow&quot;</span> <span class="fu">$</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">do</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">route <span class="fu">$</span> setExtension <span class="st">&quot;.html&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">compileSlideshow</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isSlideshow <span class="fu">=</span> maybe <span class="dt">False</span> (const <span class="dt">True</span>) <span class="fu">.</span> M.lookup <span class="st">&quot;slides&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <code>compileSlideshow</code> rule extracts the <code>slides</code> metadata in order to decide which type of slideshow to generate, then passes it to <code>slidesCompiler</code>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; compileSlideshow ::</span> <span class="dt">Rules</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> compileSlideshow <span class="fu">=</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> getUnderlying</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> (<span class="ot">`getMetadataField`</span> <span class="st">&quot;slides&quot;</span>)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> slidesCompiler <span class="fu">.</span> maybe <span class="dt">SlidySlides</span> read</code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
 <h2 id="generating-the-slideshows">Generating the slideshows</h2>
-<p>Now that we know which files we should be creating slideshows for, we need a compiler to do the actual generation! As usual, we start with the context, which is very simple – just attach a date to the default context.</p>
+<p>Now that we know which files we should be creating slideshows for, we’re ready to do the actual generation! As usual, we start with the context, which is very simple – just attach a date to the default context.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -189,11 +235,24 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesCtx ::</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesCtx <span class="fu">=</span> dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span></code></pre></td>
-</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="fu">&lt;&gt;</span> defaultContext</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesCtx </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&lt;&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">defaultContext</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -208,19 +267,34 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesTemplate ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Identifier</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesTemplate <span class="dt">RevealJsSlides</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="st">&quot;templates/slides/reveal.js.html&quot;</span></code></pre></td>
+</tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesTemplate <span class="dt">RevealJsSlides</span> <span class="fu">=</span> <span class="st">&quot;templates/slides/reveal.js.html&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesTemplate <span class="dt">S5Slides</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="st">&quot;templates/slides/s5.html&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesTemplate <span class="dt">S5Slides</span>       <span class="fu">=</span> <span class="st">&quot;templates/slides/s5.html&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesTemplate <span class="dt">SlidySlides</span>    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="st">&quot;templates/slides/slidy.html&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesTemplate <span class="dt">SlidySlides</span>    <span class="fu">=</span> <span class="st">&quot;templates/slides/slidy.html&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesTemplate s              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> error <span class="fu">$</span> <span class="st">&quot;Unsupported slide variant: &quot;</span> <span class="fu">++</span> show s</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Note that this is a partial function – I haven’t added support for all the slideshow engines yet so if you try to use one without a template the Hakyll build will fail.</p>
+<p>The final clause covers the case where I haven’t yet added support for one of Pandoc’s supported slideshow formats.</p>
 <p>Another difference between the various HTML slideshow engines is which HTML they expect to be working with! Reveal.js expects HTML 5, while the others I’ve tried all work better with HTML 4 source. I’ve made a quick lookup for that as well.</p>
 <div class="elastic-tabstops">
 <table>
@@ -231,16 +305,26 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesExpectHTML5 ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesExpectHTML5 <span class="dt">RevealJsSlides</span> <span class="fu">=</span> <span class="dt">True</span></code></pre></td>
-</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesExpectHTML5 _              <span class="fu">=</span> <span class="dt">False</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesExpectHTML5 <span class="dt">RevealJsSlides</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="dt">True</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesExpectHTML5 _              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="dt">False</span></code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Finally, the compiler itself! This takes a standard pandoc compiler, adds the <code>readerOptions</code> and <code>writerOptions</code> we defined in the entry on standard <a href="../../posts/2014-09-29-generating-this-website-part-2-posts.html">posts</a>, and then customizes them with slideshow-specific functionality.</p>
+<p>Finally, the compiler itself! This takes a standard pandoc compiler, adds the <code>readerOptions</code> and <code>writerOptions</code> we defined in the entry on standard <a href="../../posts/2014-09-29-generating-this-website-part-2-posts">posts</a>, and then customizes them with slideshow-specific functionality.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -251,25 +335,50 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesCompiler ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesCompiler sv <span class="fu">=</span> pandocCompilerWith readerOptions slideWriterOpts</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesCompiler sv <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate (slidesTemplate sv) slidesCtx</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   pandocCompilerWith readerOptions slideWriterOpts</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> slideWriterOpts <span class="fu">=</span> writerOptions</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate (slidesTemplate sv) slidesCtx</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                         { writerSlideVariant <span class="fu">=</span> sv</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     slideWriterOpts </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> writerOptions</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                         , writerHtml5        <span class="fu">=</span> slidesExpectHTML5 sv</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">{ writerSlideVariant </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> sv</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                         , writerIncremental  <span class="fu">=</span> <span class="dt">True</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">, writerHtml5        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> slidesExpectHTML5 sv</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                         }</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">, writerIncremental  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="dt">True</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">}</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
 </tr>
 </tbody>
 </table>
