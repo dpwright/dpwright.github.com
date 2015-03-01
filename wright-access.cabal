@@ -72,6 +72,9 @@ executable nengajou2015
                        filepath,
                        process,
                        vector-space < 0.9,
-                       SVGFonts
+                       SVGFonts,
+                       -- I don't use blaze-markup directly, but leaving the
+                       -- version number unset causes lots of cabal issues
+                       blaze-markup < 0.7
   hs-source-dirs:      pending-posts, posts
   default-language:    Haskell2010
