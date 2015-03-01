@@ -58,6 +58,7 @@ actual functionality.
 > import Indexing
 > import Feed
 > import Slides
+> import OutdatedURLs
 
 Some simple rules
 -----------------
@@ -165,7 +166,7 @@ trick which allows me to keep the function point-free, and I think makes it read
 a little more declaratively.
 
 > taggedRules :: Tags -> Rules ()
-> taggedRules = posts & index & tagIndex & tagCloud & feed
+> taggedRules = posts & outdatedURLs & index & tagIndex & tagCloud & feed
 >   where (&) = liftA2 (>>)
 
 This trick exploits the fact that `(->)`, the type of functions, implements
