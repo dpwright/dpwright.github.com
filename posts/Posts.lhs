@@ -243,8 +243,8 @@ of all links (I've modified it slightly to work with `String`s instead of
 > removeIndexHtml body = return $ withUrls removeIndexStr body
 >   where
 >     removeIndexStr url = case splitFileName url of
->       (dir, "index.html") | isLocal dir -> dir
->       _                                 -> url
+>       (dir, "index.html") | isLocal dir 	-> dir
+>       _                                 	-> url
 >     isLocal uri = not $ "://" `isInfixOf` uri
 
 That all fits together quite nicely.  There's just one snag... that
