@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
+        <title>Wright Access - Generating this website part 2: Posts</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../pages/about.html"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            
+              <h1 class="title">Generating this website part 2: Posts</h1>
+            
+            
+
+            <div class="info">29 September, 2014</div>
+
+
+
+<div class="sidenote">
+<p>This is part two of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website.html">here</a></p>
+</div>
+<p>OK, time to dive into arguably the most important part of the website generator – generating the posts themselves! Really, this is what it all comes down to; any other features like tags, rss feeds, crossposting and so on are just window dressing. Generating posts is not actually that hard, but you’ll find it’s one of the most often-tweaked part of your Hakyll setup as most changes you want to make affect posts in some way. Let’s get started!</p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>We start with our usual <code>OverloadedStrings</code> definition and <code>Hakyll</code> import. Because we’re developing a module now, rather than the main entry point of our program, we also need a module header. This was missing from the last post but will be present in all the remaining modules in this series.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Posts</span> <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Note that since the module is called <code>Posts</code>, the file itself must also be called <code>Posts.hs</code>, or rather <code>Posts.lhs</code> as it is a literate Haskell document. This has a bit of a knock-on effect, as Hakyll’s default behaviour is to expect that all files will follow a <code>date-title</code> convention for their filenames, so already we will have to do some extra work to get it to draw that information from the Pandoc header instead of the filename.</p>
+<p>The following imports give us some extra helper functions which we’ll use throughout our program. These functions (particularly the operators) are so common I almost wish they were part of the standard prelude, but they aren’t so we’ll have to live with a longish import list. I won’t go into too much detail here but as I’ve used explicit imports you can see exactly which functions I’m importing from where.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Monoid</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;&gt;</span>))</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Maybe</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(fromMaybe)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(intercalate)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span>           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(toLower, isAlphaNum)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>), (<span class="fu">&lt;*&gt;</span>))</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Monad</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(msum)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>I’m going to be making use of a few system/date related functions to handle the date specified in the header and rename the file appropriately.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.FilePath</span>     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(replaceBaseName, takeDirectory,</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, (<span class="fu">&lt;/&gt;</span>))</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(defaultTimeLocale)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Clock</span>     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">UTCTime</span> (<span class="fu">..</span>))</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Format</span>    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(formatTime, parseTime)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <code>Map</code> and <code>Set</code> data structures export function names that clash with those from the standard prelude for working with lists, so I’ll import those qualified here. In fact, I only make use of one function from each (<code>lookup</code> and <code>union</code> respectively), so I could have just imported those functions and had done with it, but it’s common form to import data structures like this qualified, so I’m in the habit of it. It’s also nice to be able to look at code called <code>M.lookup</code> and know straight away that it’s looking up the value in a map and not an association list.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Set</span> <span class="kw">as</span> <span class="dt">S</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Finally some more specific imports. I’ll be overriding some of Pandoc’s default options so I’ll need to bring those into scope.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Definition</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">Pandoc</span>(<span class="fu">..</span>))</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Options</span>    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">ReaderOptions</span>(<span class="fu">..</span>),</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="dt">WriterOptions</span> (<span class="fu">..</span>),</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="dt">Extension</span> (<span class="fu">..</span>),</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="dt">HTMLMathMethod</span>(<span class="fu">..</span>), def)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As well as that, I’m going to import the <code>Crossposting</code> and <code>ElasticTabstops</code> modules which we’ll cover later in the series.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Crossposting</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">ElasticTabstops</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>After all that, we can actually get on with writing some code! If you’re new to Haskell, don’t worry too much about all these imports – in general you just add them as you come across functionality you need to use which is defined in another module, so you don’t really need to think too much about them ahead of time. Because Haskell encourages breaking things down into small, reusable components, import lists can get quite long. This is a good thing!</p>
+<h2 id="pandoc-options">Pandoc options</h2>
+<p>To begin with, I’m going to define the custom version of the Pandoc compiler we’ll use to generate the posts. Hakyll comes with some reasonable defaults, but I’d like to tweak it a little to allow support for features specific to my needs here – in particular, I want support for:</p>
+<ul>
+<li>Literate Haskell (or you wouldn’t be reading this!)</li>
+<li>MathJax</li>
+<li>Syntax Highlighting</li>
+<li>Smart Parsing (conversion of <code>--</code> to –, and so forth)</li>
+</ul>
+<p>The compiler itself is just a standard compiler with different reader and writer options, and some pandoc-level transformations:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; customCompiler ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> customCompiler <span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">pandocCompilerWithTransform</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   readerOptions writerOptions pandocTransforms</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Those options are defined in terms of Pandoc’s defaults, provided by the <code>Default</code> typeclass, which allows you to specify a default definition <code>def</code> for any type. First we tell the reader to add <code>readerSmart</code> to its options:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readerOptions ::</span> <span class="dt">ReaderOptions</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> readerOptions <span class="fu">=</span> def { readerSmart <span class="fu">=</span> <span class="dt">True</span> }</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The writer options are manipulated in a similar way, adding MathJax support, syntax highlighting, and literate Haskell.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; writerOptions ::</span> <span class="dt">WriterOptions</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> writerOptions <span class="fu">=</span> def</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   { writerHTMLMathMethod <span class="fu">=</span> <span class="dt">MathJax</span> <span class="st">&quot;&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , writerHighlight      <span class="fu">=</span> <span class="dt">True</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , writerExtensions     <span class="fu">=</span> extensions</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   }</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> extensions </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> writerExtensions def <span class="ot">`S.union`</span> S.fromList</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">[ <span class="dt">Ext_literate_haskell</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">]</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <code>MathJax</code> constructor takes a string to supply the URL to <code>mathjax.js</code>, so that it can embed it in the output HTML, however in this case Hakyll overrides Pandoc’s default HTML output to insert our templates, and it is there that we import <code>mathjax.js</code>, so we can just pass the empty string here.</p>
+<p>Defining <code>extensions</code> as a union of the default extensions with a single-member set may seem like overkill, and for only one item it is, but doing it this way means that if I ever want to add an extension I can just add it to the list.</p>
+<p>Finally, we define <code>pandocTransform</code>, for our post-processing needs. This is just the composition of any pandoc-level filters we want to apply – see the posts for those individual filters for more information.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pandocTransforms ::</span> <span class="dt">Pandoc</span> <span class="ot">-&gt;</span> <span class="dt">Pandoc</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> pandocTransforms <span class="fu">=</span> elasticTabstops</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="generating-posts">Generating posts</h2>
+<p>Here begins a pattern that you will see a lot of. In Hakyll, the way you generate anything is by defining a <code>Compiler</code>. Usually, that <code>Compiler</code> is paired with a <code>Context</code> which provides all the variables you may want to make use of in your template. Finally, we tie that <code>Compiler</code> to a specific set of inputs using <code>Rules</code>, which we covered in the previous post. Often, people write all their <code>Rules</code> inline in one big <code>main</code> function, but to make breaking the configuration over a number of blog posts easier, I’ve elected to define each set of <code>Rules</code> as an independent function which I call from <code>main</code> in the first post.</p>
+<p>First, then, the <code>Context</code>, which simply extracts data from the metadata header at the top of the file.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; postCtx ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postCtx tags </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="fu">=</span>  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="fu">&lt;&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">tagsField <span class="st">&quot;tags&quot;</span> tags</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="fu">&lt;&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">crosspostField <span class="st">&quot;xp&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="fu">&lt;&gt;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">defaultContext</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As well as the <code>defaultContext</code>, which gives us some common fields such as <code>title</code>, we make use of the <code>date</code>, <code>tags</code>, and <code>xp</code> fields. The first two ought to be fairly self-explanatory – the date is displayed at the top of this page and the tags are listed at the bottom.</p>
+<p><code>crosspostField</code> will be defined in a later post in this series. It is there for the case where a post on this blog is also posted on another blog – usually I’ve written it for the other blog but received permission to reproduce it here. In that case, I want to include a header at the top of the file giving a link to the original blog post.</p>
+<div id="sidenote">
+I also make use of Hakyll to allow me to write the post here in markdown and have it automatically uploaded to both my blog and the one where I’m guesting – at least if the latter is a Wordpress blog and I have posting rights there. But we’ll talk about that later.
+</div>
+<p>The <code>Compiler</code> follows standard conventions: run the Pandoc compiler (in this case our <code>customCompiler</code> defined above), apply templates, and fix up the URLs.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; postCompiler ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postCompiler tags <span class="fu">=</span> customCompiler</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/post.html&quot;</span>    ctx</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> saveSnapshot <span class="st">&quot;content&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> ctx</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> ctx <span class="fu">=</span> postCtx tags</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Hang on, what’s that <code>saveSnapshot</code> in the middle there? I never mentioned that! Well, that allows us to save a snapshot of our page <em>as it currently stands</em> at that point in the compilation. This is handy, because we’ll want to include the content of the post in RSS feeds and the like, but at that point we only want the content, not the header, footer, and navigation. It is useful, then, to be able to save out a copy at the point where that is all we have and re-use it later, rather than having to recompile the whole thing again when generating feeds.</p>
+<p>Finally, our <code>Rules</code> tell Hakyll where to get posts from, how to compile them, and where to put them.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; posts ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> posts tags <span class="fu">=</span> match (<span class="st">&quot;posts/*&quot;</span> <span class="fu">.||.</span> <span class="st">&quot;pending-posts/*&quot;</span>) <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">metadataRoute dateAndTitle <span class="ot">`composeRoutes`</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">customRoute simplifyURL</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> postCompiler tags</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This is mostly pretty simple. You can see we generate posts from both the <code>posts</code> and <code>pending-posts</code> directories (the latter are generated, but not included in the index, so I can preview them because I know the URL but they’re not “published” as such). We use the <code>date</code> and <code>title</code> metadata fields to generate a filename and then from that create a simplified URL. Finally we compile it with the <code>postCompiler</code> we defined above.</p>
+<p>I took the idea (and the code) for the simplified URL route from <a href="http://yannesposito.com/Scratch/en/blog/Hakyll-setup/">Yann Esposito’s Hakyll setup</a>. Instead of <code>post-name.html</code>, it outputs a file to <code>post-name/index.html</code>, allowing us to drop the <code>.html</code> part when visiting the page in the browser. It is defined as follows.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; simplifyURL ::</span> <span class="dt">Identifier</span> <span class="ot">-&gt;</span> FilePath</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> simplifyURL ident <span class="fu">=</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   takeDirectory p <span class="fu">&lt;/&gt;</span> takeBaseName p <span class="fu">&lt;/&gt;</span> <span class="st">&quot;index.html&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> p <span class="fu">=</span> toFilePath ident</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>That all fits together quite nicely. There’s just one snag… that <code>dateAndTitle</code> function passed to <code>metadataRoute</code> doesn’t actually exist! We’re going to have to write it.</p>
+<h2 id="extracting-the-date-and-title-from-metadata">Extracting the date and title from metadata</h2>
+<p>As mentioned, Hakyll by default expects the date and title to be included in the filename and as such it can just change the extension and have done with it. Because we might be naming files after the modules they define (in the case of Literate Haskell files), a post such as this one would end up with a URL looking like <a href="http://dpwright.com/posts/Posts.html" class="uri">http://dpwright.com/posts/Posts.html</a>, which would be very odd. Even without this, it’s quite easy to write a post which accidentally has a subtly different title to its filename, which would be confusing.</p>
+<p>Because of this, we’d much rather pull the <code>date</code> and <code>title</code> fields out of the post’s metadata, which ensures consistency and reduces repetition. Unfortunately, Hakyll provides no clear way to do this natively, so we have to make use of its generic functionality for routing based on metadata. We do this using the <code>metadataRoute</code> function, above, which takes as its parameter a function taking a posts <code>Metadata</code> and returning the <code>Routes</code> associated with that metadata, and returns <code>Routes</code> which can be used by the <code>Rules</code> to which is it passed. Its type signature looks like this:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">metadataRoute ::</span> (<span class="dt">Metadata</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span>) <span class="ot">-&gt;</span> <span class="dt">Routes</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The function we passed to <code>metadataRoute</code> above was <code>dateAndTitle</code>, which we’ll define here.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; dateAndTitle ::</span> <span class="dt">Metadata</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> dateAndTitle meta <span class="fu">=</span> fromMaybe idRoute <span class="fu">$</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mkName <span class="fu">&lt;$&gt;</span> getField <span class="st">&quot;title&quot;</span> <span class="fu">&lt;*&gt;</span> getField <span class="st">&quot;date&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">mkName t d </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">setBaseName <span class="fu">$</span> date d <span class="fu">++</span> <span class="st">&quot;-&quot;</span> <span class="fu">++</span> title t</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">getField   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="ot">`M.lookup`</span> meta)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">date       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">formatTime defaultTimeLocale</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;%Y-%m-%d&quot;</span> <span class="fu">.</span> readTime</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">title      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">map toLower <span class="fu">.</span> intercalate <span class="st">&quot;-&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">.</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">map (filter isAlphaNum) <span class="fu">.</span> words</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>There’s a lot going on in this definition so we’ll go through it carefully.</p>
+<ul>
+<li>We begin with a call to <code>fromMaybe</code> passing <code>idRoute</code> as the fallback. This means that what follows might fail, and should it fail we’ll just use the filename as-is (falling back on Hakyll’s default behaviour).</li>
+<li><code>mkName</code> is called in applicative style, passing two calls to <code>getField</code> (defined locally). We know that <code>Maybe</code> forms an <code>Applicative</code>, and that we are expecting a <code>Maybe</code> here as the second parameter to <code>fromMaybe</code>. So we can infer what will happen here: it will try to get the <code>title</code> and <code>date</code> fields, and if either of them fail it will return <code>Nothing</code>, otherwise it will pass them both to <code>mkName</code>.
+<ul>
+<li>If you are familiar with applicative style this will have been immediately obvious. If not, it is worth reading through the previous bullet-point and associated code a few times until you get a feeling for what’s happening. We’ve reduced what would have been a lot of sanity checking and nested <code>if</code> statements into a single line of code which, when you are used to this style, reads extremely clearly. It’s a very powerful technique.</li>
+</ul></li>
+<li>Moving onto the local definitions: <code>getField</code> is simply a shortcut for calling <code>Map</code>’s <code>lookup</code> function in order to get the respective fields out of the passed <code>Metadata</code>.</li>
+<li><code>mkName</code> takes the title and the date as parameters, calls the <code>date</code> and <code>title</code> functions in order to turn them into strings, and then sticks them together with a <code>-</code>. Finally it calls <code>setBaseName</code> (defined below), which works similarly to Hakyll’s native <code>setExtension</code> except that, obviously, it sets the basename.</li>
+<li><code>date</code> normalises the <code>date</code> field to the simple <code>YYYY-mm-dd</code> format we want to use for our filenames. This means you can write the date in any of Hakyll’s supported date formats and the filename will turn out OK.</li>
+<li><code>title</code> splits the title up into words, filters out any strange symbols using <code>isAlphaNum</code> (which, thankfully, is Unicode-friendly so that Japanese titles aren’t considered “strange symbols”), and then joins those words back up with <code>-</code> dashes so that we don’t have to worry about <code>%20</code>s appearing all over our URLs. Finally, it makes the whole thing lower-case.</li>
+</ul>
+<p>Function definitions like the one above are part of the reason I love Haskell and others might hate it. There’s so much functionality packed into so little code there, you do have to slow down a little bit and read it carefully to follow it, at least until you are used to code written in the style used (in this case, some applicative style and a little bit of point-free notation thrown in for good measure). Add to this the expressivity of Haskell which allows for a number of different styles, so that even once you’ve got used to the style used here you may open another codebase and find that the style employed there is completely different! There is a not-unreasonable argument that this is problematic; that encouraging a very particular style at the language level (as Python does, for example) makes it a lot easier to read unfamiliar code.</p>
+<p>I am sympathetic to this argument up to a point. It does make sense, especially if you are dealing with large numbers of programmers relatively inexperienced in the language (thus not exposed to the various styles of programming available), who regularly have to jump into different codebases (thus run into these different styles frequently). However, I do think the benefits outweight the disadvantages. Firstly, inexperienced programmers are likely to be limited to relatively isolated areas of the code, so they will have time to get used to whatever style is employed there before moving on and learning some new style along with the next codebase. Secondly, <em>once you have learnt</em> the style, it is actually dramatically <em>faster</em> to read succinct code like this than trudging through reams of <code>if</code> statements and manual <code>for</code>-style loops. It’s also harder to make mistakes, as the code fits more closely with the thing it’s trying to do.</p>
+<p>So there is a learning curve, and learning curves cost time and money when training programmers. But when the initial hump is traversed<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, the increase in productivity is well worth the effort.</p>
+<p>OK, after that little detour, let’s get back to it! The <code>dateAndTitle</code> function above made use of two helper functions which haven’t actually been defined. The first is <code>readTime</code>, which we use to normalise the date format. It takes a date string and converts it to a <code>UTCTime</code> which we can manipulate.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; readTime ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">UTCTime</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> readTime t <span class="fu">=</span> fromMaybe empty' <span class="fu">.</span> msum <span class="fu">$</span> attempts <span class="kw">where</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   attempts </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> [parseTime defaultTimeLocale fmt t <span class="fu">|</span> fmt <span class="ot">&lt;-</span> formats]</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   empty'   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> error <span class="fu">$</span> <span class="st">&quot;Could not parse date field: &quot;</span> <span class="fu">++</span> t</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   formats  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> [ <span class="st">&quot;%a, %d %b %Y %H:%M:%S %Z&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  , <span class="st">&quot;%Y-%m-%dT%H:%M:%S%Z&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  , <span class="st">&quot;%Y-%m-%d %H:%M:%S%Z&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  , <span class="st">&quot;%Y-%m-%d %H:%M&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  , <span class="st">&quot;%Y-%m-%d&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  , <span class="st">&quot;%B %e, %Y %l:%M %p&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  , <span class="st">&quot;%B %e, %Y&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  , <span class="st">&quot;%b %d, %Y&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  ]</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The basic idea for the implementation is taken from Hakyll itself, from its <code>getItemUTC</code> which is defined in <a href="https://hackage.haskell.org/package/hakyll-4.2.2.0/docs/src/Hakyll-Web-Template-Context.html"><code>Hakyll.Web.Template.Context</code></a>. Unfortunately, the type signature for that function is quite a lot more complicated than we need, so I’ve extracted the parts we need into a simple <code>String -&gt; UTCTime</code> function here. If the date doesn’t match any of the supported formats <code>readTime</code> will simply crash with an error – not the best error handling but since we’re always going to be running this interactively it doesn’t really matter.</p>
+<p><code>setBaseName</code> turns a string into a <code>FilePath</code>, which it can then manipulate using Haskell’s native <code>replaceBaseName</code> functionality.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; setBaseName ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Routes</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> setBaseName basename <span class="fu">=</span> customRoute <span class="fu">$</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   (<span class="ot">`replaceBaseName`</span> basename) <span class="fu">.</span> toFilePath</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="pages">Pages</h2>
+<p>Another form of content on this blog is that of “pages”, which are basically posts except that they don’t have a date or tags associated with them and they are not indexed or included in feeds. As a result they are super-simple – we don’t need to save a snapshot, or to parse the date or change the filename. Instead I can just compile it with a template designed for the purpose and set the extension. We’ll use the same <code>customCompiler</code> as posts for consistency, but we’ll just pass the <code>defaultContext</code> as we don’t need any of the extra metadata posts use.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pageCompiler ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> pageCompiler <span class="fu">=</span> customCompiler</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/page.html&quot;</span>    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">ctx</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">ctx</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> ctx <span class="fu">=</span> defaultContext</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The rules for pages are equally simple – just grab anything from the <code>pages</code> folder, compile it using the <code>pageCompiler</code> and set its extension to <code>html</code>. This is expressed below.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; pages ::</span> <span class="dt">Rules</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> pages <span class="fu">=</span> match <span class="st">&quot;pages/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> setExtension <span class="st">&quot;html&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile pageCompiler</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="conclusion">Conclusion</h2>
+<p>That’s about it for compiling posts! This is <em>almost</em> all you need to get a Hakyll site up and running – the only problem is since we still don’t have post indexing you have to know the URL of the post you want to read before you read it! This is about as complicated as it gets with Hakyll though – if you’ve followed this post, the rest should be easy! We’ll cover indexing next, after which we’ll go about adding special features one at a time.</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Anybody who’s read code using the <code>Lens</code> library will get the joke.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+<div class="tagsinfo">Tagged with: <a href="../tags/hakyll.html">hakyll</a>, <a href="../tags/literate-programs.html">literate-programs</a>, <a href="../tags/generating%20this%20website.html">generating this website</a></div>
+
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>
