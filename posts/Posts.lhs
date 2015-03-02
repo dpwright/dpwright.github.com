@@ -245,7 +245,7 @@ of all links (I've modified it slightly to work with `String`s instead of
 >     removeIndexStr url = case splitFileName url of
 >       (dir, "index.html") | isLocal dir -> dir
 >       (dir, _)                          -> dir
->     isLocal uri = not (isInfixOf "://" uri)
+>     isLocal uri = not $ isInfixOf "://" uri
 
 That all fits together quite nicely.  There's just one snag... that
 `dateAndTitle` function passed to `metadataRoute` doesn't actually exist!
