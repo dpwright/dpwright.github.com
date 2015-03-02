@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
         <title>Wright Access - Generating this website part x: Indexing</title>
-        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
-        <link rel="stylesheet" type="text/css" href="../../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
-        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/">
         </script>
     </head>
     <body>
@@ -17,7 +17,7 @@
              <h1 id="logomain"><a href="../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../pages/about.html"><i class="fa fa-question-circle"></i></a>
+                <a href="../../pages/"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
@@ -61,7 +61,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>), empty)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>))</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -76,9 +76,6 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Hashable</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Maybe</span></code></pre></td>
-</tr>
-<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Ord</span></code></pre></td>
 </tr>
 </tbody>
@@ -98,6 +95,18 @@
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude.Unicode</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -129,7 +138,7 @@
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField' <span class="st">&quot;url&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField <span class="st">&quot;url&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
@@ -200,7 +209,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   applyTemplateList itemTpl (itemCtx tags) ps</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   applyTemplateList itemTpl (itemCtx tags) ps ≫<span class="fu">=</span> removeIndexHtml</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
@@ -276,6 +285,10 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">≫<span class="fu">=</span> relativizeUrls</code></pre></td>
 </tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">≫<span class="fu">=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -297,6 +310,9 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags <span class="st">&quot;posts/*&quot;</span> indexContext</code></pre></td>
 </tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           ≫<span class="fu">=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -314,65 +330,34 @@
 <table>
 <colgroup>
 <col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexContext </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> bodyField     <span class="st">&quot;body&quot;</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ metadataField</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField'     <span class="st">&quot;url&quot;</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ pathField     <span class="st">&quot;path&quot;</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ missingField</code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; urlField' ::</span> <span class="dt">String</span> <span class="ot">→</span> <span class="dt">Context</span> a</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> urlField' key <span class="fu">=</span> field key <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   fmap (maybe empty normaliseURL) ∘ getRoute ∘ itemIdentifier</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
 <col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     normaliseURL url </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> toUrl ∘ fromMaybe url</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexContext </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> bodyField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;body&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                      </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> needlePrefix <span class="st">&quot;index.html&quot;</span> url</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ metadataField </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;url&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ pathField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;path&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ missingField  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -405,6 +390,12 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> relativizeUrls</code></pre></td>
 </tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
 </tbody>
 </table>
 <table>
@@ -415,24 +406,29 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">tagsCtx </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> constField <span class="st">&quot;title&quot;</span> <span class="st">&quot;tags&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     tagsCtx </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> tagCloudField </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;tagCloud&quot;</span> <span class="dv">100</span> <span class="dv">500</span> (shuffle tags)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">        </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ tagCloudField <span class="st">&quot;tagCloud&quot;</span> <span class="dv">100</span> <span class="dv">500</span> (shuffle tags)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ bodyField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;body&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">        </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ defaultContext</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;url&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">shuffle </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> sortTagsBy ∘ comparing <span class="fu">$</span> hash ∘ fst</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ pathField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;path&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ missingField  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -442,36 +438,42 @@
 </colgroup>
 <tbody>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     shuffle <span class="fu">=</span> sortTagsBy ∘ comparing <span class="fu">$</span> hash ∘ fst</code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; tagIndex ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Rules</span> ()</code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> tagIndex tags <span class="fu">=</span> tagsRules tags <span class="fu">$</span> \_ pattern <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
 </tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> gsubRoute <span class="st">&quot;.html&quot;</span> (const <span class="st">&quot;/index.html&quot;</span>)</code></pre></td>
+</tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route idRoute</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags pattern defaultContext</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags pattern defaultContext</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           ≫<span class="fu">=</span> withItemBody removeIndexHtml</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
 
-<div class="tagsinfo">Tagged with: <a href="../../tags/hakyll.html">hakyll</a>, <a href="../../tags/literate-programs.html">literate-programs</a>, <a href="../../tags/generating%20this%20website.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="../../tags/hakyll/">hakyll</a>, <a href="../../tags/literate-programs/">literate-programs</a>, <a href="../../tags/generating%20this%20website/">generating this website</a></div>
 
         </div>
         <div id="footer">
           <div id="text-licence">
-            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
             <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </div>
           <br />
           <div id="code-licence">
-            All code is released under the <a href="../../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+            All code is released under the <a href="../../pages/">BSD (2-Clause) License</a>.
           </div>
         </div>
     </body>

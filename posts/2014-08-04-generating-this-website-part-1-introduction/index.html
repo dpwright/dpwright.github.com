@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
         <title>Wright Access - Generating this website part 1: Introduction</title>
-        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
-        <link rel="stylesheet" type="text/css" href="../../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
-        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/">
         </script>
     </head>
     <body>
@@ -17,7 +17,7 @@
              <h1 id="logomain"><a href="../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../pages/about.html"><i class="fa fa-question-circle"></i></a>
+                <a href="../../pages/"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
@@ -32,10 +32,10 @@
 
 
 <div class="sidenote">
-<p>This is part one of the “generating this website” series. To read the rest of the series, go to the series index <a href="../../tags/generating%20this%20website.html">here</a></p>
+<p>This is part one of the “generating this website” series. To read the rest of the series, go to the series index <a href="../../tags/">here</a></p>
 </div>
 <p>I’ve recently migrated this website to a new server, and while I was at it I thought I’d have another shot at giving it a reboot and actually keeping it up-to-date this time. I’m much more experienced in both Haskell and literate programming than I was when last I updated it, so when I was modifying my configuration it suddenly occurred to me that since this site is generated using Haskell, and since Haskell supports literate programming natively, I could very easily make the site “self-hosting” by writing up the configuration itself as a series of blog posts!</p>
-<p>Thus begins this series, unimaginatively named <a href="../../tags/generating%20this%20website.html">Generating this Website</a>. To recap, the site is generated using <a href="http://jaspervdj.be/hakyll">Hakyll</a>, a Haskell library for generating static websites. I will write this series assuming basic Haskell knowledge; you should be familiar with standard typeclasses like <code>Monoid</code> and <code>Applicative</code>. Specific knowledge of Hakyll is not required, and if an idiom feels at all obscure I will attempt to explain it as I go. If there’s anything you don’t get, you can always drop me a tweet @<a href="http://twitter.com/danielpwright">danielpwright</a>!</p>
+<p>Thus begins this series, unimaginatively named <a href="../../tags/">Generating this Website</a>. To recap, the site is generated using <a href="http://jaspervdj.be/">Hakyll</a>, a Haskell library for generating static websites. I will write this series assuming basic Haskell knowledge; you should be familiar with standard typeclasses like <code>Monoid</code> and <code>Applicative</code>. Specific knowledge of Hakyll is not required, and if an idiom feels at all obscure I will attempt to explain it as I go. If there’s anything you don’t get, you can always drop me a tweet @<a href="http://twitter.com/">danielpwright</a>!</p>
 <p>This post will just cover the basics – for details of the generation of actual posts, the index pages, and so on, check back for future posts! I will update this post with links as I write them.</p>
 <h2 id="preliminaries">Preliminaries</h2>
 <p>To begin with, a couple of lines which will grow familiar as this series progresses:</p>
@@ -94,7 +94,7 @@
 </table>
 </div>
 <h2 id="some-simple-rules">Some simple rules</h2>
-<p>The main entry point to Hakyll takes a set of <a href="http://jaspervdj.be/hakyll/reference/Hakyll-Core-Rules.html#t:Rules"><code>Rules</code></a> and returns an <code>IO</code> action which generates the site. <code>Rules</code> themselves form a monad, so assuming we have some simple rules:</p>
+<p>The main entry point to Hakyll takes a set of <a href="http://jaspervdj.be/hakyll/reference/"><code>Rules</code></a> and returns an <code>IO</code> action which generates the site. <code>Rules</code> themselves form a monad, so assuming we have some simple rules:</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -157,7 +157,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 </tbody>
 </table>
 </div>
-<p>Hakyll provides a <a href="http://jaspervdj.be/hakyll/reference/Hakyll-Core-Identifier-Pattern.html#t:Pattern"><code>Pattern</code></a> type which, conveniently, implements <code>IsString</code> so our <code>OverloadedStrings</code> pragma takes care of the conversion for us. The <code>**</code> pattern searches in that directory and all subdirectories.</p>
+<p>Hakyll provides a <a href="http://jaspervdj.be/hakyll/reference/"><code>Pattern</code></a> type which, conveniently, implements <code>IsString</code> so our <code>OverloadedStrings</code> pragma takes care of the conversion for us. The <code>**</code> pattern searches in that directory and all subdirectories.</p>
 <p>Next up come the images. These are also very simple – simply take the full path of the images, and copy them to the same place in the output directory.</p>
 <div class="elastic-tabstops">
 <table>
@@ -198,7 +198,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 </table>
 </div>
 <p>Of course, the <code>copyFileCompiler</code> would work just as well, but we might as well compress the CSS while we’re at it.</p>
-<p>Occasionally, I just want to put some static files up that don’t fit the structure of the rest of the blog. This is particularly useful when I want to upload slides from a talk I’ve given, for example the <a href="../../gits-guts">git talk</a> I gave a couple of months ago. The talk itself is maintained in a different repository, so it’s convenient if I can just include that as a submodule and have its files copied automatically. I do this by storing all such content in the <code>static</code> directory, and then copying it when generating the site, stripping the initial <code>static/</code> from the output path.</p>
+<p>Occasionally, I just want to put some static files up that don’t fit the structure of the rest of the blog. This is particularly useful when I want to upload slides from a talk I’ve given, for example the <a href="../../">git talk</a> I gave a couple of months ago. The talk itself is maintained in a different repository, so it’s convenient if I can just include that as a submodule and have its files copied automatically. I do this by storing all such content in the <code>static</code> directory, and then copying it when generating the site, stripping the initial <code>static/</code> from the output path.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -299,18 +299,18 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 </div>
 <p>This concludes the introduction to Hakyll and the entry point for the generation code for this website. Stay tuned for the next entry, where we’ll add the configuration to actually create the posts themselves!</p>
 
-<div class="tagsinfo">Tagged with: <a href="../../tags/literate-programs.html">literate-programs</a>, <a href="../../tags/hakyll.html">hakyll</a>, <a href="../../tags/generating%20this%20website.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="../../tags/literate-programs/">literate-programs</a>, <a href="../../tags/hakyll/">hakyll</a>, <a href="../../tags/generating%20this%20website/">generating this website</a></div>
 
         </div>
         <div id="footer">
           <div id="text-licence">
-            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
             <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </div>
           <br />
           <div id="code-licence">
-            All code is released under the <a href="../../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+            All code is released under the <a href="../../pages/">BSD (2-Clause) License</a>.
           </div>
         </div>
     </body>

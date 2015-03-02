@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
         <title>Wright Access - あけましておめでとうございます</title>
-        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
-        <link rel="stylesheet" type="text/css" href="../../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
-        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/">
         </script>
     </head>
     <body>
@@ -17,7 +17,7 @@
              <h1 id="logomain"><a href="../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../pages/about.html"><i class="fa fa-question-circle"></i></a>
+                <a href="../../pages/"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
 
 
 <center>
-<img src="../../posts/2015-01-01-あけましておめでとうございます/nengajou.png" title="明けましておめでとうございます" />
+<img src="../../posts/2015-01-01-あけましておめでとうございます/" title="明けましておめでとうございます" />
 </center>
 <h2 id="年賀状をhaskellで">年賀状をHaskellで</h2>
 <p>上の画像が今年の僕達の年賀状です。</p>
@@ -50,7 +50,7 @@
 <p>結局、「上の白いレイヤーから切る」という方法ではなく、 「そのまま５つの三角形を描く」という方法でやりました。</p>
 <p>文章ではちょっと分かりづらいと思うので、絵で説明します。</p>
 <center>
-<img src="../../posts/2015-01-01-あけましておめでとうございます/triangles.png" title="５つの三角形" />
+<img src="../../posts/2015-01-01-あけましておめでとうございます/" title="５つの三角形" />
 </center>
 <p>この下にメッセージをつけます。</p>
 <p>では、実際にどう作ったか振り返ります。</p>
@@ -375,7 +375,7 @@
 <h2 id="二等辺三角形">二等辺三角形</h2>
 <p>もう一度下の画像を見てみましょう。</p>
 <center>
-<img src="../../posts/2015-01-01-あけましておめでとうございます/triangles.png" title="５つの三角形" />
+<img src="../../posts/2015-01-01-あけましておめでとうございます/" title="５つの三角形" />
 </center>
 <p>この５つの三角形は全部二等辺三角形です！ diagramsは正三角形を作る関数が定義されていますが、 二等辺三角形はないため、自分で定義する必要があります。</p>
 <div class="elastic-tabstops">
@@ -406,8 +406,8 @@
 </table>
 </div>
 <p><code>θ</code>は頂角、<code>a</code>は高度（altitude）です。</p>
-<p><code>(^-^)</code>、<code>(^/)</code>は<a href="https://hackage.haskell.org/package/vector-space">vector-space</a>というパッケージで定義され、 角度やベクトル等を引算、割算ができるような関数です。 意味が分からないときは<code>^</code>を消してみたら、だいたいの意味が見えてきます （<code>(^-^)</code> → <code>(-)</code>、<code>(^/)</code> → <code>(/)</code>)。</p>
-<p><code>(&amp;)</code>、<code>(.~)</code>は<a href="https://hackage.haskell.org/package/lens">lens</a>のオペレーターです。 今からlensの説明しようとすると話が終わらないので、今日は省きます。</p>
+<p><code>(^-^)</code>、<code>(^/)</code>は<a href="https://hackage.haskell.org/package/">vector-space</a>というパッケージで定義され、 角度やベクトル等を引算、割算ができるような関数です。 意味が分からないときは<code>^</code>を消してみたら、だいたいの意味が見えてきます （<code>(^-^)</code> → <code>(-)</code>、<code>(^/)</code> → <code>(/)</code>)。</p>
+<p><code>(&amp;)</code>、<code>(.~)</code>は<a href="https://hackage.haskell.org/package/">lens</a>のオペレーターです。 今からlensの説明しようとすると話が終わらないので、今日は省きます。</p>
 <p>画像のレイアウトをするため、底辺の長さが必要なときがあります。 それを計算するために下記のユーティリティ関数を使います。</p>
 <div class="elastic-tabstops">
 <table>
@@ -635,7 +635,7 @@
 <p>になります。この画像では順番は関係ないけれど、 場合によっては必要になりますね。 <em><code>Diagram</code></em>を連結すると、 上から下の順番になります（<code>edgeTriangleLeft</code>の下に <code>bottomTriangleLeft</code>を描いて、その下に <code>centralTriangle</code>を描く…という形）。</p>
 <p>この画像の三角形を見ると２種類があります。 まずは、真ん中の３つの三角形。</p>
 <center>
-<img src="../../posts/2015-01-01-あけましておめでとうございます/outline-triangles.png" title="Picture of 3 central triangles goes here" />
+<img src="../../posts/2015-01-01-あけましておめでとうございます/" title="Picture of 3 central triangles goes here" />
 </center>
 <p>輪郭のみを描いて、下にある写真が見える三角形ですね。</p>
 <div class="elastic-tabstops">
@@ -667,7 +667,7 @@
 <p>「なぜ<code>centerXY</code>が必要か？」ですが、Diagramsはデフォルトでは 原点は高度から見る真ん中ではなく、重心に設定してあります。 二等辺三角形を鏡映すると、ずれてしまう。 <code>centerXY</code>をしたら、簡単に鏡映できるようになります。</p>
 <p>次は左と右の、真っ白の三角形です。</p>
 <center>
-<img src="../../posts/2015-01-01-あけましておめでとうございます/edge-triangles.png" title="Picture of 2 edge triangles goes here" />
+<img src="../../posts/2015-01-01-あけましておめでとうございます/" title="Picture of 2 edge triangles goes here" />
 </center>
 <p>この三角形の頂角は真ん中の三角形の反対角度になっています。</p>
 <div class="elastic-tabstops">
@@ -1272,18 +1272,18 @@
 <p>さあ、これで今年の年賀状が完成しました！</p>
 <p>今年も楽しみながら、関数型言語で面白いものを作って行きましょう！</p>
 
-<div class="tagsinfo">Tagged with: <a href="../../tags/%E6%97%A5%E6%9C%AC%E8%AA%9E.html">日本語</a>, <a href="../../tags/functional-programming.html">functional-programming</a>, <a href="../../tags/haskell.html">haskell</a>, <a href="../../tags/%E3%81%8A%E6%AD%A3%E6%9C%88.html">お正月</a>, <a href="../../tags/new%20year.html">new year</a>, <a href="../../tags/%E5%B9%B4%E8%B3%80%E7%8A%B6.html">年賀状</a></div>
+<div class="tagsinfo">Tagged with: <a href="../../tags/%E6%97%A5%E6%9C%AC%E8%AA%9E/">日本語</a>, <a href="../../tags/functional-programming/">functional-programming</a>, <a href="../../tags/haskell/">haskell</a>, <a href="../../tags/%E3%81%8A%E6%AD%A3%E6%9C%88/">お正月</a>, <a href="../../tags/new%20year/">new year</a>, <a href="../../tags/%E5%B9%B4%E8%B3%80%E7%8A%B6/">年賀状</a></div>
 
         </div>
         <div id="footer">
           <div id="text-licence">
-            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
             <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </div>
           <br />
           <div id="code-licence">
-            All code is released under the <a href="../../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+            All code is released under the <a href="../../pages/">BSD (2-Clause) License</a>.
           </div>
         </div>
     </body>

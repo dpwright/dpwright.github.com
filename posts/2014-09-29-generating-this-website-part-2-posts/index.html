@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
         <title>Wright Access - Generating this website part 2: Posts</title>
-        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
-        <link rel="stylesheet" type="text/css" href="../../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
-        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="../../css/" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/">
         </script>
     </head>
     <body>
@@ -17,7 +17,7 @@
              <h1 id="logomain"><a href="../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../pages/about.html"><i class="fa fa-question-circle"></i></a>
+                <a href="../../pages/"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
 
 
 <div class="sidenote">
-<p>This is part two of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website.html">here</a></p>
+<p>This is part two of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/">here</a></p>
 </div>
 <p>OK, time to dive into arguably the most important part of the website generator – generating the posts themselves! Really, this is what it all comes down to; any other features like tags, rss feeds, crossposting and so on are just window dressing. Generating posts is not actually that hard, but you’ll find it’s one of the most often-tweaked part of your Hakyll setup as most changes you want to make affect posts in some way. Let’s get started!</p>
 <h2 id="preliminaries">Preliminaries</h2>
@@ -74,7 +74,7 @@
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>           </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(intercalate)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(intercalate, isInfixOf)</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span>           </code></pre></td>
@@ -105,7 +105,7 @@
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, (<span class="fu">&lt;/&gt;</span>))</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, splitFileName, (<span class="fu">&lt;/&gt;</span>))</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span>       </code></pre></td>
@@ -386,6 +386,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> ctx <span class="fu">=</span> postCtx tags</code></pre></td>
 </tr>
 </tbody>
@@ -457,9 +460,40 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tbody>
 </table>
 </div>
+<p>This works nicely, but as Yann points out in his post it leaves a lot of links with <code>index.html</code> at the end of them floating around. We basically never want this, so Yann suggests the following code to strip <code>index.html</code> from the end of all links (I’ve modified it slightly to work with <code>String</code>s instead of <code>Item</code>s).</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; removeIndexHtml ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> removeIndexHtml body <span class="fu">=</span> return <span class="fu">$</span> withUrls removeIndexStr body</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     removeIndexStr url <span class="fu">=</span> <span class="kw">case</span> splitFileName url <span class="kw">of</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir <span class="ot">-&gt;</span> dir</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, _)                          <span class="ot">-&gt;</span> dir</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isLocal uri <span class="fu">=</span> not (isInfixOf <span class="st">&quot;://&quot;</span> uri)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>That all fits together quite nicely. There’s just one snag… that <code>dateAndTitle</code> function passed to <code>metadataRoute</code> doesn’t actually exist! We’re going to have to write it.</p>
 <h2 id="extracting-the-date-and-title-from-metadata">Extracting the date and title from metadata</h2>
-<p>As mentioned, Hakyll by default expects the date and title to be included in the filename and as such it can just change the extension and have done with it. Because we might be naming files after the modules they define (in the case of Literate Haskell files), a post such as this one would end up with a URL looking like <a href="http://dpwright.com/posts/Posts.html" class="uri">http://dpwright.com/posts/Posts.html</a>, which would be very odd. Even without this, it’s quite easy to write a post which accidentally has a subtly different title to its filename, which would be confusing.</p>
+<p>As mentioned, Hakyll by default expects the date and title to be included in the filename and as such it can just change the extension and have done with it. Because we might be naming files after the modules they define (in the case of Literate Haskell files), a post such as this one would end up with a URL looking like <a href="http://dpwright.com/posts/" class="uri">http://dpwright.com/posts/Posts.html</a>, which would be very odd. Even without this, it’s quite easy to write a post which accidentally has a subtly different title to its filename, which would be confusing.</p>
 <p>Because of this, we’d much rather pull the <code>date</code> and <code>title</code> fields out of the post’s metadata, which ensures consistency and reduces repetition. Unfortunately, Hakyll provides no clear way to do this natively, so we have to make use of its generic functionality for routing based on metadata. We do this using the <code>metadataRoute</code> function, above, which takes as its parameter a function taking a posts <code>Metadata</code> and returning the <code>Routes</code> associated with that metadata, and returns <code>Routes</code> which can be used by the <code>Rules</code> to which is it passed. Its type signature looks like this:</p>
 <div class="elastic-tabstops">
 <table>
@@ -552,7 +586,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </ul>
 <p>Function definitions like the one above are part of the reason I love Haskell and others might hate it. There’s so much functionality packed into so little code there, you do have to slow down a little bit and read it carefully to follow it, at least until you are used to code written in the style used (in this case, some applicative style and a little bit of point-free notation thrown in for good measure). Add to this the expressivity of Haskell which allows for a number of different styles, so that even once you’ve got used to the style used here you may open another codebase and find that the style employed there is completely different! There is a not-unreasonable argument that this is problematic; that encouraging a very particular style at the language level (as Python does, for example) makes it a lot easier to read unfamiliar code.</p>
 <p>I am sympathetic to this argument up to a point. It does make sense, especially if you are dealing with large numbers of programmers relatively inexperienced in the language (thus not exposed to the various styles of programming available), who regularly have to jump into different codebases (thus run into these different styles frequently). However, I do think the benefits outweight the disadvantages. Firstly, inexperienced programmers are likely to be limited to relatively isolated areas of the code, so they will have time to get used to whatever style is employed there before moving on and learning some new style along with the next codebase. Secondly, <em>once you have learnt</em> the style, it is actually dramatically <em>faster</em> to read succinct code like this than trudging through reams of <code>if</code> statements and manual <code>for</code>-style loops. It’s also harder to make mistakes, as the code fits more closely with the thing it’s trying to do.</p>
-<p>So there is a learning curve, and learning curves cost time and money when training programmers. But when the initial hump is traversed<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, the increase in productivity is well worth the effort.</p>
+<p>So there is a learning curve, and learning curves cost time and money when training programmers. But when the initial hump is traversed<a href="./" class="footnoteRef" id="fnref1"><sup>1</sup></a>, the increase in productivity is well worth the effort.</p>
 <p>OK, after that little detour, let’s get back to it! The <code>dateAndTitle</code> function above made use of two helper functions which haven’t actually been defined. The first is <code>readTime</code>, which we use to normalise the date format. It takes a date string and converts it to a <code>UTCTime</code> which we can manipulate.</p>
 <div class="elastic-tabstops">
 <table>
@@ -621,7 +655,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tbody>
 </table>
 </div>
-<p>The basic idea for the implementation is taken from Hakyll itself, from its <code>getItemUTC</code> which is defined in <a href="https://hackage.haskell.org/package/hakyll-4.2.2.0/docs/src/Hakyll-Web-Template-Context.html"><code>Hakyll.Web.Template.Context</code></a>. Unfortunately, the type signature for that function is quite a lot more complicated than we need, so I’ve extracted the parts we need into a simple <code>String -&gt; UTCTime</code> function here. If the date doesn’t match any of the supported formats <code>readTime</code> will simply crash with an error – not the best error handling but since we’re always going to be running this interactively it doesn’t really matter.</p>
+<p>The basic idea for the implementation is taken from Hakyll itself, from its <code>getItemUTC</code> which is defined in <a href="https://hackage.haskell.org/package/hakyll-4.2.2.0/docs/src/"><code>Hakyll.Web.Template.Context</code></a>. Unfortunately, the type signature for that function is quite a lot more complicated than we need, so I’ve extracted the parts we need into a simple <code>String -&gt; UTCTime</code> function here. If the date doesn’t match any of the supported formats <code>readTime</code> will simply crash with an error – not the best error handling but since we’re always going to be running this interactively it doesn’t really matter.</p>
 <p><code>setBaseName</code> turns a string into a <code>FilePath</code>, which it can then manipulate using Haskell’s native <code>replaceBaseName</code> functionality.</p>
 <div class="elastic-tabstops">
 <table>
@@ -714,22 +748,22 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Anybody who’s read code using the <code>Lens</code> library will get the joke.<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>Anybody who’s read code using the <code>Lens</code> library will get the joke.<a href="./">↩</a></p></li>
 </ol>
 </div>
 
-<div class="tagsinfo">Tagged with: <a href="../../tags/hakyll.html">hakyll</a>, <a href="../../tags/literate-programs.html">literate-programs</a>, <a href="../../tags/generating%20this%20website.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="../../tags/hakyll/">hakyll</a>, <a href="../../tags/literate-programs/">literate-programs</a>, <a href="../../tags/generating%20this%20website/">generating this website</a></div>
 
         </div>
         <div id="footer">
           <div id="text-licence">
-            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
             <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </div>
           <br />
           <div id="code-licence">
-            All code is released under the <a href="../../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+            All code is released under the <a href="../../pages/">BSD (2-Clause) License</a>.
           </div>
         </div>
     </body>

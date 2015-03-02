@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
         <title>Wright Access - Writing a TCP server in Haskell using proxies and pipes</title>
-        <link rel="stylesheet" type="text/css" href="../css/default.css" />
-        <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
-        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        <link rel="stylesheet" type="text/css" href="../css/" />
+        <link rel="stylesheet" type="text/css" href="../css/" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/">
         </script>
     </head>
     <body>
@@ -17,7 +17,7 @@
              <h1 id="logomain"><a href="../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../pages/about.html"><i class="fa fa-question-circle"></i></a>
+                <a href="../pages/"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
@@ -31,15 +31,15 @@
 
 <div id="crosspost">
 <p>This is a cross-post of an article originally written for the <a href="http://blog.vitei.com/">Vitei Backroom Blog</a>.<br />
-Read the original article <a href="http://blog.vitei.com/?p=147">here</a>.</p>
+Read the original article <a href="http://blog.vitei.com/">here</a>.</p>
 </div>
 
 
 <center>
-<img src="http://blog.vitei.com/wp-content/uploads/2013/08/haskell-pipes2.jpg" alt="Haskell Pipes" />
+<img src="http://blog.vitei.com/wp-content/uploads/2013/08/" alt="Haskell Pipes" />
 </center>
 <div class="sidenote">
-Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pipes 4</a>, this article is now rather out-of-date. I leave it up here for posterity, but if you’re new to Pipes you should probably just ignore it and find a more up-to-date tutorial.
+Since the release of <a href="http://hackage.haskell.org/package/">Pipes 4</a>, this article is now rather out-of-date. I leave it up here for posterity, but if you’re new to Pipes you should probably just ignore it and find a more up-to-date tutorial.
 </div>
 <p>Since my last post, I’ve really been enjoying Haskell, and in fact a lot of the functional ideas I had formerly been playing with in Clojure I am now exploring in Haskell instead. I will go into more detail on the reasons for that in a future post – for now I just wanted to share a neat bit of code I wrote the other day that I think really demonstrates the kind of concise, readable code Haskell enables.</p>
 <div>
@@ -159,7 +159,7 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 </tbody>
 </table>
 </div>
-<p>Onto the handler itself then! This is the first instance of one of the types defined by the <code>pipes</code> library, a <code>Pipe</code>. A <code>Pipe</code> is a generalization of the <code>Proxy</code> typeclass defined by the library, which defines a set of types which can send and/or receive data up or downstream. The library defines various instances of these. They are explained in excellent detail in the <a href="http://hackage.haskell.org/packages/archive/pipes/3.3.0/doc/html/Control-Proxy-Tutorial.html#g:3">Control.Proxy Tutorial</a>, but in summary:</p>
+<p>Onto the handler itself then! This is the first instance of one of the types defined by the <code>pipes</code> library, a <code>Pipe</code>. A <code>Pipe</code> is a generalization of the <code>Proxy</code> typeclass defined by the library, which defines a set of types which can send and/or receive data up or downstream. The library defines various instances of these. They are explained in excellent detail in the <a href="http://hackage.haskell.org/packages/archive/pipes/3.3.0/doc/html/">Control.Proxy Tutorial</a>, but in summary:</p>
 <ul>
 <li>A <code>Producer</code> generates values to be streamed <em>downstream</em></li>
 <li>A <code>Consumer</code> reads values from <em>upstream</em></li>
@@ -544,18 +544,18 @@ Since the release of <a href="http://hackage.haskell.org/package/pipes-4.0.0">Pi
 </div>
 <p>If you copy and paste this page into a file and run it with <code>runhaskell</code> you should be able to open another window and telnet into <code>localhost</code> on port 8000. Try typing some commands and see what happens!</p>
 
-<div class="tagsinfo">Tagged with: <a href="../tags/literate-programs.html">literate-programs</a>, <a href="../tags/haskell.html">haskell</a>, <a href="../tags/functional-programming.html">functional-programming</a></div>
+<div class="tagsinfo">Tagged with: <a href="../tags/literate-programs/">literate-programs</a>, <a href="../tags/haskell/">haskell</a>, <a href="../tags/functional-programming/">functional-programming</a></div>
 
         </div>
         <div id="footer">
           <div id="text-licence">
-            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
             <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </div>
           <br />
           <div id="code-licence">
-            All code is released under the <a href="../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+            All code is released under the <a href="../pages/">BSD (2-Clause) License</a>.
           </div>
         </div>
     </body>

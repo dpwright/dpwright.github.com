@@ -80,7 +80,7 @@
 </div>
 <p>Thanks to <a href="http://stackoverflow.com/a/9753364/1004609">this Stack Overflow answer</a> for the technique, which I just wrapped up in an alias to make it easier to use.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/git.html">git</a>, <a href="/tags/alias.html">alias</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/git/index.html">git</a>, <a href="/tags/alias/index.html">alias</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -154,7 +154,7 @@
 </div>
 <p>Thanks to <a href="http://stackoverflow.com/a/9753364/1004609">this Stack Overflow answer</a> for the technique, which I just wrapped up in an alias to make it easier to use.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/git.html">git</a>, <a href="/tags/alias.html">alias</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/git/index.html">git</a>, <a href="/tags/alias/index.html">alias</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -1408,7 +1408,7 @@
 <p>さあ、これで今年の年賀状が完成しました！</p>
 <p>今年も楽しみながら、関数型言語で面白いものを作って行きましょう！</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E.html">日本語</a>, <a href="/tags/functional-programming.html">functional-programming</a>, <a href="/tags/haskell.html">haskell</a>, <a href="/tags/%E3%81%8A%E6%AD%A3%E6%9C%88.html">お正月</a>, <a href="/tags/new%20year.html">new year</a>, <a href="/tags/%E5%B9%B4%E8%B3%80%E7%8A%B6.html">年賀状</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E/index.html">日本語</a>, <a href="/tags/functional-programming/index.html">functional-programming</a>, <a href="/tags/haskell/index.html">haskell</a>, <a href="/tags/%E3%81%8A%E6%AD%A3%E6%9C%88/index.html">お正月</a>, <a href="/tags/new%20year/index.html">new year</a>, <a href="/tags/%E5%B9%B4%E8%B3%80%E7%8A%B6/index.html">年賀状</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -2662,7 +2662,7 @@
 <p>さあ、これで今年の年賀状が完成しました！</p>
 <p>今年も楽しみながら、関数型言語で面白いものを作って行きましょう！</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E.html">日本語</a>, <a href="/tags/functional-programming.html">functional-programming</a>, <a href="/tags/haskell.html">haskell</a>, <a href="/tags/%E3%81%8A%E6%AD%A3%E6%9C%88.html">お正月</a>, <a href="/tags/new%20year.html">new year</a>, <a href="/tags/%E5%B9%B4%E8%B3%80%E7%8A%B6.html">年賀状</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E/index.html">日本語</a>, <a href="/tags/functional-programming/index.html">functional-programming</a>, <a href="/tags/haskell/index.html">haskell</a>, <a href="/tags/%E3%81%8A%E6%AD%A3%E6%9C%88/index.html">お正月</a>, <a href="/tags/new%20year/index.html">new year</a>, <a href="/tags/%E5%B9%B4%E8%B3%80%E7%8A%B6/index.html">年賀状</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -2718,7 +2718,7 @@
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>           </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(intercalate)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(intercalate, isInfixOf)</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span>           </code></pre></td>
@@ -2749,7 +2749,7 @@
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, (<span class="fu">&lt;/&gt;</span>))</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, splitFileName, (<span class="fu">&lt;/&gt;</span>))</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span>       </code></pre></td>
@@ -3030,6 +3030,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> ctx <span class="fu">=</span> postCtx tags</code></pre></td>
 </tr>
 </tbody>
@@ -3097,6 +3100,37 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> p <span class="fu">=</span> toFilePath ident</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This works nicely, but as Yann points out in his post it leaves a lot of links with <code>index.html</code> at the end of them floating around. We basically never want this, so Yann suggests the following code to strip <code>index.html</code> from the end of all links (I’ve modified it slightly to work with <code>String</code>s instead of <code>Item</code>s).</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; removeIndexHtml ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> removeIndexHtml body <span class="fu">=</span> return <span class="fu">$</span> withUrls removeIndexStr body</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     removeIndexStr url <span class="fu">=</span> <span class="kw">case</span> splitFileName url <span class="kw">of</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir <span class="ot">-&gt;</span> dir</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, _)                          <span class="ot">-&gt;</span> dir</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isLocal uri <span class="fu">=</span> not (isInfixOf <span class="st">&quot;://&quot;</span> uri)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -3362,7 +3396,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </ol>
 </div>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/generating%20this%20website.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -3418,7 +3452,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>           </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(intercalate)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(intercalate, isInfixOf)</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Char</span>           </code></pre></td>
@@ -3449,7 +3483,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, (<span class="fu">&lt;/&gt;</span>))</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, splitFileName, (<span class="fu">&lt;/&gt;</span>))</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span>       </code></pre></td>
@@ -3730,6 +3764,9 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> ctx <span class="fu">=</span> postCtx tags</code></pre></td>
 </tr>
 </tbody>
@@ -3797,6 +3834,37 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> p <span class="fu">=</span> toFilePath ident</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This works nicely, but as Yann points out in his post it leaves a lot of links with <code>index.html</code> at the end of them floating around. We basically never want this, so Yann suggests the following code to strip <code>index.html</code> from the end of all links (I’ve modified it slightly to work with <code>String</code>s instead of <code>Item</code>s).</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; removeIndexHtml ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> removeIndexHtml body <span class="fu">=</span> return <span class="fu">$</span> withUrls removeIndexStr body</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     removeIndexStr url <span class="fu">=</span> <span class="kw">case</span> splitFileName url <span class="kw">of</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir <span class="ot">-&gt;</span> dir</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, _)                          <span class="ot">-&gt;</span> dir</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isLocal uri <span class="fu">=</span> not (isInfixOf <span class="st">&quot;://&quot;</span> uri)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -4062,7 +4130,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 </ol>
 </div>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/generating%20this%20website.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -4343,7 +4411,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 </div>
 <p>This concludes the introduction to Hakyll and the entry point for the generation code for this website. Stay tuned for the next entry, where we’ll add the configuration to actually create the posts themselves!</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/generating%20this%20website.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -4624,7 +4692,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 </div>
 <p>This concludes the introduction to Hakyll and the entry point for the generation code for this website. Stay tuned for the next entry, where we’ll add the configuration to actually create the posts themselves!</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs.html">literate-programs</a>, <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/generating%20this%20website.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -4641,7 +4709,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>大分遅くなってしまったが、<a href="http://dpwright.com/gits-guts">スライドをアップしました</a>。スライドで「ｐ」を押せばノートが出てきます（ちょっと適当に書いたけど何となく言ったことが分かります）。</p>
 <p>（絵を描くことはすごい下手なんで、図表は同僚の大久保佳尚さんに描いて頂きました。感謝します！）</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/git.html">git</a>, <a href="/tags/talks.html">talks</a>, <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E.html">日本語</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/git/index.html">git</a>, <a href="/tags/talks/index.html">talks</a>, <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E/index.html">日本語</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -4658,7 +4726,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>大分遅くなってしまったが、<a href="http://dpwright.com/gits-guts">スライドをアップしました</a>。スライドで「ｐ」を押せばノートが出てきます（ちょっと適当に書いたけど何となく言ったことが分かります）。</p>
 <p>（絵を描くことはすごい下手なんで、図表は同僚の大久保佳尚さんに描いて頂きました。感謝します！）</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/git.html">git</a>, <a href="/tags/talks.html">talks</a>, <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E.html">日本語</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/git/index.html">git</a>, <a href="/tags/talks/index.html">talks</a>, <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E/index.html">日本語</a></div>
 ]]></summary>
 </entry>
 
