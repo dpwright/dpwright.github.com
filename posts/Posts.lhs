@@ -44,7 +44,7 @@ importing from where.
 
 > import Data.Monoid         	((<>))
 > import Data.Maybe          	(fromMaybe)
-> import Data.List           	(intercalate)
+> import Data.List           	(intercalate, isInfixOf)
 > import Data.Char           	(toLower, isAlphaNum)
 > import Control.Applicative 	((<$>), (<*>))
 > import Control.Monad       	(msum)
@@ -53,7 +53,7 @@ I'm going to be making use of a few system/date related functions to handle the
 date specified in the header and rename the file appropriately.
 
 > import System.FilePath     	(replaceBaseName, takeDirectory,
->                            	 takeBaseName, (</>))
+>                            	 takeBaseName, splitFileName, (</>))
 > import System.Locale       	(defaultTimeLocale)
 > import Data.Time.Clock     	(UTCTime (..))
 > import Data.Time.Format    	(formatTime, parseTime)
@@ -195,6 +195,7 @@ case our `customCompiler` defined above), apply templates, and fix up the URLs.
 >   >>= saveSnapshot "content"
 >   >>= loadAndApplyTemplate "templates/default.html" ctx
 >   >>= relativizeUrls
+>   >>= withItemBody removeIndexHtml
 >   where ctx = postCtx tags
 
 Hang on, what's that `saveSnapshot` in the middle there?  I never mentioned
@@ -231,6 +232,20 @@ visiting the page in the browser.  It is defined as follows.
 > simplifyURL ident =
 >   takeDirectory p </> takeBaseName p </> "index.html"
 >   where p = toFilePath ident
+
+This works nicely, but as Yann points out in his post it leaves a lot of links
+with `index.html` at the end of them floating around.  We basically never want
+this, so Yann suggests the following code to strip `index.html` from the end
+of all links (I've modified it slightly to work with `String`s instead of
+`Item`s).
+
+> removeIndexHtml :: String -> Compiler String
+> removeIndexHtml body = return $ withUrls removeIndexStr body
+>   where
+>     removeIndexStr url = case splitFileName url of
+>       (dir, "index.html") | isLocal dir -> dir
+>       (dir, _)                          -> dir
+>     isLocal uri = not (isInfixOf "://" uri)
 
 That all fits together quite nicely.  There's just one snag... that
 `dateAndTitle` function passed to `metadataRoute` doesn't actually exist!
