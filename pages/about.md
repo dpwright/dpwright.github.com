@@ -77,5 +77,5 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 [cv-pdf]:                  #
 [cv-html]:                 #
 [cv-json]:                 #
-[generating this website]: http://www.dpwright.com/tags/generating%20this%20website.html
-[literate-programs]:       http://www.dpwright.com/tags/literate-programs.html
+[generating this website]: http://www.dpwright.com/tags/generating%20this%20website
+[literate-programs]:       http://www.dpwright.com/tags/literate-programs

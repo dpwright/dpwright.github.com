@@ -413,7 +413,7 @@ This is expressed below.
 
 > pages :: Rules ()
 > pages = match "pages/*" $ do
->   route $ setExtension "html"
+>   route $ customRoute simplifyURL
 >   compile pageCompiler
 
 Conclusion
