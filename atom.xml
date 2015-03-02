@@ -3133,7 +3133,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> dir</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> init dir</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       _                                 </code></pre></td>
@@ -3396,7 +3396,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> pages <span class="fu">=</span> match <span class="st">&quot;pages/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> setExtension <span class="st">&quot;html&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> customRoute simplifyURL</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile pageCompiler</code></pre></td>
@@ -3884,7 +3884,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> dir</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> init dir</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       _                                 </code></pre></td>
@@ -4147,7 +4147,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> pages <span class="fu">=</span> match <span class="st">&quot;pages/*&quot;</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> setExtension <span class="st">&quot;html&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> customRoute simplifyURL</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile pageCompiler</code></pre></td>
