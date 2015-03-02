@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
         <title>Wright Access - (Literate) Haskell script to create a new Hakyll post</title>
-        <link rel="stylesheet" type="text/css" href="../../css/" />
-        <link rel="stylesheet" type="text/css" href="../../css/" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/" />
-        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/">
+        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>
     </head>
     <body>
@@ -17,7 +17,7 @@
              <h1 id="logomain"><a href="../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../pages/"><i class="fa fa-question-circle"></i></a>
+                <a href="../../pages/about.html"><i class="fa fa-question-circle"></i></a>
             </div>
         </div>
 
@@ -34,12 +34,12 @@
 <p>This is my first post after quite a long absence. A lot has happened:</p>
 <ul>
 <li>I got married.</li>
-<li>I’ve spent a lot of time with functional programming languages, particularly <a href="http://">Clojure</a>, which I used to create the website we used to manage the aforementioned wedding.</li>
-<li>I’ve switched this blog from <a href="http://">Jekyll</a> to <a href="http://jaspervdj.be/">Hakyll</a> (And thus its configuration from Ruby to Haskell).</li>
+<li>I’ve spent a lot of time with functional programming languages, particularly <a href="http://clojure.org">Clojure</a>, which I used to create the website we used to manage the aforementioned wedding.</li>
+<li>I’ve switched this blog from <a href="http://jekyllrb.com">Jekyll</a> to <a href="http://jaspervdj.be/hakyll">Hakyll</a> (And thus its configuration from Ruby to Haskell).</li>
 </ul>
 <p>It is about this last point that I intend to write now. I will spare you the usual introduction about what Haskell is, as there are plenty of resources from which you could glean that. I will talk a little bit about why I decided to make the switch though, before walking through a little helper utility which I hope will come in handy.</p>
 <h2 id="from-jekyll-to-hakyll">From Jekyll to Hakyll</h2>
-<p>Although I had enjoyed setting up and using Jekyll, I was starting to get a little fed up of it – through no fault of its own, really. In the interests of getting up and running quickly, I used <a href="http://">Octopress</a> to get started, downloaded a <a href="https://github.com/kui/">nice, minimal theme</a> by <a href="http://">k-ui</a> (from which my current theme still draws influence), and started tweaking it to fit my needs.</p>
+<p>Although I had enjoyed setting up and using Jekyll, I was starting to get a little fed up of it – through no fault of its own, really. In the interests of getting up and running quickly, I used <a href="http://octopress.org">Octopress</a> to get started, downloaded a <a href="https://github.com/kui/k-ui-octopress-theme">nice, minimal theme</a> by <a href="http://k-ui.jp">k-ui</a> (from which my current theme still draws influence), and started tweaking it to fit my needs.</p>
 <p>The problem was, I had downloaded this big system that did everything for me, and I soon came across problems I didn’t know how to solve. Probably if I’d taken more time with Jekyll I could have figured it out, but I ended up neglecting the site for quite a while to work on the wedding site, and by the time I got back to it I was looking for something new.</p>
 <p>I considered writing my own, probably in Clojure, but then I came across Hakyll and thought it would give me the excuse I’ve been looking for to give Haskell a try. It offers less “out of the box” than Octopress did (not sure about Jekyll), so I have to set up quite a lot of the basic stuff myself, which means that I come out understanding it much better. Well, that’s the idea, anyway.</p>
 <p>One of the things I did like about Octopress, though, was that it came with some useful shortcuts. I don’t really want to have to look up the date and write it out every time I write a new post; I’d rather just say “new post”, give it a title, and start writing. As far as I can tell, Hakyll doesn’t provide this functionality – nor should it, necessarily; its job is to compile my site.</p>
@@ -119,7 +119,7 @@
 </tbody>
 </table>
 </div>
-<p>The way this function works is quite clever. Mathematically speaking, functions can be <a href="http://en.wikipedia.org/wiki/">composed</a> to create new functions which are equivalent to running the second function on the output of the first. Haskell supports this property directly using the <code>.</code> syntax. Here we define <code>normaliseArgs</code> as the <em>composition</em> of <code>words</code> and <code>unwords</code>. Interestingly, doing it this way we don’t have to worry about the inputs and outputs of the function: we simply declaratively state the relationship between the functions.</p>
+<p>The way this function works is quite clever. Mathematically speaking, functions can be <a href="http://en.wikipedia.org/wiki/Function_composition">composed</a> to create new functions which are equivalent to running the second function on the output of the first. Haskell supports this property directly using the <code>.</code> syntax. Here we define <code>normaliseArgs</code> as the <em>composition</em> of <code>words</code> and <code>unwords</code>. Interestingly, doing it this way we don’t have to worry about the inputs and outputs of the function: we simply declaratively state the relationship between the functions.</p>
 <p>It is generally seen as good form to explicitly state the input and output types for top-level function definitions, however I have chosen not to here, because it feels natural that they should match those of <code>words</code> and <code>unwords</code>. Experienced Haskellers will be able to tell me if I’m in the wrong.</p>
 <p>Having explained the <code>normaliseArgs</code> function, we can look at the implementation of the script itself. The <code>main</code> function gives an overview of how the script will work:</p>
 <div class="elastic-tabstops">
@@ -304,24 +304,24 @@
 h='&#100;&#112;&#x77;&#114;&#x69;&#x67;&#104;&#116;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#100;&#x61;&#110;&#x69;&#x2b;&#98;&#108;&#x6f;&#x67;';e=n+a+h;
 document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+'contact me'+'<\/'+'a'+'>');
 // -->
-</script><noscript>contact me (dani+blog at dpwright dot com)</noscript> and let me know! You can even suggest modifications to the article by editing it directly <a href="https://github.com/dpwright/dpwright.github.com/edit/source/posts/">here</a> and sending them as a pull request. Any feedback is greatly appreciated!</p>
+</script><noscript>contact me (dani+blog at dpwright dot com)</noscript> and let me know! You can even suggest modifications to the article by editing it directly <a href="https://github.com/dpwright/dpwright.github.com/edit/source/posts/2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs">here</a> and sending them as a pull request. Any feedback is greatly appreciated!</p>
 <p>The biggest thing that sticks out to me is my frequent use of <code>printf</code>, particularly when it comes to generating commands to pass to <code>system</code>. This feels a little like overkill, and I’m sure there must be a better way.</p>
 <p>Another problem is that punctuation in blog titles won’t be handled well. The filename generator simply makes everything lower-case and adds hyphens; it should perhaps strip out any characters which are not URL-friendly, too. The call to vim is worse – since it passes the header text as a command-line parameter, it must keep the title as-is, but will break if the title contains quotation marks. The only solution I can think of for this is to write the header text to a temporary file and then read it in from vim, but I’ll leave that as an exercise for the reader and just avoid using quotation marks in my blog posts for now ;-)</p>
 <h2 id="in-summary">In Summary</h2>
-<p><img src="http://cdn.memegenerator.net/instances/400x/" alt="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" /> </p>
+<p><img src="http://cdn.memegenerator.net/instances/400x/38355687.jpg" alt="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" /> </p>
 
 <div class="tagsinfo">Tagged with: <a href="../../tags/literate-programs/">literate-programs</a>, <a href="../../tags/functional-programming/">functional-programming</a>, <a href="../../tags/haskell/">haskell</a>, <a href="../../tags/hakyll/">hakyll</a></div>
 
         </div>
         <div id="footer">
           <div id="text-licence">
-            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/" /></a><br />
-            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
             <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </div>
           <br />
           <div id="code-licence">
-            All code is released under the <a href="../../pages/">BSD (2-Clause) License</a>.
+            All code is released under the <a href="../../pages/about.html#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
           </div>
         </div>
     </body>

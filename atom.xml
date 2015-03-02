@@ -3123,14 +3123,31 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     removeIndexStr url <span class="fu">=</span> <span class="kw">case</span> splitFileName url <span class="kw">of</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir <span class="ot">-&gt;</span> dir</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> dir</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, _)                          <span class="ot">-&gt;</span> dir</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       _                                 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> url</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isLocal uri <span class="fu">=</span> not (isInfixOf <span class="st">&quot;://&quot;</span> uri)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isLocal uri <span class="fu">=</span> not <span class="fu">$</span> <span class="st">&quot;://&quot;</span> <span class="ot">`isInfixOf`</span> uri</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -3857,14 +3874,31 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     removeIndexStr url <span class="fu">=</span> <span class="kw">case</span> splitFileName url <span class="kw">of</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir <span class="ot">-&gt;</span> dir</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, <span class="st">&quot;index.html&quot;</span>) <span class="fu">|</span> isLocal dir </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> dir</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       (dir, _)                          <span class="ot">-&gt;</span> dir</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       _                                 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">-&gt;</span> url</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isLocal uri <span class="fu">=</span> not (isInfixOf <span class="st">&quot;://&quot;</span> uri)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isLocal uri <span class="fu">=</span> not <span class="fu">$</span> <span class="st">&quot;://&quot;</span> <span class="ot">`isInfixOf`</span> uri</code></pre></td>
 </tr>
 </tbody>
 </table>
