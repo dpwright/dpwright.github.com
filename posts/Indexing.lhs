@@ -206,12 +206,14 @@ going to <http://dpwright.com/tags>.
 First we define our context.
 
 > tagCloudContext :: Tags -> Context String
-> tagCloudContext tags 	= tagCloudField 	"tagCloud" 100 500 (shuffle tags)
+> tagCloudContext tags 	= cloud	
 >                      	⊕ bodyField     	"body"
 >                      	⊕ urlField      	"url"
 >                      	⊕ pathField     	"path"
 >                      	⊕ missingField  	
->   where shuffle = sortTagsBy ∘ comparing $ hash ∘ fst
+>   where
+>     cloud   	= tagCloudField "tagCloud" 100 500 $ shuffle tags
+>     shuffle 	= sortTagsBy ∘ comparing $ hash ∘ fst
 
 Most of the legwork here is done by `tagCloudField`, which is provided by
 Hakyll.  As mentioned earlier, we sort the tags by the hash of their name,
