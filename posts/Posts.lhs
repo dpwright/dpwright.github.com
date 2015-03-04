@@ -428,6 +428,6 @@ which we'll go about adding special features one at a time.
 
 [^1]: Anybody who's read code using the `Lens` library will get the joke.
 
-[generating-this-website]: http://www.dpwright.com/tags/generating%20this%20website.html
+[generating-this-website]: http://www.dpwright.com/tags/generating%20this%20website
 [hwtc]: https://hackage.haskell.org/package/hakyll-4.2.2.0/docs/src/Hakyll-Web-Template-Context.html
 [yehs]: http://yannesposito.com/Scratch/en/blog/Hakyll-setup/

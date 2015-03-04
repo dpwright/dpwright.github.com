@@ -202,7 +202,7 @@ This concludes the introduction to Hakyll and the entry point for the generation
 code for this website.  Stay tuned for the next entry, where we'll add the
 configuration to actually create the posts themselves!
 
-[gensite]:        /tags/generating%20this%20website.html
+[gensite]:        /tags/generating%20this%20website
 [hakyll]:         http://jaspervdj.be/hakyll
 [danielpwright]:  http://twitter.com/danielpwright
 [hakyllrules]:    http://jaspervdj.be/hakyll/reference/Hakyll-Core-Rules.html#t:Rules
