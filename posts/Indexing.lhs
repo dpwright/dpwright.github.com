@@ -5,8 +5,8 @@ title: Generating this website part 3: Indexing
 ---
 
 <div class="sidenote">
-This is part two of the "generating this website" series.  To read the rest of
-the series, go to the series index [here][generating-this-website]
+This is part three of the "generating this website" series.  To read the rest
+of the series, go to the series index [here][generating-this-website]
 </div>
 
 After something of a hiatus, I'm back with the next in the "generating this
