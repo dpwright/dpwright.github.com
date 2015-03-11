@@ -281,10 +281,10 @@ define here.
 > dateAndTitle :: Metadata -> Routes
 > dateAndTitle meta = fromMaybe idRoute $
 >   mkName <$> getField "title" <*> getField "date"
->   where 	mkName t d 	= 	setBaseName $ date d ++ "-" ++ title t
+>   where 	mkName t d 	= 	setBaseName $ date d </> title t
 >         	getField   	= 	(`M.lookup` meta)
 >         	date       	= 	formatTime defaultTimeLocale
->         	           	  	"%Y-%m-%d" . readTime
+>         	           	  	"%Y/%m/%d" . readTime
 >         	title      	= 	map toLower . intercalate "-"
 >         	           	. 	map (filter isAlphaNum) . words
 
@@ -311,10 +311,10 @@ There's a lot going on in this definition so we'll go through it carefully.
   passed `Metadata`.
 - `mkName` takes the title and the date as parameters, calls the `date`
   and `title` functions in order to turn them into strings, and then sticks them
-  together with a `-`.  Finally it calls `setBaseName` (defined below), which
+  together with a `/`.  Finally it calls `setBaseName` (defined below), which
   works similarly to Hakyll's native `setExtension` except that, obviously, it
   sets the basename.
-- `date` normalises the `date` field to the simple `YYYY-mm-dd` format we want
+- `date` normalises the `date` field to the simple `YYYY/mm/dd` format we want
   to use for our filenames.  This means you can write the date in any of
   Hakyll's supported date formats and the filename will turn out OK.
 - `title` splits the title up into words, filters out any strange symbols using
