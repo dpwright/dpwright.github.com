@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
+        <title>Wright Access - Updating git branches you're not on</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-35158763-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../../../../../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            
+              <h1 class="title">Updating git branches you're not on</h1>
+            
+            
+
+            <div class="info">27 January, 2015</div>
+
+
+
+<p>Do you use <code>git</code>?</p>
+<p>Have you ever been on a feature branch and wanted to pull all the upstream changes into your <code>master</code> branch before rebasing onto that? Of course you have.</p>
+<p>If you’re sick of doing this:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre><code>$ git checkout master</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>$ git pull</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre><code>$ git checkout feature-branch</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>$ git rebase master</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Add the following lines to your <code>.gitconfig</code>:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[alias]</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    remote-for-branch </span><span class="ot">=</span><span class="st"> &quot;!f() { git for-each-ref --format='%(upstream:short)' `for b in $@</span><span class="co">; do echo refs/heads/$b; done` | sed 's:/.*$::'; }; f&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    sync </span><span class="ot">=</span><span class="st"> &quot;!f() { for b in $@</span><span class="co">; do git fetch `git remote-for-branch $b` $b:$b; done }; f&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now you can do this!</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre><code>$ git sync master</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>$ git rebase master</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Thanks to <a href="http://stackoverflow.com/a/9753364/1004609">this Stack Overflow answer</a> for the technique, which I just wrapped up in an alias to make it easier to use.</p>
+
+<div class="tagsinfo">Tagged with: <a href="../../../../../tags/git">git</a>, <a href="../../../../../tags/alias">alias</a></div>
+
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../../../../../pages/about#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>

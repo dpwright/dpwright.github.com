@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
+        <title>Wright Access - File-specific merge resolution in git</title>
+        <link rel="stylesheet" type="text/css" href="../../../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-35158763-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../../../../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            
+              <h1 class="title">File-specific merge resolution in git</h1>
+            
+            
+
+            <div class="info">11 May, 2012</div>
+
+
+
+<p>I’ve been using git-svn for a while now so that I can take advantage of the power and convenience of git without having to bother everyone else on the project (who are all happily using SVN). It was a bit frustrating at first, but once I got the hang of the basic workflow and settled into a routine I started to really like it, and now I don’t think I could ever go back to using the SVN client directly.</p>
+<p>One annoyance I’ve come across multiple times using both SVN and Git is that of checked in binary files. Ideally, we’d only check in the source files and build off that, but in practice this is problematic for a number of reasons. We’d like the non-programmers on the team to be able to build the project without having to have the compiler toolchain installed; we’d like the version of our executable everyone is running to be guaranteed to be the same; and we’d like it to be possible to checkout the project and start running it straight away without having to do a build.</p>
+<p>The problem with this is that we get a lot of merge conflicts on the binary files we’re checking in. Take the executable; programmers rebuild this every time they hit “compile”. It is almost certain that each time you pull, there’ll be a new copy of the executable in the repo that clashes with yours.</p>
+<p>The solution is simple: we always want to accept our version of the executable file. That way the timestamp will be older than the new source files we’ve received from the repo, so when we run make it will pick up on that and rebuild the executable with the new code we’ve just pulled in.</p>
+<p>The problem is, I’ve never found a way to automate that for specific files in the repo. With SVN, the majority of the team use TortoiseSVN as their interface, which doesn’t seem to offer that sort of flexibility. With git, I was aware of the “ours” and “Xours” merge strategies but didn’t know how to apply them only to specific files in a merge. I’d read some tips about adding <code>merge=ours</code> into the .gitattributes file, but it didn’t seem to work.</p>
+<p>Well, after a little bit of digging around on stackoverflow, I found <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">this question</a>, the first answer to which explains how to do exactly that simply and easily. Basically, you have to create a script, which acts as a custom merge driver. Since git’s default behaviour is to leave your copy as-is during a binary merge, all that driver has to do is <code>exit 0</code>:-</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep MY version when there is a conflict</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Nothing to do: %A (the second parameter) already contains my version</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Just indicate the merge has been successfully &quot;resolved&quot; with the exit status</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">exit</span> 0</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As a convenience, I added a “keep theirs” driver to go with it:-</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep THEIR version when there is a conflict</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Copy their version over ours and report success</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cp</span> -f <span class="ot">$3</span> <span class="ot">$2</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">exit</span> 0</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Once those scripts are in place, it’s simply a matter of defining them in your <code>.git/config</code> file, and then setting which files should use them using <code>.gitattributes</code>:-</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-mine&quot;]</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">name </span><span class="ot">=</span><span class="st"> Always keep mine during merge</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">driver </span><span class="ot">=</span><span class="st"> git-merge-keep-mine.sh %O %A %B</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-theirs&quot;]</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">name </span><span class="ot">=</span><span class="st"> Always keep theirs during merge</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
+<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">driver </span><span class="ot">=</span><span class="st"> git-merge-keep-theirs.sh %O %A %B</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">*.exe</span> -crlf -diff merge=keep-mine</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">*.tga</span> -crlf -diff merge=keep-mine</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>And that’s it! My merges have become <em>much</em> more pleasant since I set this up.</p>
+<p>If anybody knows how to do this sort of thing using [Tortoise]SVN, I’d love to hear about it in the comments!</p>
+<p>(Note: All the above code samples were copied almost verbatim from the previously mentioned <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">stackoverflow entry</a>. I don’t claim credit for any of it.)</p>
+
+<div class="tagsinfo">Tagged with: <a href="../../../../tags/git">git</a>, <a href="../../../../tags/subversion">subversion</a>, <a href="../../../../tags/version%20control">version control</a></div>
+
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../../../../pages/about#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>

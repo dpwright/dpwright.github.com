@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
+        <title>Wright Access - Generating this website part 3: Indexing</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-35158763-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../../../../../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            
+              <h1 class="title">Generating this website part 3: Indexing</h1>
+            
+            
+
+            <div class="info"> 4 March, 2015</div>
+
+
+
+<div class="sidenote">
+<p>This is part three of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website">here</a></p>
+</div>
+<p>After something of a hiatus, I’m back with the next in the “generating this website” series, which describes the actual code used to create the site you’re reading. This time I’m going to cover indexing, which in combination with the <a href="../../../../../posts/2014-08-04-generating-this-website-part-1-introduction">introduction</a> and the previous post on <a href="../../../../../posts/2014-09-29-generating-this-website-part-2-posts">generating posts themselves</a> is enough to get a basic Hakyll site up and running.</p>
+<p>What do I mean by “indexing”? Well, basically just creating the list of blog posts on the site’s <a href="../../../../../">main page</a>, or the indices by <a href="../../../../../tags">tags</a>. This is the main mechanism by which visitors will navigate the site and be introduced to new posts.</p>
+<p>It’s possible to go quite deep on this, breaking up indices into pages, having lists by year or by month, and so forth. As I don’t have too many posts, I’m keeping it simple for now, with a single-page index of all posts, and a similar single-page index per tag. I may revisit this as the number of posts increases to split the index up over multiple pages, or have some sort of infinite scrolling thing like twitter. Should that happen I’ll update this post – as I’ll have to of course, because this post is a literate program, and the code you’re about to see is what I actually run to generate the index pages for this site.</p>
+<p>Let’s get cracking.</p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>For this post, I’m going to try out something I haven’t tried before, and that’s the <code>UnicodeSyntax</code> extension for GHC and the <a href="https://hackage.haskell.org/package/base-unicode-symbols">base-unicode-symbols</a> package which gives Unicode equivalents to commonly used Haskell operators. Why? Well, I’ve recently switched to using the <a href="http://checkmyworking.com/cm-web-fonts/">Computer Modern</a> series of fonts on the site; specifically I use <code>Computer Modern Serif</code> for the prose and <code>Computer Modern Concrete</code> for code. I think it looks really nice (well, unless you’re on Windows anyway), but some of Haskell’s operators are a little ungainly – for example the ubiquitous monadic bind operator comes out as <code>&gt;&gt;=</code>, and monoidal concatenation isn’t much better: <code>&lt;&gt;</code>. With unicode operators I can use <code>≫=</code> and <code>⊕</code> respectively, which look nicer at the possible expense of being slightly more awkward to type.</p>
+<p>Most of the operators are similar enough to their ASCII originals that I hope readers will still be able to follow the code.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE UnicodeSyntax #-}</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Having enabled Unicode syntax, I’ll start with the usual incantation:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Indexing</span> <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Here come the Unicode modules, which give me the operators from <code>Control.Monad</code>, <code>Data.Monoid</code>, and the Prelude, in Unicode.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Monad.Unicode</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Monoid.Unicode</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude.Unicode</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>base-unicode-symbols</code> does export a module for <code>Control.Applicative</code>, but there is no Unicode symbol representing <code>&lt;$&gt;</code>, so I import that here.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> ((&lt;$&gt;))</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The following two modules come in handy for imposing a pseudo-random order on my tags (for the tag cloud). In fact there’s nothing random about it – I just order the tags based on the hash of their name, but the result looks a lot less tacky than an alphabetically ordered list.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Hashable</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Ord</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Finally I import the previous blog on <a href="../../../../../posts/2014-09-29-generating-this-website-part-2-posts">posts</a>, to make use of the <code>removeIndexHtml</code> function.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span> (removeIndexHtml)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="the-main-index">The main index</h2>
+<p>This is the main index which you see on the <a href="../../../../../">main page</a>. Even though it is not an index by tag, I need to make use of the tags in order to list under each post title what tags apply to that post.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; index ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Rules</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> index tags <span class="fu">=</span> create [<span class="st">&quot;index.html&quot;</span>] <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route idRoute</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags <span class="st">&quot;posts/*&quot;</span> indexContext</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The rule is pretty simple – I create a page, <code>index.html</code>, which runs the <code>indexCompiler</code> over all files in the <code>posts</code> directory. Since I’m creating the file from scratch, rather than converting from some source format, I don’t need to perform any transformation on the filename so I can just use <code>idRoute</code>.</p>
+<p>As always with Hakyll, we make use of a <code>Compiler</code> to give the conversion/generation steps for a resource and a <code>Context</code>to supply the fields. The <code>Context</code> in this case is as follows:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; indexContext ::</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexContext </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> bodyField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;body&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ metadataField </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;url&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ pathField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;path&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ missingField  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>These fields can then be used in the index template.</p>
+<p>What about the <code>Compiler</code>? Well, let’s start by looking at its type signature.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexCompiler </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Tags</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Pattern</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>There are quite a few parameters here. As mentioned, we need the <code>Tags</code>, and the <code>Pattern</code> allows us to specify how to find the posts. We could have just used <code>indexContext</code> directly here rather than pass it in, but as we’ll see if we pass it in we can re-use this <code>Compiler</code> when we generate our tag-specific indices by passing in a different <code>Context</code>. Finally, the function returns our <code>Compiler</code>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> indexCompiler tags pattern baseCtx <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ctx <span class="ot">←</span> mkCtx baseCtx <span class="fu">&lt;$&gt;</span> postList tags pattern recentFirst</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   makeItem <span class="st">&quot;&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> loadAndApplyTemplate <span class="st">&quot;templates/archive.html&quot;</span> ctx</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> ctx</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> relativizeUrls</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> mkCtx base list <span class="fu">=</span> constField <span class="st">&quot;posts&quot;</span> list ⊕ base</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The compiler is fairly standard, except perhaps for that first line – what’s going on there? Well, in order to generate our index, we first need to generate our list of posts, and that’s the job of <code>postList</code>. We then add that to our <code>Context</code>, and use this augmented <code>Context</code> to generate the index page as a whole.</p>
+<p>That is actually where most of the work happens – if you think about it, the <code>index</code> page itself is just a skeleton around the main thing we’re trying to display – the list of posts. That being the case, let’s take a look at how that’s generated.</p>
+<h2 id="the-list-of-posts">The list of posts</h2>
+<p>OK, so we want a thing, it’s Hakyll, what do we need? A <code>Context</code> and a <code>Compiler</code>, of course! We define the <code>Context</code> required to generate a single item in the list.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; itemCtx ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> itemCtx tags </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> tagsField <span class="st">&quot;tags&quot;</span> tags</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ dateField <span class="st">&quot;date&quot;</span> <span class="st">&quot;%e %B, %Y&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField <span class="st">&quot;url&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>              </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ defaultContext</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In other words, to display a single item, we need the post’s tags, its date and URL, and the default context, which will give us its title.</p>
+<p>Given this <code>Context</code>, Hakyll provides a function called <code>applyTemplateList</code> which allows us to apply a template over each <code>Item</code> in a list, turning a <code>Compiler</code> for a list of <code>Item</code>s into a <code>Compiler</code> for a single <code>Item</code> representing the whole list.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postList </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Tags</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Pattern</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">([<span class="dt">Item</span> <span class="dt">String</span>] <span class="ot">→</span> <span class="dt">Compiler</span> [<span class="dt">Item</span> <span class="dt">String</span>])</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Compiler</span> <span class="dt">String</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> postList tags pattern sortFilter <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ps      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">←</span> sortFilter <span class="fu">=</span>≪ loadAll (pattern <span class="fu">.&amp;&amp;.</span> hasNoVersion)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   itemTpl </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">←</span> loadBody <span class="st">&quot;templates/post-item.html&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   applyTemplateList itemTpl (itemCtx tags) ps</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> removeIndexHtml</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <code>sortFilter</code> parameter to this function allows us to order the <code>Item</code>s based on their <code>Context</code>. As you can see in the call to <code>postList</code> in <code>indexCompiler</code> above, we pass in <code>recentFirst</code> to sort the posts by date.</p>
+<h2 id="dealing-with-tags">Dealing with tags</h2>
+<p>Extending our system to deal with tags is easy – we just write another set of <code>Rules</code> similar to <code>index</code> which generates a page for each tag.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; tagIndex ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Rules</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> tagIndex tags <span class="fu">=</span> tagsRules tags <span class="fu">$</span> \_ pattern <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route <span class="fu">$</span> gsubRoute <span class="st">&quot;.html&quot;</span> (const <span class="st">&quot;/index.html&quot;</span>)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> indexCompiler tags pattern defaultContext</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The default <code>tagsRules</code> provided by Hakyll put the tags in a file called <code>tagname.html</code>, so we use <code>gsubRoute</code> here to rename that to <code>tagname/index.html</code> and get a prettier URL.</p>
+<p>As an added bonus and to give us a way to browse all tags in the site, let’s generate a <a href="../../../../../tags">tag cloud</a>. This is a bit of an easter egg as I haven’t linked to it anywhere on the site except in this post, but you can always access it by going to <a href="http://dpwright.com/tags" class="uri">http://dpwright.com/tags</a>.</p>
+<p>First we define our context.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; tagCloudContext ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> <span class="dt">String</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> tagCloudContext tags </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> cloud</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ bodyField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;body&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ urlField      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;url&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ pathField     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;path&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">⊕ missingField  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     cloud   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> tagCloudField <span class="st">&quot;tagCloud&quot;</span> <span class="dv">100</span> <span class="dv">500</span> <span class="fu">$</span> shuffle tags</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     shuffle </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> sortTagsBy ∘ comparing <span class="fu">$</span> hash ∘ fst</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Most of the legwork here is done by <code>tagCloudField</code>, which is provided by Hakyll. As mentioned earlier, we sort the tags by the hash of their name, which gives us a random-looking, but in fact predictable, order for the tags. It is important that this ordering is deterministic and not random, otherwise I’d have to regenerate the tags page even when no changes had been made to the site!</p>
+<p>Finally we describe the <code>Rules</code> for the <code>tagCloud</code> itself. I’ve written the <code>Compiler</code> inline here as we don’t need to make use of it elsewhere and that keeps things simple.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; tagCloud ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Rules</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> tagCloud tags <span class="fu">=</span> create [<span class="st">&quot;tags/index.html&quot;</span>] <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> tagsCtx <span class="fu">=</span> tagCloudContext tags</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route idRoute</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> makeItem <span class="st">&quot;&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> loadAndApplyTemplate <span class="st">&quot;templates/tags.html&quot;</span>    tagsCtx</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> tagsCtx</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> relativizeUrls</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> withItemBody removeIndexHtml</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>And that’s it! The site is now fully indexed, with a single main index on the front page an an index per-tag as well.</p>
+
+<div class="tagsinfo">Tagged with: <a href="../../../../../tags/hakyll">hakyll</a>, <a href="../../../../../tags/literate-programs">literate-programs</a>, <a href="../../../../../tags/generating%20this%20website">generating this website</a></div>
+
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../../../../../pages/about#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>
