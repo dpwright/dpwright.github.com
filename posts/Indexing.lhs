@@ -205,7 +205,7 @@ going to <http://dpwright.com/tags>.
 
 First we define our context.
 
-> tagCloudContext :: Tags -> Context String
+> tagCloudContext :: Tags → Context String
 > tagCloudContext tags 	= cloud	
 >                      	⊕ bodyField     	"body"
 >                      	⊕ urlField      	"url"
