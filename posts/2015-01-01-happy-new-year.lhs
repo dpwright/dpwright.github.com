@@ -4,7 +4,7 @@ tags: 日本語, functional-programming, haskell, お正月, new year, 年賀状
 title: あけましておめでとうございます
 ---
 
-<center>![](/posts/2015-01-01-あけましておめでとうございます/nengajou.png "明けましておめでとうございます")</center>
+<center>![](/posts/2015/01/01/あけましておめでとうございます/nengajou.png "明けましておめでとうございます")</center>
 
 年賀状をHaskellで
 -----------------
@@ -38,7 +38,7 @@ title: あけましておめでとうございます
 
 文章ではちょっと分かりづらいと思うので、絵で説明します。
 
-<center>![](/posts/2015-01-01-あけましておめでとうございます/triangles.png "５つの三角形")</center>
+<center>![](/posts/2015/01/01/あけましておめでとうございます/triangles.png "５つの三角形")</center>
 
 この下にメッセージをつけます。
 
@@ -176,7 +176,7 @@ diagramsのドキュメンテーションに推奨される`NoMonomorphismRestri
 
 もう一度下の画像を見てみましょう。
 
-<center>![](/posts/2015-01-01-あけましておめでとうございます/triangles.png "５つの三角形")</center>
+<center>![](/posts/2015/01/01/あけましておめでとうございます/triangles.png "５つの三角形")</center>
 
 この５つの三角形は全部二等辺三角形です！
 diagramsは正三角形を作る関数が定義されていますが、
@@ -283,7 +283,7 @@ diagramsは正三角形を作る関数が定義されていますが、
 この画像の三角形を見ると２種類があります。
 まずは、真ん中の３つの三角形。
 
-<center>![](/posts/2015-01-01-あけましておめでとうございます/outline-triangles.png "Picture of 3 central triangles goes here")</center>
+<center>![](/posts/2015/01/01/あけましておめでとうございます/outline-triangles.png "Picture of 3 central triangles goes here")</center>
 
 輪郭のみを描いて、下にある写真が見える三角形ですね。
 
@@ -299,7 +299,7 @@ diagramsは正三角形を作る関数が定義されていますが、
 
 次は左と右の、真っ白の三角形です。
 
-<center>![](/posts/2015-01-01-あけましておめでとうございます/edge-triangles.png "Picture of 2 edge triangles goes here")</center>
+<center>![](/posts/2015/01/01/あけましておめでとうございます/edge-triangles.png "Picture of 2 edge triangles goes here")</center>
 
 この三角形の頂角は真ん中の三角形の反対角度になっています。
 
@@ -482,7 +482,7 @@ SVGFontsがネームスペース無しのXMLしかサポートされていませ
 
 > main :: IO ()
 > main = do
->   photo <- loadPhoto "static/posts/2015-01-01-あけましておめでとうございます/beach-club.png"
+>   photo <- loadPhoto "static/posts/2015/01/01/あけましておめでとうございます/beach-club.png"
 >   fonts <- prepareFonts Fonts
 >     	{ english  	= "/Library/Fonts/Microsoft/Garamond"
 >     	, numbers  	= "/Library/Fonts/Microsoft/Calisto MT"
