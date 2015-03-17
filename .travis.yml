@@ -7,7 +7,7 @@ env:
   global:
     - secure: "Jc7XHdzAuXpQHX9w5H8ij8u/c4+eLSlyPTv+gT7Yjwf4n1xUwoUujHG5RoFrTUUUuNSc5qtsCBUXcaYHaF1yFWfmCuhNGc6H5VszFy8keXr4LBmtn8pIoKRSqs4EJ+NDp3v8fz/9znCzUHcaCPJFHET2pN7G8UwV/WpGT2JevDw="
 install:
-  - cabal install --only-dependencies
+  - cabal install --only-dependencies -f site-only
 before_script:
   - cd _site
   - git checkout master
