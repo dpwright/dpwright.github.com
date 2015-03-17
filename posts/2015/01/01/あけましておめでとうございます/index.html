@@ -41,7 +41,7 @@
 
 
 <center>
-<img src="../../../../../posts/2015-01-01-あけましておめでとうございます/nengajou.png" title="明けましておめでとうございます" />
+<img src="../../../../../posts/2015/01/01/あけましておめでとうございます/nengajou.png" title="明けましておめでとうございます" />
 </center>
 <h2 id="年賀状をhaskellで">年賀状をHaskellで</h2>
 <p>上の画像が今年の僕達の年賀状です。</p>
@@ -59,7 +59,7 @@
 <p>結局、「上の白いレイヤーから切る」という方法ではなく、 「そのまま５つの三角形を描く」という方法でやりました。</p>
 <p>文章ではちょっと分かりづらいと思うので、絵で説明します。</p>
 <center>
-<img src="../../../../../posts/2015-01-01-あけましておめでとうございます/triangles.png" title="５つの三角形" />
+<img src="../../../../../posts/2015/01/01/あけましておめでとうございます/triangles.png" title="５つの三角形" />
 </center>
 <p>この下にメッセージをつけます。</p>
 <p>では、実際にどう作ったか振り返ります。</p>
@@ -384,7 +384,7 @@
 <h2 id="二等辺三角形">二等辺三角形</h2>
 <p>もう一度下の画像を見てみましょう。</p>
 <center>
-<img src="../../../../../posts/2015-01-01-あけましておめでとうございます/triangles.png" title="５つの三角形" />
+<img src="../../../../../posts/2015/01/01/あけましておめでとうございます/triangles.png" title="５つの三角形" />
 </center>
 <p>この５つの三角形は全部二等辺三角形です！ diagramsは正三角形を作る関数が定義されていますが、 二等辺三角形はないため、自分で定義する必要があります。</p>
 <div class="elastic-tabstops">
@@ -644,7 +644,7 @@
 <p>になります。この画像では順番は関係ないけれど、 場合によっては必要になりますね。 <em><code>Diagram</code></em>を連結すると、 上から下の順番になります（<code>edgeTriangleLeft</code>の下に <code>bottomTriangleLeft</code>を描いて、その下に <code>centralTriangle</code>を描く…という形）。</p>
 <p>この画像の三角形を見ると２種類があります。 まずは、真ん中の３つの三角形。</p>
 <center>
-<img src="../../../../../posts/2015-01-01-あけましておめでとうございます/outline-triangles.png" title="Picture of 3 central triangles goes here" />
+<img src="../../../../../posts/2015/01/01/あけましておめでとうございます/outline-triangles.png" title="Picture of 3 central triangles goes here" />
 </center>
 <p>輪郭のみを描いて、下にある写真が見える三角形ですね。</p>
 <div class="elastic-tabstops">
@@ -676,7 +676,7 @@
 <p>「なぜ<code>centerXY</code>が必要か？」ですが、Diagramsはデフォルトでは 原点は高度から見る真ん中ではなく、重心に設定してあります。 二等辺三角形を鏡映すると、ずれてしまう。 <code>centerXY</code>をしたら、簡単に鏡映できるようになります。</p>
 <p>次は左と右の、真っ白の三角形です。</p>
 <center>
-<img src="../../../../../posts/2015-01-01-あけましておめでとうございます/edge-triangles.png" title="Picture of 2 edge triangles goes here" />
+<img src="../../../../../posts/2015/01/01/あけましておめでとうございます/edge-triangles.png" title="Picture of 2 edge triangles goes here" />
 </center>
 <p>この三角形の頂角は真ん中の三角形の反対角度になっています。</p>
 <div class="elastic-tabstops">
@@ -1236,7 +1236,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   photo <span class="ot">&lt;-</span> loadPhoto <span class="st">&quot;static/posts/2015-01-01-あけましておめでとうございます/beach-club.png&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   photo <span class="ot">&lt;-</span> loadPhoto <span class="st">&quot;static/posts/2015/01/01/あけましておめでとうございます/beach-club.png&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   fonts <span class="ot">&lt;-</span> prepareFonts <span class="dt">Fonts</span></code></pre></td>

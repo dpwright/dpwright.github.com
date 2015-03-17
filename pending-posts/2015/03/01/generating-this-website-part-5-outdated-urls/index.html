@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - Generating this website part x: Outdated URLs</title>
+        <title>Wright Access - Generating this website part 5: Outdated URLs</title>
         <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -32,7 +32,7 @@
 
         <div id="content">
             
-              <h1 class="title">Generating this website part x: Outdated URLs</h1>
+              <h1 class="title">Generating this website part 5: Outdated URLs</h1>
             
             
 
@@ -40,6 +40,9 @@
 
 
 
+<div class="sidenote">
+<p>This is part five of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website">here</a></p>
+</div>
 <p>On February 1st, 2015, I decided to change the URL scheme for this site, such that instead of outputting pages to <code>post-name.html</code> it would output to <code>post-name/index.html</code>. Unfortunately, this breaks any existing links to the original pages that might be out there. This module keeps those links active by generating any posts prior to that date at the original URL.</p>
 <h2 id="imports">Imports</h2>
 <p>Let’s get the obvious out the way…</p>
@@ -50,13 +53,19 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE UnicodeSyntax #-}</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">OutdatedURLs</span> <span class="kw">where</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">OutdatedURLs</span> <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude.Unicode</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -120,7 +129,7 @@
 </tbody>
 </table>
 </div>
-<p>The <code>Rules</code> managing these posts are similar to those for <a href="../../../../../posts/2014-09-29-generating-this-website-part-2-posts">standard <code>Posts</code></a>. We make use of the recently-added <code>matchMetadata</code> to compare the <code>date</code> field of the posts with our <code>cutoffDate</code>, and we tag the rule with the version “outdated” to avoid them showing up in the index. And of course we use <code>setExtension</code> rather than <code>simplifyURL</code>, since that’s the whole point of the exercise!</p>
+<p>The <code>Rules</code> managing these posts are similar to those for <a href="../../../../../posts/2014/09/29/generating-this-website-part-2-posts">standard <code>Posts</code></a>. We make use of the recently-added <code>matchMetadata</code> to compare the <code>date</code> field of the posts with our <code>cutoffDate</code>, and we tag the rule with the version “outdated” to avoid them showing up in the index. And of course we use <code>setExtension</code> rather than <code>simplifyURL</code>, since that’s the whole point of the exercise!</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -128,13 +137,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; outdatedURLs ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; outdatedURLs ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Rules</span> ()</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> outdatedURLs tags <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   matchMetadata <span class="st">&quot;posts/*&quot;</span> isOutdated <span class="fu">.</span> version <span class="st">&quot;outdated&quot;</span> <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   matchMetadata <span class="st">&quot;posts/*&quot;</span> isOutdated ∘ version <span class="st">&quot;outdated&quot;</span> <span class="fu">$</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -184,11 +193,11 @@
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isOutdated </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe <span class="dt">False</span> checkDate <span class="fu">.</span> M.lookup <span class="st">&quot;date&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe <span class="dt">False</span> checkDate ∘ M.lookup <span class="st">&quot;date&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     checkDate  </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (<span class="fu">&gt;</span> <span class="dv">0</span>) <span class="fu">.</span> diffUTCTime cutoffDate <span class="fu">.</span> readTime</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (<span class="fu">&gt;</span> <span class="dv">0</span>) ∘ diffUTCTime cutoffDate ∘ readTime</code></pre></td>
 </tr>
 </tbody>
 </table>
