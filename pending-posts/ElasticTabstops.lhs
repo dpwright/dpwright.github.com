@@ -1,8 +1,13 @@
 ---
 date: 2014-12-29 14:59:26
 tags: hakyll, literate-programs, generating this website
-title: Generating this website part x: Elastic Tabstops
+title: Generating this website part 6: Elastic Tabstops
 ---
+
+<div class="sidenote">
+This is part six of the "generating this website" series.  To read the rest
+of the series, go to the series index [here][generating-this-website]
+</div>
 
 > {-# LANGUAGE OverloadedStrings #-}
 > module ElasticTabstops where
@@ -42,4 +47,5 @@ title: Generating this website part x: Elastic Tabstops
 >   | otherwise	= (lts, [l]):(n, ls):gs
 >   where lts = countNumTabs l
 
+[generating-this-website]: http://www.dpwright.com/tags/generating%20this%20website
 [elastic-tabstops]: http://nickgravgaard.com/elastictabstops/
