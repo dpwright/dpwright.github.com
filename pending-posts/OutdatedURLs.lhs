@@ -1,8 +1,13 @@
 ---
 date: 2015-03-01 20:28:17
 tags: hakyll, literate-programs, generating this website
-title: Generating this website part x: Outdated URLs
+title: Generating this website part 5: Outdated URLs
 ---
+
+<div class="sidenote">
+This is part five of the "generating this website" series.  To read the rest
+of the series, go to the series index [here][generating-this-website]
+</div>
 
 On February 1st, 2015, I decided to change the URL scheme for this site, such
 that instead of outputting pages to `post-name.html` it would output to
@@ -15,12 +20,14 @@ Imports
 
 Let's get the obvious out the way...
 
+> {-# LANGUAGE UnicodeSyntax #-}
 > {-# LANGUAGE OverloadedStrings #-}
 > module OutdatedURLs where
 > import Hakyll
+> import Prelude.Unicode
 
 We'll also import *`Posts`*, since for the most part we want to generate these
-posts exactly like their correctly-addressed counterparts. 
+posts exactly like their correctly-addressed counterparts.
 
 > import Posts
 
@@ -49,15 +56,15 @@ the version "outdated" to avoid them showing up in the index.  And of course
 we use `setExtension` rather than `simplifyURL`, since that's the whole point
 of the exercise!
 
-> outdatedURLs :: Tags -> Rules ()
+> outdatedURLs :: Tags → Rules ()
 > outdatedURLs tags =
->   matchMetadata "posts/*" isOutdated . version "outdated" $
+>   matchMetadata "posts/*" isOutdated ∘ version "outdated" $
 >   do 	route   	$ 	metadataRoute dateAndTitle `composeRoutes`
 >      	        	  	setExtension ".html"
 >      	compile 	$ 	postCompiler tags
 >   where
->     isOutdated 	= maybe False checkDate . M.lookup "date"
->     checkDate  	= (> 0) . diffUTCTime cutoffDate . readTime
+>     isOutdated 	= maybe False checkDate ∘ M.lookup "date"
+>     checkDate  	= (> 0) ∘ diffUTCTime cutoffDate ∘ readTime
 
 That's it!
 ----------
@@ -67,4 +74,5 @@ scheme without breaking any old links.  I wouldn't want to make a habit of
 this sort of thing, but it's good to know it can be resolved fairly easily
 should the need arise!
 
-[posts]: /posts/2014-09-29-generating-this-website-part-2-posts
+[generating-this-website]: http://www.dpwright.com/tags/generating%20this%20website
+[posts]: /posts/2014/09/29/generating-this-website-part-2-posts
