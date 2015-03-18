@@ -8,8 +8,203 @@
         <name>Daniel P. Wright</name>
         <email>dani@dpwright.com</email>
     </author>
-    <updated>2015-03-04T09:57:39Z</updated>
+    <updated>2015-03-18T10:08:39Z</updated>
     <entry>
+    <title>Generating this website part 4: Atom Feed</title>
+    <link href="http://dpwright.com/posts/2015/03/18/generating-this-website-part-4-atom-feed/index.html" />
+    <id>http://dpwright.com/posts/2015/03/18/generating-this-website-part-4-atom-feed/index.html</id>
+    <published>2015-03-18T10:08:39Z</published>
+    <updated>2015-03-18T10:08:39Z</updated>
+    <summary type="html"><![CDATA[<div class="info">18 March, 2015</div>
+
+
+
+<div class="sidenote">
+<p>This is part four of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website">here</a></p>
+</div>
+<p>By this point we have the basic features up and running, and everything we do from here on are more or less “nice to have”s. First of which is an Atom feed, so people using feed readers can easily keep track of new posts.</p>
+<p>Feeds seem to have become less popular recently, which I think is a shame since I find them to be an incredibly easy way to keep on top of new content across the various communities I’m interested in. Perhaps I am part of the problem, however, as I recently removed the Atom feed link from the header during the redesign of this website over the new year holidays. It may come as a surprise, then, that I have a feed at all! I do, and you can access it at <a href="http://dpwright.com/atom.xml" class="uri">http://dpwright.com/atom.xml</a>, which I had thought was a standard location which browsers and feed readers would pick up automatically. It turns out I was wrong about that, so I guess I’ll have to add the link back in.</p>
+<p>Anyway, here’s how I generate the above feed. There’s not a lot new in this post that isn’t already covered in the <a href="http://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html">official documentation on feeds</a>, but here it is.</p>
+<p>First, the usual pragmas and imports. I was quite pleased with the results of using <code>UnicodeSyntax</code> last post, so I’m going to do it again.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE UnicodeSyntax #-}</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Feed</span> <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Let’s import some useful operators…</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude.Unicode</span>     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((⧺))</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Monoid.Unicode</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((⊕))</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>))</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Finally, we make use of <code>postCtx</code> from <em><code>Posts</code></em>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span> (postCtx)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Hakyll supports feeds natively and provides the <em><code>FeedConfiguration</code></em> type to configure the feed’s properties. Here’s mine.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; feedConfig ::</span> <span class="dt">FeedConfiguration</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> feedConfig <span class="fu">=</span> <span class="dt">FeedConfiguration</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   { feedTitle       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;Wright Access&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , feedDescription </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;dpwright&#39;s notes on code, Japan, &quot;</span> ⧺</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;Japanese, and anything else&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , feedAuthorName  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;Daniel P. Wright&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , feedAuthorEmail </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;dani@dpwright.com&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , feedRoot        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="st">&quot;http://dpwright.com&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   }</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now we can generate the feed itself. In this series so far, you’ve already seen many times that to generate anything we need a <em><code>Compiler</code></em> and a <em><code>Context</code></em>, which we can then refer to in a set of <em><code>Rules</code></em> which will determine where and from what source files the content is made. In this case, all of these things are so simple we just define them inline.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; feed ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Rules</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> feed tags <span class="fu">=</span> create [<span class="st">&quot;atom.xml&quot;</span>] <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   route idRoute</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     allContent </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">←</span> loadAllSnapshots <span class="st">&quot;posts/*&quot;</span> <span class="st">&quot;content&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ps         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">←</span> take <span class="dv">10</span> <span class="fu">&lt;$&gt;</span> recentFirst allContent</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     renderAtom feedConfig feedCtx ps</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> feedCtx <span class="fu">=</span> postCtx tags ⊕ bodyField <span class="st">&quot;description&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The feed context is just the post context augmented with the <code>description</code> field. You may remember when we were <a href="/posts/2014/09/29/generating-this-website-part-2-posts/#generating-posts">generating the posts</a> we used a function called <code>saveSnapshot</code> to save a copy of the content before adding headers and other global design elements. Here we load that content and put it in the <code>description</code> field for the post, resulting in an Atom feed which contains the entire post as its description, so that it can be read from within the feed reader of your choice.</p>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+]]></summary>
+</entry>
+<entry>
     <title>Generating this website part 3: Indexing</title>
     <link href="http://dpwright.com/posts/2015/03/04/generating-this-website-part-3-indexing/index.html" />
     <id>http://dpwright.com/posts/2015/03/04/generating-this-website-part-3-indexing/index.html</id>
@@ -5231,23 +5426,6 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <p>This concludes the introduction to Hakyll and the entry point for the generation code for this website. Stay tuned for the next entry, where we’ll add the configuration to actually create the posts themselves!</p>
 
 <div class="tagsinfo">Tagged with: <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
-]]></summary>
-</entry>
-<entry>
-    <title>Git's Guts: gitの内側を探検しましょう！</title>
-    <link href="http://dpwright.com/posts/2014/07/22/gits-guts-git%E3%81%AE%E5%86%85%E5%81%B4%E3%82%92%E6%8E%A2%E6%A4%9C%E3%81%97%E3%81%BE%E3%81%97%E3%82%87%E3%81%86.html" />
-    <id>http://dpwright.com/posts/2014/07/22/gits-guts-git%E3%81%AE%E5%86%85%E5%81%B4%E3%82%92%E6%8E%A2%E6%A4%9C%E3%81%97%E3%81%BE%E3%81%97%E3%82%87%E3%81%86.html</id>
-    <published>2014-07-22T02:32:05Z</published>
-    <updated>2014-07-22T02:32:05Z</updated>
-    <summary type="html"><![CDATA[<div class="info">22 July, 2014</div>
-
-
-
-<p>この前５月に京都の「<a href="http://vshtc.doorkeeper.jp/events/11099">今日から始めるGit &amp; GitHub入門（リバイバル＋α）</a>」イベントに登壇しました。うちのトークはちょっと高級向きで心配してたが、gitの経験者もいたし、初心者でも「わき分からんかったけどおもろい」と言ってくれたからよかったです。</p>
-<p>大分遅くなってしまったが、<a href="http://dpwright.com/gits-guts">スライドをアップしました</a>。スライドで「ｐ」を押せばノートが出てきます（ちょっと適当に書いたけど何となく言ったことが分かります）。</p>
-<p>（絵を描くことはすごい下手なんで、図表は同僚の大久保佳尚さんに描いて頂きました。感謝します！）</p>
-
-<div class="tagsinfo">Tagged with: <a href="/tags/git/index.html">git</a>, <a href="/tags/talks/index.html">talks</a>, <a href="/tags/%E6%97%A5%E6%9C%AC%E8%AA%9E/index.html">日本語</a></div>
 ]]></summary>
 </entry>
 
