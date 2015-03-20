@@ -196,10 +196,10 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Linear</span> (<span class="dt">V2</span>(..), <span class="dt">V3</span>(..), <span class="dt">M33</span>, <span class="dt">M44</span>, <span class="dt">Quaternion</span>,</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               eye3, eye4, perspective, axisAngle,</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               eye3, eye4, perspective, lookAt, axisAngle,</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               mkTransformation, (<span class="fu">!*!</span>),</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               mkTransformation, (<span class="fu">!*!</span>), normalize,</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               inv33, column, _xyz)</code></pre></td>
@@ -248,6 +248,24 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>), (<span class="fu">&lt;*&gt;</span>), pure)</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Concurrent</span>     (threadDelay)</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.IO</span>           </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(hSetBuffering, stdout,</code></pre></td>
@@ -1385,6 +1403,18 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">GL_TEXTURE_MIN_FILTER</span> <span class="dt">GL_LINEAR</span></code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glTexParameteri <span class="dt">GL_TEXTURE_2D</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">GL_TEXTURE_WRAP_S</span> <span class="dt">GL_CLAMP_TO_EDGE</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glTexParameteri <span class="dt">GL_TEXTURE_2D</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">GL_TEXTURE_WRAP_T</span> <span class="dt">GL_CLAMP_TO_EDGE</span></code></pre></td>
+</tr>
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">$</span> printErrors <span class="st">&quot;MIN&quot;</span></code></pre></td>
 </tr>
 </tbody>
@@ -1956,7 +1986,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glDepthFunc  </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_LESS</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_LEQUAL</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -1977,15 +2007,15 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnable     </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--  glEnable     </span></code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_BLEND</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBlendFunc  </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--  glBlendFunc  </span></code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_SRC_ALPHA</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="co">--               </span></code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_ONE_MINUS_SRC_ALPHA</span></code></pre></td>
 </tr>
 <tr class="even">
@@ -2053,7 +2083,7 @@
 </div>
 <p>That projection matrix is written to the <code>IORef</code> so that we can access it from within our main loop.</p>
 <h2 id="handling-state">Handling state</h2>
-<p>This demo is very simple, so there isn’t much state to deal with. Nevertheless, the cube <em>does</em> spin, so we will need to keep track of its angle. As well as that, I’m going to include the camera position and rotation within the state structure even though they remain constant throughout the demo, as it’s convenient to hold the data together, and in real life you’re almost certainly going to be moving the camera at some point anyway.</p>
+<p>This demo is very simple, so there isn’t much state to deal with. Nevertheless, the cube <em>does</em> spin, so we will need to keep track of its angle. As well as that, I’m going to include the camera position within the state structure even though it remains constant throughout the demo, as it’s convenient to hold the data together, and in real life you’re almost certainly going to be moving the camera at some point anyway.</p>
 <p>Our state, then, can be represented as follows:</p>
 <div class="elastic-tabstops">
 <table>
@@ -2082,11 +2112,6 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , cameraPosition </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V3</span> <span class="dt">GLfloat</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , cameraRotation </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Quaternion</span> <span class="dt">GLfloat</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -2131,12 +2156,7 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , cameraPosition </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> (<span class="fu">-</span><span class="dv">5</span>)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , cameraRotation </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">axisAngle (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span>) <span class="dv">0</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> (<span class="fu">-</span><span class="dv">3</span>)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -2245,9 +2265,12 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     swapBuffers</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     dt <span class="ot">←</span> getDeltaTime</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     GLFW.pollEvents</code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     dt <span class="ot">←</span> getDeltaTime</code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     loop <span class="fu">$</span> update s dt</code></pre></td>
 </tr>
 </tbody>
@@ -2356,22 +2379,22 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="co">-- set uniforms</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> viewMat      <span class="fu">=</span> mkTransformation (cameraRotation state) (cameraPosition state)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> viewMat        <span class="fu">=</span> lookAt (cameraPosition state) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span>)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       modelMat     <span class="fu">=</span> mkTransformation (cubeRotation state) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       modelMat       <span class="fu">=</span> mkTransformation (cubeRotation state) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       viewModelMat <span class="fu">=</span> viewMat <span class="fu">!*!</span> modelMat</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       viewModelMat   <span class="fu">=</span> viewMat <span class="fu">!*!</span> modelMat</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       normalMat    <span class="fu">=</span> distribute <span class="fu">&lt;$&gt;</span> inv33 (m44_to_m33 viewModelMat)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       viewModelMat33 <span class="fu">=</span> viewModelMat <span class="fu">^.</span> _xyz <span class="fu">.</span> column _xyz</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       pvmMat       <span class="fu">=</span> projectionMatrix <span class="fu">!*!</span> viewModelMat</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       normalMat      <span class="fu">=</span> distribute <span class="fu">&lt;$&gt;</span> inv33 viewModelMat33</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       m44_to_m33   <span class="fu">=</span> (<span class="fu">^.</span> _xyz <span class="fu">.</span> column _xyz)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       pvmMat         <span class="fu">=</span> projectionMatrix <span class="fu">!*!</span> viewModelMat</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">case</span> normalMat <span class="kw">of</span></code></pre></td>
@@ -2386,7 +2409,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       with pvmMat <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix4fv (pvmMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_FALSE</span> <span class="fu">.</span> castPtr</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix4fv (pvmMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_TRUE</span> <span class="fu">.</span> castPtr</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;pvmmatrix&quot;</span></code></pre></td>
@@ -2395,13 +2418,13 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       with viewModelMat <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix4fv (viewModelMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_FALSE</span> <span class="fu">.</span> castPtr</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix4fv (viewModelMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_TRUE</span> <span class="fu">.</span> castPtr</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       with nm <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix3fv (normalMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_FALSE</span> <span class="fu">.</span> castPtr</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix3fv (normalMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_TRUE</span> <span class="fu">.</span> castPtr</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;normal&quot;</span></code></pre></td>
@@ -2413,7 +2436,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;diffuse&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (ambientColour <span class="fu">$</span> shader res) <span class="fl">0.2</span> <span class="fl">0.2</span> <span class="fl">0.2</span> <span class="dv">1</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (ambientColour <span class="fu">$</span> shader res) <span class="fl">0.7</span> <span class="fl">0.7</span> <span class="fl">0.7</span> <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;ambient&quot;</span></code></pre></td>
@@ -2431,34 +2454,34 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;shininess&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform3f (lightDirection <span class="fu">$</span> shader res) <span class="fl">0.2</span> <span class="fl">0.2</span> <span class="fl">0.2</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">let</span> (<span class="dt">V3</span> lx ly lz) <span class="fu">=</span> normalize <span class="fu">$</span> <span class="dt">V3</span> <span class="dv">1</span> (<span class="fu">-</span><span class="dv">1</span>) <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform3f (lightDirection <span class="fu">$</span> shader res) lx ly lz</code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;lifhtDi&quot;</span></code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform1i (diffuseMap <span class="fu">$</span> shader res) <span class="dv">0</span></code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;uniforms&quot;</span></code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="co">-- bind texture</span></code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glActiveTexture <span class="dt">GL_TEXTURE0</span></code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glBindTexture <span class="dt">GL_TEXTURE_2D</span> <span class="fu">$</span> texture res</code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;glBindTexture draw&quot;</span></code></pre></td>
-</tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="co">-- TODO tex parameters</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       liftIO <span class="fu">$</span> printErrors <span class="st">&quot;glBindTexture draw&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
