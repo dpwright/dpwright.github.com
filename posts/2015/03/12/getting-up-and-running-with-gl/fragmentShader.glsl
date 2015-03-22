@@ -21,12 +21,11 @@ void main()
     vec4 spec = vec4(0.0);
 
     vec3 n = normalize(calculatedNormal);
-    vec3 e = normalize(vec3(calculatedEye));
-
     float intensity = max(dot(n,lightDirection), 0.0);
 
     if (intensity > 0.0)
     {
+        vec3 e = normalize(vec3(calculatedEye));
         vec3 h = normalize(lightDirection + e);
 
         float intSpec = max(dot(h,n), 0.0);
@@ -34,5 +33,6 @@ void main()
     }
 
     vec4 texCol = texture(diffuseMap, fragmentUV);
-    colorOut = texCol * rgba * max(intensity * diffuseColour + spec, ambientColour);
+    vec4 baseCol = mix(rgba, texCol, texCol.a);
+    colorOut = baseCol * max(intensity * diffuseColour + spec, ambientColour);
 }
