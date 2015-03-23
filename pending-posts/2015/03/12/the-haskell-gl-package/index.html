@@ -177,13 +177,23 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedLists #-}</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+</div>
+<p>The gl package makes quite heavy use of pattern synonyms to reproduce GL’s native enums.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE PatternSynonyms #-}</span></code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>And as with my last post, I’m going to make use of Unicode symbols in this file.</p>
+<p>I’m also going to make use of Unicode symbols in this file.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -236,10 +246,10 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Linear</span> (<span class="dt">V2</span>(..), <span class="dt">V3</span>(..), <span class="dt">M33</span>, <span class="dt">M44</span>, <span class="dt">Quaternion</span>,</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Linear</span> (<span class="dt">V2</span>(..), <span class="dt">V3</span>(..), <span class="dt">M44</span>, <span class="dt">Quaternion</span>,</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               eye3, eye4, perspective, lookAt, axisAngle,</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               perspective, lookAt, axisAngle,</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               mkTransformation, (<span class="fu">!*!</span>), normalize,</code></pre></td>
@@ -285,30 +295,12 @@
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Monad</span>       </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(void, when, unless, liftM2, forM_)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(void, when, unless, liftM2)</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>), (<span class="fu">&lt;*&gt;</span>), pure)</code></pre></td>
 </tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Concurrent</span>     (threadDelay)</code></pre></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.IO</span>           </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(hSetBuffering, stdout,</code></pre></td>
@@ -352,15 +344,9 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Text.Foreign</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">as <span class="dt">T</span></code></pre></td>
 </tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Vector</span>          <span class="kw">as</span> <span class="dt">V</span></code></pre></td>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Vector</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">as <span class="dt">V</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -433,6 +419,9 @@
 </tbody>
 </table>
 </div>
+<h2 id="error-handling-utilities">Error-handling utilities</h2>
+<p>I don’t actually ;make use of these functions anywhere within this post, but you can bet I used them while I was writing it! Debugging graphical issues can be extremely frustrating as the GPU doesn’t have anything akin to a <code>printf</code>, and GL itself is basically a gigantic state machine where subtle mistakes can lead to strange errors down the line. Sometimes it can be useful to take a scattergun approach and just sprinkle error-checking facilities throughout your code in the hope of getting a clue as to what might be the problem. These functions help you do that.</p>
+<p>First, <code>getErrors</code> collects all the errors GL is currently reporting. Since GL allwos certain operations to be performed concurrently, it holds multiple error registers, and a single call to <code>glGetError</code> just gives you the value from one of them. Here, we keep calling it until there are no errors left, at which point we return all the available errors as a list.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -440,14 +429,98 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Debug.Trace</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; getErrors ::</span> <span class="dt">IO</span> [<span class="dt">GLuint</span>]</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List.Split</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> getErrors <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   err <span class="ot">←</span> glGetError</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">if</span> err <span class="fu">==</span> <span class="dt">GL_NO_ERROR</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      <span class="kw">then</span> return []</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      <span class="kw">else</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        errs <span class="ot">←</span> getErrors</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        return <span class="fu">$</span> err<span class="fu">:</span>errs</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>The errors themselves are, like most things in GL, just a <code>GLuint</code> that maps to some enumerated value. The documentation for <code>glGetError</code> gives us a clue as to what values might be returned, so we can use that to convert the errors to a more useful <em><code>String</code></em> value.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; showError ::</span> <span class="dt">GLuint</span> <span class="ot">→</span> <span class="dt">String</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_ENUM</span>      <span class="fu">=</span> <span class="st">&quot;GL_INVALID_ENUM&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_VALUE</span>     <span class="fu">=</span> <span class="st">&quot;GL_INVALID_VALUE&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_OPERATION</span> <span class="fu">=</span> <span class="st">&quot;GL_INVALID_OPERATION&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_FRAMEBUFFER_OPERATION</span> <span class="fu">=</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                                  <span class="st">&quot;GL_INVALID_FRAMEBUFFER_OPERATION&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_OUT_OF_MEMORY</span>     <span class="fu">=</span> <span class="st">&quot;GL_OUT_OF_MEMORY&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_UNDERFLOW</span>   <span class="fu">=</span> <span class="st">&quot;GL_STACK_UNDERFLOW&quot;</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_OVERFLOW</span>    <span class="fu">=</span> <span class="st">&quot;GL_STACK_OVERFLOW&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError x                    <span class="fu">=</span> <span class="st">&quot;GL Error &quot;</span> <span class="fu">++</span> show x</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Finally, the <code>printErrors</code> function is the one we’ll actually use. It uses the above two functions to collect the errors and output them. I found it useful just to crash straight away at these point, so I report the errors using <code>error</code>. If you wanted to try and continue despite the errors you could use <code>putStrLn</code> instead.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; printErrors ::</span> <span class="dt">String</span> <span class="ot">→</span> <span class="dt">IO</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> printErrors prefix <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   es <span class="ot">←</span> map showError <span class="fu">&lt;$&gt;</span> getErrors</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   when (not <span class="fu">$</span> null es) <span class="fu">$</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     error (prefix <span class="fu">++</span> <span class="st">&quot;: &quot;</span> <span class="fu">++</span> show es)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Note the <code>prefix</code> parameter, which just lets you put in a little string describing where in the code the error occurred. Armed with this function, you can scatter error checks all over the place to help narrow down the problem.</p>
 <h2 id="setting-up-the-window">Setting up the window</h2>
 <p>Let’s begin by setting up the window using GLFW and binding it to our current GL context. We’ll have our main function do that, and then when that’s out the way the fun can start.</p>
 <div class="elastic-tabstops">
@@ -463,7 +536,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>  hSetBuffering stdout <span class="dt">LineBuffering</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   hSetBuffering stdout <span class="dt">LineBuffering</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -477,16 +550,16 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>  success <span class="ot">←</span> GLFW.init</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   success <span class="ot">←</span> GLFW.init</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>  <span class="kw">if</span> not success</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">if</span> not success</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>  <span class="kw">then</span> void <span class="fu">$</span> putStrLn <span class="st">&quot;Failed to initialise GLFW&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">then</span> void <span class="fu">$</span> putStrLn <span class="st">&quot;Failed to initialise GLFW&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>  <span class="kw">else</span> <span class="kw">do</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">else</span> <span class="kw">do</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -500,19 +573,19 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>    mapM_ GLFW.windowHint</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     mapM_ GLFW.windowHint</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      [ <span class="dt">GLFW.WindowHint'ClientAPI</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       [ <span class="dt">GLFW.WindowHint'ClientAPI</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="dt">GLFW.ClientAPI'OpenGL</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           <span class="dt">GLFW.ClientAPI'OpenGL</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      , <span class="dt">GLFW.WindowHint'OpenGLProfile</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'OpenGLProfile</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="dt">GLFW.OpenGLProfile'Core</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           <span class="dt">GLFW.OpenGLProfile'Core</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -523,15 +596,15 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      , <span class="dt">GLFW.WindowHint'OpenGLForwardCompat</span> </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'OpenGLForwardCompat</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">True</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      , <span class="dt">GLFW.WindowHint'ContextVersionMajor</span> </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'ContextVersionMajor</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">3</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      , <span class="dt">GLFW.WindowHint'ContextVersionMinor</span> </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'ContextVersionMinor</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">2</span> ]</code></pre></td>
 </tr>
 </tbody>
@@ -546,11 +619,11 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>    w <span class="ot">←</span> </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     w <span class="ot">←</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">GLFW.createWindow <span class="dv">480</span> <span class="dv">320</span> <span class="st">&quot;Haskell GL&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Nothing</span> <span class="dt">Nothing</span></code></pre></td>
 </tr>
 </tbody>
@@ -561,7 +634,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>    <span class="kw">case</span> w <span class="kw">of</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="kw">case</span> w <span class="kw">of</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -572,11 +645,11 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      <span class="dt">Nothing</span>  </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="dt">Nothing</span>  </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> putStrLn <span class="st">&quot;Failed to create window&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      <span class="dt">Just</span> win </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="dt">Just</span> win </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> <span class="kw">do</span></code></pre></td>
 </tr>
 </tbody>
@@ -590,7 +663,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        GLFW.makeContextCurrent w</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         GLFW.makeContextCurrent w</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -604,13 +677,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        closed <span class="ot">←</span> newIORef <span class="dt">False</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         closed <span class="ot">←</span> newIORef <span class="dt">False</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        GLFW.setWindowCloseCallback win <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         GLFW.setWindowCloseCallback win <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="dt">Just</span> (const <span class="fu">$</span> writeIORef closed <span class="dt">True</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           <span class="dt">Just</span> (const <span class="fu">$</span> writeIORef closed <span class="dt">True</span>)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -623,13 +696,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        (w, h) <span class="ot">&lt;-</span> GLFW.getWindowSize win</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         dims <span class="ot">←</span> GLFW.getWindowSize win</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        projectionMatrix <span class="ot">←</span> newIORef <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         projectionMatrix <span class="ot">←</span> newIORef <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          perspective (π<span class="fu">/</span><span class="dv">3</span>) (fromIntegral w <span class="fu">/</span> fromIntegral h) <span class="dv">1</span> <span class="dv">1000</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           calculateProjectionMatrix dims</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -642,10 +715,10 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        GLFW.setWindowSizeCallback win <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         GLFW.setWindowSizeCallback win <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>          <span class="dt">Just</span> (const <span class="fu">$</span> resize projectionMatrix)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           <span class="dt">Just</span> (const <span class="fu">$</span> resize projectionMatrix)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -658,13 +731,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        <span class="kw">let</span> swapper <span class="fu">=</span> GLFW.swapBuffers win</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="kw">let</span> swapper <span class="fu">=</span> GLFW.swapBuffers win</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        initialise ≫<span class="fu">=</span> runDemo closed projectionMatrix swapper</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         initialise ≫<span class="fu">=</span> runDemo closed projectionMatrix swapper</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        GLFW.terminate</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         GLFW.terminate</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -770,12 +843,6 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; v2 ::</span> (a, a) <span class="ot">→</span> <span class="dt">V2</span> a</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> v2 (x, y) <span class="fu">=</span> <span class="dt">V2</span> x y</code></pre></td>
-</tr>
-<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; v3 ::</span> (a, a, a) <span class="ot">→</span> <span class="dt">V3</span> a</code></pre></td>
 </tr>
 <tr class="even">
@@ -837,7 +904,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     normals <span class="fu">=</span> V.concat <span class="fu">.</span> map (V.replicate <span class="dv">4</span>) <span class="fu">$</span> ns <span class="fu">++</span> negated ns</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">where</span> ns <span class="fu">=</span> [v3 ( <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>), v3 ( <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), v3 ( <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)]</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">where</span> ns <span class="fu">=</span> [<span class="dt">V3</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span>, <span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span>, <span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span>]</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
@@ -846,7 +913,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     uvs <span class="fu">=</span> V.concat <span class="fu">.</span> replicate <span class="dv">6</span> <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       [v2 (<span class="dv">0</span>,<span class="dv">0</span>), v2 (<span class="dv">0</span>,<span class="dv">1</span>), v2 (<span class="dv">1</span>,<span class="dv">1</span>), v2 (<span class="dv">1</span>,<span class="dv">0</span>)]</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       [<span class="dt">V2</span> <span class="dv">0</span> <span class="dv">0</span>, <span class="dt">V2</span> <span class="dv">0</span> <span class="dv">1</span>, <span class="dt">V2</span> <span class="dv">1</span> <span class="dv">1</span>, <span class="dt">V2</span> <span class="dv">1</span> <span class="dv">0</span>]</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
@@ -929,7 +996,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; unpackIndices ::</span> <span class="dt">V.Vector</span> (<span class="dt">GLuint</span>, <span class="dt">GLuint</span>, <span class="dt">GLuint</span>) <span class="ot">-&gt;</span> <span class="dt">V.Vector</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; unpackIndices ::</span> <span class="dt">V.Vector</span> (<span class="dt">GLuint</span>, <span class="dt">GLuint</span>, <span class="dt">GLuint</span>) <span class="ot">→</span> <span class="dt">V.Vector</span> <span class="dt">GLuint</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> unpackIndices <span class="fu">=</span> V.concatMap unpack</code></pre></td>
@@ -951,16 +1018,16 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; interleave ::</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">-&gt;</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">-&gt;</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">-&gt;</span> <span class="dt">V.Vector</span> (<span class="dt">V2</span> <span class="dt">GLfloat</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> (<span class="dt">V2</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">-&gt;</span> <span class="dt">V.Vector</span> <span class="dt">GLfloat</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> <span class="dt">GLfloat</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> interleave positions colours normals uvs <span class="fu">=</span></code></pre></td>
@@ -988,7 +1055,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; fromMeshSpec ::</span> <span class="dt">MeshSpec</span> <span class="ot">-&gt;</span> <span class="dt">MeshData</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; fromMeshSpec ::</span> <span class="dt">MeshSpec</span> <span class="ot">→</span> <span class="dt">MeshData</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> fromMeshSpec spec <span class="fu">=</span></code></pre></td>
@@ -1160,7 +1227,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   [vbo, ibo] <span class="ot">&lt;-</span> liftIO <span class="fu">.</span> allocaArray <span class="dv">2</span> <span class="fu">$</span> \buffers <span class="ot">-&gt;</span> <span class="kw">do</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   [vbo, ibo] <span class="ot">←</span> liftIO <span class="fu">.</span> allocaArray <span class="dv">2</span> <span class="fu">$</span> \buffers <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glGenBuffers <span class="dv">2</span> buffers</code></pre></td>
@@ -1186,7 +1253,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> vertices <span class="fu">=</span> vertexData cube</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">.</span> SV.unsafeWith (SV.convert vertices) <span class="fu">$</span> \vsPtr <span class="ot">-&gt;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">.</span> SV.unsafeWith (SV.convert vertices) <span class="fu">$</span> \vsPtr <span class="ot">→</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glBufferData <span class="dt">GL_ARRAY_BUFFER</span></code></pre></td>
@@ -1221,7 +1288,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> indices <span class="fu">=</span> indexData cube</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">.</span> SV.unsafeWith (SV.convert indices) <span class="fu">$</span> \isPtr <span class="ot">-&gt;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">.</span> SV.unsafeWith (SV.convert indices) <span class="fu">$</span> \isPtr <span class="ot">→</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glBufferData <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span></code></pre></td>
@@ -1704,7 +1771,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span><span class="ot"> unsign ::</span> <span class="dt">Integral</span> a <span class="ot">=&gt;</span> <span class="dt">GLint</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span><span class="ot"> unsign ::</span> <span class="dt">Integral</span> a <span class="ot">=&gt;</span> <span class="dt">GLint</span> <span class="ot">→</span> <span class="dt">Maybe</span> a</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       unsign x <span class="fu">|</span> x <span class="fu">&lt;</span> <span class="dv">0</span>     <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></td>
@@ -1726,19 +1793,19 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span><span class="ot"> forString ::</span> <span class="dt">Integral</span> a</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 <span class="ot">=&gt;</span> (<span class="dt">GLuint</span> <span class="ot">-&gt;</span> <span class="dt">Ptr</span> <span class="dt">GLchar</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">GLint</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 <span class="ot">=&gt;</span> (<span class="dt">GLuint</span> <span class="ot">→</span> <span class="dt">Ptr</span> <span class="dt">GLchar</span> <span class="ot">→</span> <span class="dt">IO</span> <span class="dt">GLint</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 <span class="ot">-&gt;</span> <span class="dt">T.Text</span> <span class="ot">-&gt;</span> <span class="dt">MaybeT</span> (<span class="dt">ContT</span> r <span class="dt">IO</span>) a</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 <span class="ot">→</span> <span class="dt">T.Text</span> <span class="ot">→</span> <span class="dt">MaybeT</span> (<span class="dt">ContT</span> r <span class="dt">IO</span>) a</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       f <span class="ot">`forString`</span> x <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         (str, _) <span class="ot">&lt;-</span> lift <span class="fu">$</span> <span class="dt">ContT</span> (T.withCStringLen <span class="fu">$</span> T.concat [x, <span class="st">&quot;\0&quot;</span>])</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         (str, _) <span class="ot">←</span> lift <span class="fu">$</span> <span class="dt">ContT</span> (T.withCStringLen <span class="fu">$</span> T.concat [x, <span class="st">&quot;\0&quot;</span>])</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         loc      <span class="ot">&lt;-</span> liftIO <span class="fu">$</span> f programID str</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         loc      <span class="ot">←</span> liftIO <span class="fu">$</span> f programID str</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="dt">MaybeT</span> <span class="fu">.</span> return <span class="fu">$</span> unsign loc</code></pre></td>
@@ -1754,7 +1821,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glShader <span class="ot">&lt;-</span> <span class="dt">MaybeT</span> <span class="fu">.</span> evalContT <span class="fu">.</span> runMaybeT <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glShader <span class="ot">←</span> <span class="dt">MaybeT</span> <span class="fu">.</span> evalContT <span class="fu">.</span> runMaybeT <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Shader</span> <span class="fu">&lt;$&gt;</span> pure programID</code></pre></td>
@@ -1901,15 +1968,30 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   writeIORef projectionMatrix <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     perspective (π<span class="fu">/</span><span class="dv">3</span>) (fromIntegral w <span class="fu">/</span> fromIntegral h) <span class="dv">1</span> <span class="dv">100</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   writeIORef projectionMatrix <span class="fu">$</span> calculateProjectionMatrix (w, h)</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>That projection matrix is written to the <code>IORef</code> so that we can access it from within our main loop.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; calculateProjectionMatrix ::</span> <span class="dt">Integral</span> a <span class="ot">=&gt;</span> (a, a) <span class="ot">→</span> <span class="dt">M44</span> <span class="dt">GLfloat</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> calculateProjectionMatrix (w, h) <span class="fu">=</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   perspective (π<span class="fu">/</span><span class="dv">3</span>) (fromIntegral w <span class="fu">/</span> fromIntegral h) <span class="dv">1</span> <span class="dv">100</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
 <h2 id="handling-state">Handling state</h2>
 <p>This demo is very simple, so there isn’t much state to deal with. Nevertheless, the cube <em>does</em> spin, so we will need to keep track of its angle. As well as that, I’m going to include the camera position within the state structure even though it remains constant throughout the demo, as it’s convenient to hold the data together, and in real life you’re almost certainly going to be moving the camera at some point anyway.</p>
 <p>Our state, then, can be represented as follows:</p>
@@ -2147,7 +2229,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       stride    <span class="fu">=</span> fromIntegral floatSize <span class="fu">*</span> <span class="dv">11</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   vao <span class="ot">&lt;-</span> fillWith <span class="fu">$</span> glGenVertexArrays <span class="dv">1</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   vao <span class="ot">←</span> fillWith <span class="fu">$</span> glGenVertexArrays <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindVertexArray vao</code></pre></td>
@@ -2210,10 +2292,10 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">case</span> normalMat <span class="kw">of</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Nothing</span> <span class="ot">-&gt;</span> return ()</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Nothing</span> <span class="ot">→</span> return ()</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Just</span> nm <span class="ot">-&gt;</span> <span class="kw">do</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Just</span> nm <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       with pvmMat <span class="fu">$</span></code></pre></td>
@@ -2283,99 +2365,6 @@
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glFlush</code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; getErrors ::</span> <span class="dt">IO</span> [<span class="dt">GLuint</span>]</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> getErrors <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   err <span class="ot">&lt;-</span> glGetError</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">if</span> err <span class="fu">==</span> <span class="dt">GL_NO_ERROR</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      <span class="kw">then</span> return []</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      <span class="kw">else</span> <span class="kw">do</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        errs <span class="ot">&lt;-</span> getErrors</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        return <span class="fu">$</span> err<span class="fu">:</span>errs</code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; showError ::</span> <span class="dt">GLuint</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_ENUM</span>      <span class="fu">=</span> <span class="st">&quot;GL_INVALID_ENUM&quot;</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_VALUE</span>     <span class="fu">=</span> <span class="st">&quot;GL_INVALID_VALUE&quot;</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_OPERATION</span> <span class="fu">=</span> <span class="st">&quot;GL_INVALID_OPERATION&quot;</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_FRAMEBUFFER_OPERATION</span> <span class="fu">=</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                                  <span class="st">&quot;GL_INVALID_FRAMEBUFFER_OPERATION&quot;</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_OUT_OF_MEMORY</span>     <span class="fu">=</span> <span class="st">&quot;GL_OUT_OF_MEMORY&quot;</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_UNDERFLOW</span>   <span class="fu">=</span> <span class="st">&quot;GL_STACK_UNDERFLOW&quot;</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_OVERFLOW</span>    <span class="fu">=</span> <span class="st">&quot;GL_STACK_OVERFLOW&quot;</span></code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; printErrors ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> printErrors prefix <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   es <span class="ot">&lt;-</span> map showError <span class="fu">&lt;$&gt;</span> getErrors</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   when (not <span class="fu">$</span> null es) <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     error (prefix <span class="fu">++</span> <span class="st">&quot;: &quot;</span> <span class="fu">++</span> show es)</code></pre></td>
 </tr>
 </tbody>
 </table>
