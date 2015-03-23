@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - Getting up and running with gl</title>
+        <title>Wright Access - The Haskell gl package</title>
         <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -32,17 +32,41 @@
 
         <div id="content">
             
-              <h1 class="title">Getting up and running with gl</h1>
+              <h1 class="title">The Haskell gl package</h1>
             
+            
+              <h2 class="subtitle">a pragmatic primer</h1>
             
 
             <div class="info">12 March, 2015</div>
 
 
 
-<p>That’s a lower-case <code>gl</code>, as in the <a href="https://hackage.haskell.org/package/gl">gl package</a> introduced relatively recently by Edward Kmett and others. <code>gl</code> attempts to be a low-level but <em>complete</em> set of bindings to the OpenGL API – as opposed to the rather more longstanding <a href="https://hackage.haskell.org/package/OpenGL">OpenGL package</a>, which tries to be a bit more “Haskelly” but at the cost of certain missing parts of the OpenGL specification.</p>
-<p>A couple of questions have come up on the haskell-cafe mailing list and on <a href="http://reddit.com/r/haskell">/r/haskell</a> recently about getting up and running with OpenGL in Haskell, and since I’d been looking for an opportunity to try out the <code>gl</code> bindings for a while now I thought it’d be a good opportunity to give them a shot.</p>
-<p>This post is a literate Haskell file – lines preceded by <code>&gt;</code> are executable code, so you should be able to run and test the file directly. I am writing it “live” as it were, so I will conclude the post with my thoughts on the two GL libraries.</p>
+<p><!-- TODO gfixler expressed interest in proofreading on IRC --></p>
+<p>This post demonstrates how to get to a useful, working foundation for an OpenGL application using the recent <a href="https://hackage.haskell.org/package/gl"><code>gl</code> package</a> with the minimum of fuss. By the end of the post, this is what we’ll have:</p>
+<center>
+<img src="../../../../../posts/2015/03/12/getting-up-and-running-with-gl/spinningCube.gif" title="A spinning cube" />
+</center>
+<p>Which is to say:</p>
+<ul>
+<li>A window, created and managed by <a href="https://hackage.haskell.org/package/GLFW-b"><code>GLFW-b</code></a>.</li>
+<li>A cube mesh, with positions, colours, normals, and <em>uv</em> co-ordinates.</li>
+<li>A single directional light, calculated using the fragment shader.</li>
+<li>A texture, alpha blended with the underlying colours.</li>
+<li>Some very simple animation (the cube spins).</li>
+</ul>
+<p>I have tended to find while trying to get set up with OpenGL that, while there are a lot of resources out there, I’ve often had to piece together various blog posts in order to get a working application that I can build off. This post aims to give you a solid jumping-off point to start on the interesting stuff straight away.</p>
+<p>As well as that, this post is an opportunity for me to try the <a href="https://hackage.haskell.org/package/gl">gl package</a>, introduced relatively recently by Edward Kmett and others. <code>gl</code> attempts to be a low-level but <em>complete</em> set of bindings to the OpenGL API – as opposed to the rather more longstanding <a href="https://hackage.haskell.org/package/OpenGL">OpenGL package</a>, which tries to be a bit more “Haskelly” but at the cost of certain missing parts of the OpenGL specification.</p>
+<div class="sidenote">
+<p><a href="https://hackage.haskell.org/package/OpenGL">OpenGL</a> is build on the <a href="https://hackage.haskell.org/package/OpenGLRaw">OpenGLRaw</a> package, which as the name implies is supposed to be a “raw” binding for OpenGL much as <a href="https://hackage.haskell.org/package/gl">gl</a> is. As I understand it, the problems with this package are as follows:</p>
+<ul>
+<li>It doesn’t work well as an “escape hatch” for the higher-level OpenGL package because many of the abstractions don’t translate between the two libraries.</li>
+<li>It is not as complete at <a href="https://hackage.haskell.org/package/gl">gl</a> in terms of the number of extensions it supports.</li>
+<li>Because it is part of the Haskell Platform, fixes to the above issues can take a year to make their way into the library.</li>
+</ul>
+<p>For more information about the reasons behind the creation of the <a href="https://hackage.haskell.org/package/gl">gl</a> library, <a href="https://www.youtube.com/watch?v=yFXzuCFeRGM&amp;t=1h36m55s">this video</a> makes for interesting viewing.</p>
+</div>
+<p>To me, though, the greatest advantage of the <a href="https://hackage.haskell.org/package/gl">gl</a> package is that <em>you can google it</em>. Because it is machine-generated from the actual OpenGL API, all the symbol names match, and you use them in the same way as you would in C. The <em>vast</em> majority of OpenGL tutorials on the internet are written in C or C++, so having a common vocabulary with them is immensely useful.</p>
 <h2 id="setting-up-the-project">Setting up the project</h2>
 <p>In case you want to follow along, here is the relevant part of my cabal file:</p>
 <div class="elastic-tabstops">
@@ -120,6 +144,25 @@
 </table>
 </div>
 <p>I am including absolute version numbers here so that you can see exactly what I was working with, but you could probably be a lot more lenient with your own projects.</p>
+<p>This post is a literate Haskell file – lines preceded by <code>&gt;</code> are executable code, so you should be able to run and test the file directly.</p>
+<h2 id="breakdown-of-tasks">Breakdown of tasks</h2>
+<p>This post is, by necessity, quite long. There is a lot that needs to be set up in order to get a spinning cube on the screen! This is basically how I’ve started every games/graphics project I’ve done in the last ten years, and <em>every time</em> I spend the majority of my time staring into the abyss of a bright pink window with nothing rendering in it, wondering which trivial step I’ve forgotten in my initial setup which is <strong>breaking everything</strong>. By collecting all the steps together in this one, massive blog post, I hope to save others (as well as my future self) from this pain.</p>
+<p>To help navigate, here’s a breakdown of what we’re going to be doing:</p>
+<ul>
+<li>Set up language pragmas / import the required modules</li>
+<li>Set up some handy error handling utilities</li>
+<li>Create a window and associate it with our GL context</li>
+<li>Define the mesh for our cube</li>
+<li>Load Resources:
+<ul>
+<li>Convert our mesh definition to GL buffer objects</li>
+<li>Load in the texture and upload it to the GPU</li>
+<li>Compile and link the shader, and retrieve its uniform and attribute locations</li>
+</ul></li>
+<li>Initialise OpenGL</li>
+<li>Update state every frame to rotate the cube</li>
+<li>Actually render the scene</li>
+</ul>
 <h2 id="preliminaries">Preliminaries</h2>
 <p>We start with language pragmas. We will overload both string and list syntax to provide us with convenient access to Haskell’s faster <code>Text</code> and <code>Vector</code> containers.</p>
 <div class="elastic-tabstops">
@@ -504,7 +547,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>    w <span class="ot">←</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">GLFW.createWindow <span class="dv">640</span> <span class="dv">480</span> <span class="st">&quot;Haskell GL&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">GLFW.createWindow <span class="dv">480</span> <span class="dv">320</span> <span class="st">&quot;Haskell GL&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        </code></pre></td>
@@ -1799,7 +1842,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glClearColor </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">1</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fl">0.96</span> <span class="fl">0.96</span> <span class="fl">0.96</span> <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glClearDepth </code></pre></td>
@@ -1992,7 +2035,7 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     rotationSpeed   </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">π <span class="fu">/</span> <span class="dv">2</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -2194,13 +2237,13 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (diffuseColour <span class="fu">$</span> shader res) <span class="fl">0.6</span> <span class="fl">0.6</span> <span class="fl">0.6</span> <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (ambientColour <span class="fu">$</span> shader res) <span class="fl">0.2</span> <span class="fl">0.2</span> <span class="fl">0.2</span> <span class="dv">1</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (ambientColour <span class="fu">$</span> shader res) <span class="fl">0.1</span> <span class="fl">0.1</span> <span class="fl">0.1</span> <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (specularColour <span class="fu">$</span> shader res) <span class="fl">0.7</span> <span class="fl">0.7</span> <span class="fl">0.7</span> <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform1f (shininess <span class="fu">$</span> shader res) <span class="fl">0.2</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform1f (shininess <span class="fu">$</span> shader res) <span class="fl">0.4</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">let</span> (<span class="dt">V3</span> lx ly lz) <span class="fu">=</span> normalize <span class="fu">$</span> <span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span></code></pre></td>
