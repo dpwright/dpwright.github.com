@@ -1,5 +1,7 @@
     <div class="postMenuItem">
-      <h2 class="postTitle"><a href="$url$">$title$</a></h2>
+      <a href="$url$">
+        <h2 class="postTitle">$title$$if(subtitle)$: $subtitle$ $endif$</h2>
+      </a>
       <div class="postDate">$date$</div>
       <div class="postTagsList">$tags$</div>
     </div>

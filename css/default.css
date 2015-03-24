@@ -72,6 +72,7 @@ h2.subtitle {
     padding: 0px;
     font-size: 120%;
     text-align: center;
+    font-style: italic; /* TODO find a way to disable this for Japanese subtitles */
 }
 
 a {
@@ -89,16 +90,23 @@ a:hover {
     margin-bottom: 0px;
 }
 
-.postMenuItem h2 a {
-    color: black
-}
-
-.postMenuItem h2 a:hover {
-    color: #da1071
+.postMenuItem h3 {
+    padding-top: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 .postMenuItem .postDate {
     font-weight: 600;
+}
+
+.postMenuItem a .postTitle {
+    color: black
+}
+
+.postMenuItem a:hover .postTitle {
+    color: #da1071
 }
 
 .postMenuItem .postTagsList {
