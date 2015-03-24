@@ -9,6 +9,7 @@ body {
     font-size: 20px;
     margin: 0px auto 0px auto;
     text-rendering: optimizeLegibility;
+    text-align: justify;
 }
 
 p {
