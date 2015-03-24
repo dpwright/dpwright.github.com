@@ -163,6 +163,7 @@
 <li>Update state every frame to rotate the cube</li>
 <li>Actually render the scene</li>
 </ul>
+<p>Let’s get started!</p>
 <h2 id="preliminaries">Preliminaries</h2>
 <p>We start with language pragmas. We will overload both string and list syntax to provide us with convenient access to Haskell’s faster <code>Text</code> and <code>Vector</code> containers.</p>
 <div class="elastic-tabstops">
@@ -238,35 +239,53 @@
 </tbody>
 </table>
 </div>
-<p>Edward Kmett’s <a href="https://hackage.haskell.org/package/linear">linear</a> library is a good fit for working with GL.</p>
+<p>Edward Kmett’s <a href="https://hackage.haskell.org/package/linear">linear</a> library is a nice, flexible library for vector and matrix maths, and the <em><code>Storable</code></em> instances it supplies for everything make it a good fit for working with GL.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Linear</span> (<span class="dt">V2</span>(..), <span class="dt">V3</span>(..), <span class="dt">M44</span>, <span class="dt">Quaternion</span>,</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Linear</span> (</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V2</span>(<span class="fu">..</span>), <span class="dt">V3</span>(<span class="fu">..</span>), <span class="dt">M44</span>, <span class="dt">Quaternion</span>,</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               perspective, lookAt, axisAngle,</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">perspective, lookAt, axisAngle,</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               mkTransformation, (<span class="fu">!*!</span>), normalize,</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">mkTransformation, (<span class="fu">!*!</span>), normalize,</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               inv33, column, _xyz, negated)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Distributive</span> (distribute)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Lens</span>      ((^.))</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">inv33, column, _xyz, negated, eye3)</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>I’m going to use the <a href="https://hackage.haskell.org/package/JuicyPixels">JuicyPixels</a> library for loading texture data, though it would be easy enough to roll your own TGA loader if you wanted to skimp on dependencies.</p>
+<p>The following two functions also come in handy when working with Linear. <code>distribute</code> gives you the transpose of a matrix, and <code>(^.)</code> will give you access to certain fields which are expressed as lenses.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Distributive</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(distribute)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Lens</span>      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">^.</span>))</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>I’m going to use the <a href="https://hackage.haskell.org/package/JuicyPixels">JuicyPixels</a> library for loading texture data.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -290,36 +309,49 @@
 <table>
 <colgroup>
 <col width="0%" />
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Monad</span>       </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(void, when, unless, liftM2)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">void, when, unless, liftM2)</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Applicative</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">&lt;$&gt;</span>), (<span class="fu">&lt;*&gt;</span>), pure)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="fu">&lt;$&gt;</span>), (<span class="fu">&lt;*&gt;</span>), pure)</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.IO</span>           </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(hSetBuffering, stdout,</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">hSetBuffering, stdout,</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">BufferMode</span>(<span class="dt">LineBuffering</span>))</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.IORef</span>          </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">IORef</span>, newIORef,</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">IORef</span>, newIORef,</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">writeIORef, readIORef)</code></pre></td>
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Bits</span>           </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">((<span class="fu">.|.</span>))</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="fu">.|.</span>))</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Maybe</span>          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">fromMaybe)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -351,7 +383,7 @@
 </tbody>
 </table>
 </div>
-<p>Because <code>gl</code> works at quite a low level, we will occasionally need to do some manual memory management. Don’t worry, it doesn’t get too complicated!</p>
+<p>Because <code>gl</code> works at quite a low level, you have to do quite a lot of marshalling between Haskell and C. Haskell provides a number of convenient utilities for doing this within the <em><code>Foreign</code></em> hierarchy. <code>Data.Vector.Storable</code> also gives us a directly serializable form of <em><code>Vector</code></em>.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -392,7 +424,7 @@
 </tbody>
 </table>
 </div>
-<p>And finally some monad transformers which will ease some of the boilerplate.</p>
+<p>Finally, some monad transformers which will ease some of the boilerplate.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -420,7 +452,7 @@
 </table>
 </div>
 <h2 id="error-handling-utilities">Error-handling utilities</h2>
-<p>I don’t actually ;make use of these functions anywhere within this post, but you can bet I used them while I was writing it! Debugging graphical issues can be extremely frustrating as the GPU doesn’t have anything akin to a <code>printf</code>, and GL itself is basically a gigantic state machine where subtle mistakes can lead to strange errors down the line. Sometimes it can be useful to take a scattergun approach and just sprinkle error-checking facilities throughout your code in the hope of getting a clue as to what might be the problem. These functions help you do that.</p>
+<p>I don’t actually make use of these functions anywhere within this post, but you can bet I used them while I was writing it! Debugging graphical issues can be extremely frustrating as the GPU doesn’t have anything akin to a <code>printf</code>, and GL itself is basically a gigantic state machine where subtle mistakes can lead to strange errors down the line. Sometimes it can be useful to take a scattergun approach and just sprinkle error-checking facilities throughout your code in the hope of getting a clue as to what might be the problem. These functions help you do that.</p>
 <p>First, <code>getErrors</code> collects all the errors GL is currently reporting. Since GL allwos certain operations to be performed concurrently, it holds multiple error registers, and a single call to <code>glGetError</code> just gives you the value from one of them. Here, we keep calling it until there are no errors left, at which point we return all the available errors as a list.</p>
 <div class="elastic-tabstops">
 <table>
@@ -455,7 +487,7 @@
 </tbody>
 </table>
 </div>
-<p>The errors themselves are, like most things in GL, just a <code>GLuint</code> that maps to some enumerated value. The documentation for <code>glGetError</code> gives us a clue as to what values might be returned, so we can use that to convert the errors to a more useful <em><code>String</code></em> value.</p>
+<p>The errors themselves are, like most things in GL, just a <code>GLuint</code> that maps to some enumerated value. <a href="https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetError.xml">The documentation for <code>glGetError</code></a> gives us a clue as to what values might be returned, so we can use that to convert the errors to a more useful <em><code>String</code></em> value.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -466,36 +498,54 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; showError ::</span> <span class="dt">GLuint</span> <span class="ot">→</span> <span class="dt">String</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_ENUM</span>      <span class="fu">=</span> <span class="st">&quot;GL_INVALID_ENUM&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_ENUM</span> <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_VALUE</span>     <span class="fu">=</span> <span class="st">&quot;GL_INVALID_VALUE&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="st">&quot;GL_INVALID_ENUM&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_OPERATION</span> <span class="fu">=</span> <span class="st">&quot;GL_INVALID_OPERATION&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_VALUE</span> <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="st">&quot;GL_INVALID_VALUE&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_OPERATION</span> <span class="fu">=</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="st">&quot;GL_INVALID_OPERATION&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_INVALID_FRAMEBUFFER_OPERATION</span> <span class="fu">=</span></code></pre></td>
 </tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="st">&quot;GL_INVALID_FRAMEBUFFER_OPERATION&quot;</span></code></pre></td>
+</tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                                  <span class="st">&quot;GL_INVALID_FRAMEBUFFER_OPERATION&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_OUT_OF_MEMORY</span> <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_OUT_OF_MEMORY</span>     <span class="fu">=</span> <span class="st">&quot;GL_OUT_OF_MEMORY&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="st">&quot;GL_OUT_OF_MEMORY&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_UNDERFLOW</span>   <span class="fu">=</span> <span class="st">&quot;GL_STACK_UNDERFLOW&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_UNDERFLOW</span> <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_OVERFLOW</span>    <span class="fu">=</span> <span class="st">&quot;GL_STACK_OVERFLOW&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="st">&quot;GL_STACK_UNDERFLOW&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError x                    <span class="fu">=</span> <span class="st">&quot;GL Error &quot;</span> <span class="fu">++</span> show x</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError <span class="dt">GL_STACK_OVERFLOW</span> <span class="fu">=</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="st">&quot;GL_STACK_OVERFLOW&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> showError x <span class="fu">=</span> <span class="st">&quot;GL Error &quot;</span> <span class="fu">++</span> show x</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Finally, the <code>printErrors</code> function is the one we’ll actually use. It uses the above two functions to collect the errors and output them. I found it useful just to crash straight away at these point, so I report the errors using <code>error</code>. If you wanted to try and continue despite the errors you could use <code>putStrLn</code> instead.</p>
+<p>Finally, <code>printErrors</code> is the function we’ll actually use. It uses the above two functions to collect the errors and output them. I found it useful just to crash straight away at these point, so I report the errors using <code>error</code>. If you wanted to try and continue despite the errors you could use <code>putStrLn</code> instead.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -522,7 +572,8 @@
 </div>
 <p>Note the <code>prefix</code> parameter, which just lets you put in a little string describing where in the code the error occurred. Armed with this function, you can scatter error checks all over the place to help narrow down the problem.</p>
 <h2 id="setting-up-the-window">Setting up the window</h2>
-<p>Let’s begin by setting up the window using GLFW and binding it to our current GL context. We’ll have our main function do that, and then when that’s out the way the fun can start.</p>
+<p>The <code>main</code> function of our application begins by setting up the window using GLFW and binding it to our current GL context. Once that’s done, it can hand off to our initialisation and main loop to do the bulk of the work.</p>
+<p>Because I want to keep the distinction between GLFW and OpenGL quite strong, I’ve chosen not to mix them up in this post. This section, which deals with window setup and initialisation, uses GLFW exclusively and makes no direct GL calls at all. Once this section is over, we won’t touch GLFW again and it will be pure GL from then on.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -541,7 +592,7 @@
 </tbody>
 </table>
 </div>
-<p>Not strictly necessary, but I begin by setting <code>stdout</code> to use LineBuffering. This means any output will be flushed on every newline, which can be invaluable for debugging.</p>
+<p>Not strictly necessary, but I begin here by setting <code>stdout</code> to use LineBuffering. This means any output will be flushed on every newline, which can be invaluable for debugging.</p>
 <p>Next, we need to initialise GLFW.</p>
 <div class="elastic-tabstops">
 <table>
@@ -587,29 +638,19 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           <span class="dt">GLFW.OpenGLProfile'Core</span></code></pre></td>
 </tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'OpenGLForwardCompat</span> <span class="dt">True</span></code></pre></td>
+</tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'OpenGLForwardCompat</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">True</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'ContextVersionMajor</span> <span class="dv">3</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'ContextVersionMajor</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">3</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'ContextVersionMinor</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">2</span> ]</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       , <span class="dt">GLFW.WindowHint'ContextVersionMinor</span> <span class="dv">2</span> ]</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>I’ve rather arbitrarily opted for OpenGL 3.2 here, which is not outrageously out-of-date but is still widely supported. More information about the available window hints can be found in the <a href="http://www.glfw.org/docs/latest/window.html#window_hints">GLFW documentation</a>.</p>
 <p>We’re now ready to make the window. Again, it’s possible this may fail, so we’ll just drop out with an error if that happens.</p>
 <div class="elastic-tabstops">
 <table>
@@ -688,7 +729,7 @@
 </tbody>
 </table>
 </div>
-<p>We’ll also want to hook into GLFW’s <code>WindowSizeCallback</code> to avoid our image getting stretched when we resize the window. Again, we’ll make use of an <code>IORef</code> to store the calculated projection matrix so that we can access it from the render loop. We initialise it to the identity matrix for want of a better idea.</p>
+<p>We’ll also want to hook into GLFW’s <code>WindowSizeCallback</code> to avoid our image getting stretched when we resize the window. Again, we’ll make use of an <code>IORef</code> to store the calculated projection matrix so that we can access it from the render loop. We’ll cover <code>calculateProjectionMatrix</code> later; for now on just assume it’s a function which takes a tuple of <code>(width, height)</code> and returns the projection matrix we need for that aspect ratio.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -707,7 +748,7 @@
 </tbody>
 </table>
 </div>
-<p>We’ll look into the details of what <code>resize</code> does later, but for now we just tell GLFW to call it when the window is resized. Since I don’t want to have any GLFW-specific code in the main portion of this demo, I drop the <code>GLFW.Window</code> parameter using <code>const</code>.</p>
+<p>We’ll look into the details of what <code>resize</code> does later, but for now we just tell GLFW to call it when the window is resized. Since I don’t want to have any GLFW-specific code in the main portion of this demo, I drop the <code>GLFW.Window</code> parameter using <code>const</code> (I actually did the same for the <code>WindowCloseCallback</code> above, too).</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -723,6 +764,19 @@
 </tbody>
 </table>
 </div>
+<p>Let’s also make a quick helper function which swaps the draw buffers for the current window, so we don’t have to expose <code>win</code> to the rest of the program. We also put in a call to <code>GLFW.pollEvents</code> while we’re at it, so that window events and keypresses (if there were any) are handled properly.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="kw">let</span> swapper <span class="fu">=</span> GLFW.swapBuffers win ≫ GLFW.pollEvents</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>That pretty much covers it for GLFW’s setup – we’re now ready to initialise and run our demo. We’ll have our main function just drop out when it’s done, so we can terminate once it’s complete.</p>
 <div class="elastic-tabstops">
 <table>
@@ -731,18 +785,15 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="kw">let</span> swapper <span class="fu">=</span> GLFW.swapBuffers win</code></pre></td>
-</tr>
-<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         initialise ≫<span class="fu">=</span> runDemo closed projectionMatrix swapper</code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         GLFW.terminate</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>One last thing before I leave GLFW aside entirely – I’ll want to be able to access the time delta within my main loop. GLFW provides us with a convenient way to query this in a platform-agnostic manner, so let’s expose this to the rest of the program.</p>
+<p>One last thing before I leave GLFW aside entirely – I’ll want to be able to access the time delta within my main loop. GLFW provides us with a convenient way to query this in a platform-agnostic manner.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -762,7 +813,7 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   GLFW.setTime <span class="dv">0</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   return <span class="fu">$</span> maybe <span class="dv">0</span> (fromRational <span class="fu">.</span> toRational) t</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   return <span class="fu">$</span> maybe <span class="dv">0</span> (fromRational ∘ toRational) t</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -773,10 +824,10 @@
 <p>We’re going to construct our mesh in code to avoid having to worry about model formats and so forth. This section has little to do with actual GL code, so if you’re keen to see the <code>gl</code> library in action you can safely skip it.</p>
 <p>A mesh can be thought of as simply a collection of vertex data, and a set of indices into that data. For this demo, the information we need about each vertex is:</p>
 <ol style="list-style-type: decimal">
-<li>Its position relative to the model.</li>
-<li>Its colour.</li>
-<li>Its texture co-ordinates (Called <em>UV Co-ordinates</em>).</li>
-<li>Its normal vector.</li>
+<li>Its position relative to the model</li>
+<li>Its colour</li>
+<li>Its texture co-ordinates (Called <em>UV Co-ordinates</em>)</li>
+<li>Its normal vector</li>
 </ol>
 <p>We can store these in a structure with a <code>Vector</code> for each piece of data, along with an index <code>Vector</code>.</p>
 <div class="elastic-tabstops">
@@ -835,7 +886,7 @@
 </tbody>
 </table>
 </div>
-<p>We’re going to be defining a lot of these values all at once. Unfortunately, this starts to look pretty ugly in Haskell because negative numbers have to be wrapped in brackets, so that the vector <span class="math">\((0, -1, 0)\)</span> is expressed <code>V3 0 (-1) 0</code>. To try and ease the pain here, let’s define a couple of helper constructors that let us use tuple notation to build <code>V2</code> and <code>V3</code> values.</p>
+<p>We’re going to be defining a lot of these values all at once. Unfortunately, this starts to look pretty ugly in Haskell because negative numbers have to be wrapped in brackets, so that the vector <span class="math">\((0, -1, 0)\)</span> is expressed <code>V3 0 (-1) 0</code>. To try and ease the pain here, let’s define an alternate constructor for <em><code>V3</code></em> values which takes a tuple instead of three parameters.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -851,7 +902,7 @@
 </tbody>
 </table>
 </div>
-<p>This allows us to define a function to generate a cuboid of any dimension.</p>
+<p>This allows us to define a function to generate a cuboid of any dimension. The function will take the dimensions of the cuboid and fill a <em><code>MeshSpec</code></em> with the required data.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -870,6 +921,16 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     l <span class="fu">=</span> l' <span class="fu">*</span> <span class="fl">0.5</span>; d <span class="fu">=</span> d' <span class="fu">*</span> <span class="fl">0.5</span>; h <span class="fu">=</span> h' <span class="fu">*</span> <span class="fl">0.5</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+</div>
+<p>I named my input parameters <code>l'</code>, <code>h'</code>, and <code>d'</code> because although I take the length, height, and depth as input, I generally want to use these values halved, so that I can treat them as an offset from the origin in the centre of the cuboid. These halved values, then, I give the more accessible names of <code>l</code>, <code>h</code>, and <code>d</code>. Here’s how I use them to define a quad for each face of the cube:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     positions <span class="fu">=</span></code></pre></td>
 </tr>
@@ -891,38 +952,91 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        v3 ( l, h,<span class="fu">-</span>d), v3 ( l,<span class="fu">-</span>h,<span class="fu">-</span>d), v3 (<span class="fu">-</span>l,<span class="fu">-</span>h,<span class="fu">-</span>d), v3 (<span class="fu">-</span>l, h,<span class="fu">-</span>d)]</code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
+</tbody>
+</table>
+</div>
+<p>Each line here is a single face: The right, top, front, left, bottom and back faces respectively. I’m going to colour them so that the <span class="math">\((r, g, b)\)</span> values are mapped to the (normalised) <span class="math">\((x, y, z)\)</span> values. So the left, bottom, back point <span class="math">\((-l, -h, -d)\)</span> is black, the right, bottom, back point <span class="math">\((l, -h, -d)\)</span> is red, the right, top, front point <span class="math">\((l, h, d)\)</span> is white… and so forth. This can be done by saying that for a particular point <span class="math">\((x, y, z)\)</span> its RGB value can be calculated thus:</p>
+<p><span class="math">\[
+\left(\frac{x + l}{l'}, \frac{y + h}{h'}, \frac{z + d}{d'}\right)
+\]</span></p>
+<p>This can be expressed quite succinctly in Haskell.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     colours <span class="fu">=</span> V.map ((<span class="fu">/</span> <span class="dt">V3</span> l' h' d') <span class="fu">.</span> (<span class="fu">+</span> <span class="dt">V3</span> l h d)) positions</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     colours <span class="fu">=</span> V.map ((<span class="fu">/</span> <span class="dt">V3</span> l' h' d') ∘ (<span class="fu">+</span> <span class="dt">V3</span> l h d)) positions</code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
+</tbody>
+</table>
+</div>
+<p>For the normals, we can simply take the normal vector for each axis, and the negations of those vectors. Since each face is composed of four vertices, and we want to share the same normal vector across the face, we replicate each normal four times – one for each vertex.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     normals <span class="fu">=</span> V.concat <span class="fu">.</span> map (V.replicate <span class="dv">4</span>) <span class="fu">$</span> ns <span class="fu">++</span> negated ns</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     normals <span class="fu">=</span> V.concat ∘ map (V.replicate <span class="dv">4</span>) <span class="fu">$</span> ns <span class="fu">++</span> negated ns</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">where</span> ns <span class="fu">=</span> [<span class="dt">V3</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span>, <span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span>, <span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span>]</code></pre></td>
 </tr>
+</tbody>
+</table>
+</div>
+<p>The texture co-ordinates for this shape are quite simple – they simply stretch from <span class="math">\((0, 0)\)</span> in the bottom-left corner to <span class="math">\((1, 1)\)</span> in the top-right. We want the same set of co-ordinates across each face, which again we can do using <code>replicate</code>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     uvs <span class="fu">=</span> V.concat ∘ replicate <span class="dv">6</span> <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     uvs <span class="fu">=</span> V.concat <span class="fu">.</span> replicate <span class="dv">6</span> <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       [<span class="dt">V2</span> <span class="dv">0</span> <span class="dv">0</span>, <span class="dt">V2</span> <span class="dv">0</span> <span class="dv">1</span>, <span class="dt">V2</span> <span class="dv">1</span> <span class="dv">1</span>, <span class="dt">V2</span> <span class="dv">1</span> <span class="dv">0</span>]</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     indices <span class="fu">=</span> quads <span class="fu">.</span> V.zipWith forFace [<span class="dv">0</span><span class="fu">..</span>] <span class="fu">.</span> V.replicate <span class="dv">6</span> <span class="fu">$</span> (<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></td>
 </tr>
 </tbody>
 </table>
+</div>
+<p>Finally we set up the indices for our shape. The quads we defined in <code>positions</code> above follow a regular pattern: <span class="math">\((0, 1, 2, 3)\)</span>, <span class="math">\((4, 5, 6, 7)\)</span>… essentially we just make a 4-tuple of incrementing numbers from an offset of <span class="math">\(faceIndex \times 4\)</span>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     indices <span class="fu">=</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       quads ∘ V.zipWith forFace [<span class="dv">0</span><span class="fu">..</span>] ∘ V.replicate <span class="dv">6</span> <span class="fu">$</span> (<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">where</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">forFace i (a, b, c, d) <span class="fu">=</span> (a <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>, b <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>, c <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>, d <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>OpenGL doesn’t work with quads, though, it uses triangles. The <code>quads</code> function we just used takes the quads and splits them up into triangles.</p>
+<div class="elastic-tabstops">
 <table>
 <colgroup>
 <col width="0%" />
@@ -932,28 +1046,22 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">where</span> </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">quads                    </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">V.concatMap triangulate</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">triangulate (a, b, c, d) </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">[(a, b, c), (c, d, a)]</code></pre></td>
 </tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">forFace i (a, b, c, d)   </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(a <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>, b <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>, c <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>, d <span class="fu">+</span> i<span class="fu">*</span><span class="dv">4</span>)</code></pre></td>
-</tr>
 </tbody>
 </table>
 </div>
-<p>Well, that was a bit of a mouthful!</p>
-<p>Considering each of these sets of vertex data separately is convenient when constructing the mesh, especially when you’re hard-coding like I did here. You’ll get better performance, though, if you combine them into a single, interleaved array. This would just be a flat stream of <code>GLfloat</code>s, like this:</p>
+<p>…and that gives us the <em><code>MeshSpec</code></em> for our cube!</p>
+<p>Considering each of these sets of vertex data separately is convenient when constructing the mesh, especially when you’re hard-coding like I did here. You’ll get better performance, though, if you combine them into a single, interleaved array (at least if you’re not deforming or otherwise modifying the mesh). This would just be a flat stream of <em><code>GLfloat</code></em>s, like this:</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -966,7 +1074,7 @@
 </tbody>
 </table>
 </div>
-<p>The indices are also represented as a flat list, an unpacked version of the tuple representation we use in <code>MeshSpec</code> above. The following type gives a representation closer to what we’d like to feed to GL.</p>
+<p>The indices are also represented as a flat list, an unpacked version of the tuple representation we use in <em><code>MeshSpec</code></em> above. The following type gives a representation closer to what we’d like to feed to GL.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -976,13 +1084,30 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">MeshData</span> <span class="fu">=</span> <span class="dt">MeshData</span></code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   {<span class="ot"> vertexData ::</span> <span class="dt">V.Vector</span> <span class="dt">GLfloat</span></code></pre></td>
-</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> indexData  ::</span> <span class="dt">V.Vector</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   { vertexData </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">V.Vector</span> <span class="dt">GLfloat</span></code></pre></td>
 </tr>
 <tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , indexData  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">V.Vector</span> <span class="dt">GLuint</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   }</code></pre></td>
 </tr>
 </tbody>
@@ -992,16 +1117,32 @@
 <div class="elastic-tabstops">
 <table>
 <colgroup>
+<col width="0%" />
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; unpackIndices ::</span> <span class="dt">V.Vector</span> (<span class="dt">GLuint</span>, <span class="dt">GLuint</span>, <span class="dt">GLuint</span>) <span class="ot">→</span> <span class="dt">V.Vector</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> unpackIndices </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V.Vector</span> (<span class="dt">GLuint</span>, <span class="dt">GLuint</span>, <span class="dt">GLuint</span>)</code></pre></td>
 </tr>
 <tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V.Vector</span> <span class="dt">GLuint</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> unpackIndices <span class="fu">=</span> V.concatMap unpack</code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> unpack (a, b, c) <span class="fu">=</span> [a, b, c]</code></pre></td>
 </tr>
 </tbody>
@@ -1011,43 +1152,75 @@
 <div class="elastic-tabstops">
 <table>
 <colgroup>
+<col width="0%" />
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; interleave ::</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> interleave </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V.Vector</span> (<span class="dt">V3</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> (<span class="dt">V2</span> <span class="dt">GLfloat</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V.Vector</span> (<span class="dt">V2</span> <span class="dt">GLfloat</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="ot">→</span> <span class="dt">V.Vector</span> <span class="dt">GLfloat</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">V.Vector</span> <span class="dt">GLfloat</span></code></pre></td>
 </tr>
-<tr class="even">
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> interleave positions colours normals uvs <span class="fu">=</span></code></pre></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   V.foldr (<span class="fu">V.++</span>) V.empty <span class="fu">$</span></code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     V.zipWith4 combine positions colours normals uvs</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> combine (<span class="dt">V3</span> x y z) (<span class="dt">V3</span> r g b) (<span class="dt">V3</span> nx ny nz) (<span class="dt">V2</span> u v) <span class="fu">=</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">combine (<span class="dt">V3</span> x y z) (<span class="dt">V3</span> r g b) (<span class="dt">V3</span> nx ny nz) (<span class="dt">V2</span> u v) <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           [x, y, z, r, g, b, nx, ny, nz, u, v]</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  [x, y, z, r, g, b, nx, ny, nz, u, v]</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Now we can use these functions to convert from a <code>MeshSpec</code> to a <code>MeshData</code>.</p>
+<div class="sidenote">
+<p>Be careful here, as by interleaving the vertex streams into a single array of <em><code>GLfloats</code></em> you are, of course, leaving type safety behind you. When writing this post, I had a bug where my lighting looked all wrong. It turned out I had put the normals and the <em>uv</em> co-ordinates in the wrong order in my <code>combine</code> function – a fact that would have been caught by the typechecker straight away!</p>
+</div>
+<p>Now we can use these functions to convert from a <em><code>MeshSpec</code></em> to a <em><code>MeshData</code></em>.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1060,28 +1233,50 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> fromMeshSpec spec <span class="fu">=</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="dt">MeshData</span> (interleave (specPositions spec)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="dt">MeshData</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(interleave      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(specPositions spec)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                        (specColours spec)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">                 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(specColours spec)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                        (specNormals spec)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">                 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(specNormals spec)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                        (specUVs spec))</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">                 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(specUVs spec))</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            (unpackIndices <span class="fu">$</span> specIndices spec)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(unpackIndices <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> specIndices spec)</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>This gets us from an easy-to-define “mesh specification” to the raw data that we’d like to give to GL. Here, we’ve defined the mesh in code, but you could just as well load the data from a file and read it into <code>MeshData</code> if you wanted.</p>
+<p>This gets us from an easy-to-define “mesh specification” to the raw data that we’d like to give to GL. Here, we’ve defined the mesh in code, but you could just as well load the data from a file and read it into <em><code>MeshData</code></em> directly if you wanted.</p>
 <h2 id="resource-loading">Resource loading</h2>
-<p>Our aim here is to get a textured, spinning cube on the screen using modern OpenGL. To that end, the very least we will need is the mesh itself, its texture, and a shader program to do the rendering. Let’s define some datatypes to store these in.</p>
-<p>First, the mesh itself, which is composed of a <em>Vertex Buffer Object</em> for the vertex data and an <em>Index Buffer Object</em> for the index data. This is what we’ll actually bind to send the data to GL for drawing. You can bind multiple VBOs, but since we’ve gone to the trouble of interleaving our arrays we’ll just use the one.</p>
+<p>OK, our basic setup is complete, it’s time to get down and dirty with OpenGL! First we need to load and prepare our resources.</p>
+<p>Our aim here is to get a textured, spinning cube on the screen using modern OpenGL. To that end, the very least we will need is the texture, a shader program to do the rendering, and of course the mesh itself. Let’s define some datatypes to store these in.</p>
+<p>First, the mesh. We use a <em>Vertex Array Object</em> to do the rendering, which contains references to all the data making up the mesh as well as settings describing the layout of the data (which parts of the stream to bind to which attributes in the shader).</p>
+<p>The data itself is stored in <em>Vertex Buffer Objects</em>, which I have named <code>VBO</code> for the vertices and <code>IBO</code> for the indices. we bind these into the Vertex Array Object, so we don’t actually need them for rendering, but we keep hold of them for cleanup later.</p>
+<p>More information on Vertex Buffer Objects and Vertex Array Objects can be found on the <a href="https://www.opengl.org/wiki/Vertex_Specification">OpenGL wiki</a>.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1091,22 +1286,44 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Mesh</span> <span class="fu">=</span> <span class="dt">Mesh</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   { meshVBO        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
+</tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   {<span class="ot"> meshVBO        ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , meshIBO        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> meshIBO        ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , meshVAO        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> meshIndexCount ::</span> <span class="dt">GLsizei</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , meshIndexCount </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLsizei</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   }</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The texture is simple – just the ID GL uses to refer to the texture is enough. For the shader, We want the ID for the shader program, and alongside that we’ll store the locations of all the constants and attributes. These will be different per-shader, but since in this case we only have one shader we can just assume they’ll always be the same.</p>
+<p>For the shader, We want the ID for the shader program, and alongside that we’ll store the locations of all the constants and attributes. These will be different per-shader, but since in this case we only have one shader we can just assume they’ll always be the same.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1116,56 +1333,98 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Shader</span> <span class="fu">=</span> <span class="dt">Shader</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   { shaderProgram   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
+</tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   {<span class="ot"> shaderProgram   ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , positions       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> positions       ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , colours         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> colours         ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , normals         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> normals         ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , uvs             </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLuint</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> uvs             ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , pvmMatrix       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> pvmMatrix       ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , viewModelMatrix </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> viewModelMatrix ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , normalMatrix    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> normalMatrix    ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , diffuseColour   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> diffuseColour   ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , ambientColour   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> ambientColour   ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , specularColour  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> specularColour  ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , shininess       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> shininess       ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , lightDirection  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> lightDirection  ::</span> <span class="dt">GLint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , diffuseMap      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">GLint</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> diffuseMap      ::</span> <span class="dt">GLint</span></code></pre></td>
-</tr>
-<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   }</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>This represents all the data we need to send to our shader. Not that contained within this structure are not the actual <em>values</em> (the positions, colours, matrices, etc), but the <em>location at which the values are stored</em> in the shader program. We’ll use these locations to set the values when we draw.</p>
-<p>Packaging these two structures together with the texture ID, we create a <em><code>Resources</code></em> type representing all the resources this demo requires.</p>
+<p>Finally, there’s the texture, which is simple – just the ID GL uses to refer to the texture is enough.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">TextureID</span> <span class="fu">=</span> <span class="dt">GLuint</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Packaging these two structures together , we create a <em><code>Resources</code></em> type representing all the resources this demo requires.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1175,22 +1434,40 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">data</span> <span class="dt">Resources</span> <span class="fu">=</span> <span class="dt">Resources</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   { mesh    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">Mesh</span></code></pre></td>
+</tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   {<span class="ot"> mesh    ::</span> <span class="dt">Mesh</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , texture </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">TextureID</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> texture ::</span> <span class="dt">GLuint</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   , shader  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> <span class="dt">Shader</span></code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ,<span class="ot"> shader  ::</span> <span class="dt">Shader</span></code></pre></td>
-</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   }</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The job of our Initialise function, then, will be to load these resources and initialise them ready for use by GL. Loading and preparing resources for usage by GL may fail at any point, so I’m going to wrap the entire process in the <code>MaybeT</code> monad transformer so it drops out early on failure.</p>
+<p>The job of our Initialise function, then, will be to load these resources and initialise them ready for use by GL. Loading and preparing resources for usage by GL may fail at any point, so I’m going to wrap the entire process in the <em><code>MaybeT</code></em> monad transformer so it drops out early on failure.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1206,122 +1483,10 @@
 </tbody>
 </table>
 </div>
-<p>First comes the mesh. We’ll initialise a <code>MeshSpec</code> describing a <span class="math">\(1\times1\times1\)</span> cube and convert that to <code>MeshData</code> using the functions described in the previous section. At that point we’ll have some raw data, such as might have been read in from a model file if we were drawing something more complicated than a cube.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> cube <span class="fu">=</span> fromMeshSpec <span class="fu">$</span> cuboid <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span></code></pre></td>
-</tr>
-</tbody>
-</table>
+<div class="sidenote">
+<p>For a more complex application, <em><code>EitherT</code></em>/<em><code>ErrorT</code></em> might be a better choice so that we can report <em>what</em> failed.</p>
 </div>
-<p>We need to create two buffer objects: our VBO and our IBO. We create buffer objects using <code>glGenBuffers</code>; this in turn will give as an ID for each buffer with which we can refer to it.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   [vbo, ibo] <span class="ot">←</span> liftIO <span class="fu">.</span> allocaArray <span class="dv">2</span> <span class="fu">$</span> \buffers <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glGenBuffers <span class="dv">2</span> buffers</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     peekArray <span class="dv">2</span> buffers</code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Here we see <code>gl</code>’s low-level stance in action. The functions we’re calling are raw bindings to the equivalent C function, so sometimes we have to do some marshalling between Haskell and C to get our data across. In this case, the <code>glGenBuffers</code> function expects an array, which it will then fill with the IDs of the buffers we’ve requested. We make use of the facilities in <code>Foreign.Marshal.Array</code> to allocate a C-style array and then pull out the values at the end.</p>
-<p>We’ll start by setting up the vertex buffer. First we need to bind the buffer ID we just got to the <code>GL_ARRAY_BUFFER</code> target so that GL knows what we intend to do with it. Then we fill it with data. Finally, we bind 0 to <code>GL_ARRAY_BUFFER</code> to free it up.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ARRAY_BUFFER</span> vbo</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> vertices <span class="fu">=</span> vertexData cube</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">.</span> SV.unsafeWith (SV.convert vertices) <span class="fu">$</span> \vsPtr <span class="ot">→</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glBufferData <span class="dt">GL_ARRAY_BUFFER</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  (fromIntegral <span class="fu">$</span> sizeOf (V.head vertices) <span class="fu">*</span> V.length vertices)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  (castPtr vsPtr)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  <span class="dt">GL_STATIC_DRAW</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ARRAY_BUFFER</span> <span class="dv">0</span></code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>In order to get the data into C we convert our vertex vector into a <code>Data.Vector.Storable</code>, and then use <code>unsafeWith</code> to extract a pointer to the data. The function has <code>unsafe</code> in the name because it gives raw access to the underlying memory for the vector to C, which could do anything with it! All Haskell’s usual guarantees about immutability go out the window. However, in this case, we know that glBufferData won’t modify the data behind our backs, so we can use the function with confidence.</p>
-<p>Setting up the index buffer is similar, only this time the target is <code>GL_ELEMENT_ARRAY_BUFFER</code>.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span> ibo</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> indices <span class="fu">=</span> indexData cube</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">.</span> SV.unsafeWith (SV.convert indices) <span class="fu">$</span> \isPtr <span class="ot">→</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glBufferData <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  (fromIntegral <span class="fu">$</span> sizeOf (V.head indices) <span class="fu">*</span> V.length indices)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  (castPtr isPtr)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  <span class="dt">GL_STATIC_DRAW</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span> <span class="dv">0</span></code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Our buffer objects are now set up and loaded onto to the GPU ready to use. We’ll put them in the <em><code>Mesh</code></em> structure ready to be added to our <em><code>Resources</code></em>.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> glMesh <span class="fu">=</span> <span class="dt">Mesh</span> vbo ibo (fromIntegral <span class="fu">$</span> V.length indices)</code></pre></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Next let’s set up the texture. Here’s the texture we’re going to use; you can download it if you’re following along.</p>
+<p>First let’s set up the texture. Here’s the texture we’re going to use; you can download it if you’re following along.</p>
 <center>
 <img src="../../../../../posts/2015/03/12/getting-up-and-running-with-gl/haskell.png" title="The Haskell logo" />
 </center>
@@ -1369,7 +1534,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   textureID <span class="ot">←</span> liftIO <span class="fu">.</span> alloca <span class="fu">$</span> \texIDPtr <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   textureID <span class="ot">←</span> liftIO ∘ alloca <span class="fu">$</span> \texIDPtr <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glGenTextures <span class="dv">1</span> texIDPtr</code></pre></td>
@@ -1389,7 +1554,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> fillWith f <span class="fu">=</span> liftIO <span class="fu">.</span> alloca <span class="fu">$</span> liftM2 (≫) f peek</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> fillWith f <span class="fu">=</span> liftIO ∘ alloca <span class="fu">$</span> liftM2 (≫) f peek</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -1408,13 +1573,13 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> (w, h) <span class="fu">=</span> (fromIntegral texWidth, fromIntegral texHeight)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO <span class="fu">.</span> SV.unsafeWith texData <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO ∘ SV.unsafeWith texData <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glTexImage2D <span class="dt">GL_TEXTURE_2D</span> <span class="dv">0</span> <span class="dt">GL_RGBA</span> w h <span class="dv">0</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="dt">GL_RGBA</span> <span class="dt">GL_UNSIGNED_BYTE</span> <span class="fu">.</span> castPtr</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="dt">GL_RGBA</span> <span class="dt">GL_UNSIGNED_BYTE</span> ∘ castPtr</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glTexParameteri <span class="dt">GL_TEXTURE_2D</span></code></pre></td>
@@ -1443,7 +1608,10 @@
 </tbody>
 </table>
 </div>
-<p>Again, this is standard stuff, just as you’d find in any C tutorial.</p>
+<div class="sidenote">
+<p>Why is <code>unsafeWith</code> unsafe? Because it gives you a pointer to the underlying memory the <em><code>Vector</code></em> is pointing to. This is potentially unsafe because the C function you pass it to could hold onto this pointer and modify it at any time, breaking referential transparency. Stored pointers like this are also not tracked by the garbage collector, so if you hold onto it and try to use it after the original <em><code>Vector</code></em> has gone out of scope the garbage collector may already have cleaned it up.</p>
+<p>In this case, we know that <code>glTexImage2D</code> will upload the data to the GPU without modifying it, meaning that neither of these issues should concern us, so it is safe to use.</p>
+</div>
 <p>Next up are the shaders. The shader code itself is included at the end of this post; For now let’s just assume they are loaded into <code>vertexShader.glsl</code> and <code>fragmentShader.glsl</code> respectively.</p>
 <p>Loading and compiling the two shaders is basically identical, so let’s create a utility function to help us.</p>
 <div class="elastic-tabstops">
@@ -1490,7 +1658,7 @@
 </tbody>
 </table>
 </div>
-<p>After that we load the shader file and bind its contents to our new shader object. <code>glShaderSource</code> is looking for an array of C-style strings, or in other words a pointer to a pointer of <code>GLchar</code>, expressed in C as <code>const GLchar**</code>. This is where working at such a low level starts to get a bit fiddly in Haskell – you can certainly do it, but it’s definitely not as succinct as it would be in C.</p>
+<p>After that we load the shader file and bind its contents to our new shader object. <code>glShaderSource</code> is looking for an array of C-style strings, or in other words a pointer to a pointer of <em><code>GLchar</code></em>, expressed in C as <code>const GLchar**</code>. This is where working at such a low level starts to get a bit fiddly in Haskell – you can certainly do it, but it’s not quite as succinct as it would be in C.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1501,7 +1669,45 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         shaderCode <span class="ot">←</span> T.readFile filename</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         evalContT <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         T.withCStringLen shaderCode <span class="fu">$</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           \(str, len) <span class="ot">→</span> with str <span class="fu">$</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>             \strPtr <span class="ot">→</span> with (fromIntegral len) <span class="fu">$</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               \lenPtr <span class="ot">→</span> glShaderSource shaderID <span class="dv">1</span> strPtr lenPtr</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Compare the four lines starting <code>T.withCStringLen</code> with the C equivalent:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode c"><code class="sourceCode c">    glShaderSource(shaderID, <span class="dv">1</span>, &amp;shaderCode, NULL);</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Admittedly this isn’t an entirely fair comparison – it assumes <code>NULL</code>-terminated strings which we weren’t using in Haskell, and of course the file loading directly preceding it would have been more arduous in C. Still, the point stands that what is a simple operator in C (<code>&amp;</code>) requires a call to <code>with</code> and a lambda function in Haskell.</p>
+<div class="sidenote">
+<p>Fortunately, Haskell offers a number of techniques for abstracting some of this awkwardness. One of these is the <em><code>ContT</code></em> monad, which allows you to take a series of nested callback functions such as the one above and transform it into a monad, which can be expressed very readably using <code>do</code>-notation.</p>
+<p>Here’s how the above code looks using <em><code>ContT</code></em>:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">    evalContT <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -1512,15 +1718,15 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           (str, len) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">      (str, len) </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">←</span> <span class="dt">ContT</span> (T.withCStringLen shaderCode)</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           strPtr     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">      strPtr     </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">←</span> <span class="dt">ContT</span> (with str)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           lenPtr     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">      lenPtr     </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">←</span> <span class="dt">ContT</span> (with <span class="fu">$</span> fromIntegral len)</code></pre></td>
 </tr>
 </tbody>
@@ -1531,12 +1737,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           liftIO <span class="fu">$</span> glShaderSource shaderID <span class="dv">1</span> strPtr lenPtr</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">      liftIO <span class="fu">$</span> glShaderSource shaderID <span class="dv">1</span> strPtr lenPtr</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>If you’ve never used the <code>ContT</code> monad before, don’t worry – this was my first time using it too! It transforms a series of callback-based functions into a more readable monadic style. Here’s another way of writing the above which is equivalent:</p>
+<p>Given this, you could imagine that with a bit of effort and applicative notation, it might be possible to get something like,</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1544,21 +1750,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">T.withCStringLen shaderCode <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  \(str, len) <span class="ot">→</span> with str <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">    \strPtr <span class="ot">→</span> with (fromIntegral len) <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">      \lenPtr <span class="ot">→</span> glShaderSource shaderID <span class="dv">1</span> strPtr lenPtr</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">    glShaderSource shaderID <span class="dv">1</span> <span class="fu">&lt;$&gt;</span> str <span class="fu">&lt;*&gt;</span> len</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>This series of nested callbacks, as popularized by the JavaScript notion of “callback hell”, is kind of annoying to read. <code>ContT</code> just lets us express the same thing in a way that is a little easier to follow.</p>
+<p>which isn’t so far from the C after all!</p>
+</div>
 <p>Anyway, now that the shader’s loaded into memory, our utility function can compile it and check that compilation succeeded.</p>
 <div class="elastic-tabstops">
 <table>
@@ -1578,7 +1776,7 @@
 </tbody>
 </table>
 </div>
-<p>If compilation failed, we output the info log to tell us what happened. We have to do a little bit of marshalling between C and Haskell datatypes to access the log as a <code>Text</code> object for printing.</p>
+<p>If compilation failed, we output the info log to tell us what happened. We have to do a little bit of marshalling between C and Haskell datatypes to access the log as a <em><code>Text</code></em> object for printing.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1620,16 +1818,25 @@
 </table>
 <table>
 <colgroup>
+<col width="0%" />
+<col width="0%" />
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               T.putStr <span class="fu">=</span>≪ T.peekCStringLen (infoBuffer, infoLogLength')</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>               T.putStr <span class="fu">=</span>≪ </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">T.peekCStringLen (</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">infoBuffer,</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">infoLogLength')</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Anyway, now the information has been output we can return the ID of our compiled shader object if compilation was successful, or <code>Nothing</code> otherwise.</p>
+<p>Having done that, we can return the ID of our compiled shader object if compilation was successful, or <em><code>Nothing</code></em> otherwise.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1648,7 +1855,7 @@
 </tbody>
 </table>
 </div>
-<p>Our helper function complete, let’s use it to load the vertex and fragment shaders. We wrap the calls to <code>loadAndCompileShader</code> in <code>MaybeT</code> so that this function will drop out automatically if either of them fail.</p>
+<p>Our helper function complete, let’s use it to load the vertex and fragment shaders. We wrap the calls to <code>loadAndCompileShader</code> in <em><code>MaybeT</code></em> so that this function will drop out automatically if either of them fail.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1716,7 +1923,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   when (linkStatus <span class="fu">==</span> <span class="dt">GL_FALSE</span>) <span class="fu">.</span> <span class="dt">MaybeT</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   when (linkStatus <span class="fu">==</span> <span class="dt">GL_FALSE</span>) ∘ <span class="dt">MaybeT</span> <span class="fu">$</span> <span class="kw">do</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     infoLogLength <span class="ot">←</span> fillWith <span class="fu">$</span></code></pre></td>
@@ -1762,8 +1969,7 @@
 </tbody>
 </table>
 </div>
-<p>We now know that we have a valid, correctly linked program identified by <code>programID</code>. We can query this for the locations of its attributes and constants which we’ll use to set their values later.</p>
-<p>To ease the marshalling between Haskell and C I’m going to define a couple of helper functions here. The first, <code>unsign</code>, takes the C idiom of returning negative numbers on failure and converts it into the Haskell <code>Maybe</code> type.</p>
+<p>Having linked the shader program, we can through away the individual shader objects that went into it, which will make cleaning up later easier.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1771,18 +1977,16 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span><span class="ot"> unsign ::</span> <span class="dt">Integral</span> a <span class="ot">=&gt;</span> <span class="dt">GLint</span> <span class="ot">→</span> <span class="dt">Maybe</span> a</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glDeleteShader vs</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       unsign x <span class="fu">|</span> x <span class="fu">&lt;</span> <span class="dv">0</span>     <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                <span class="fu">|</span> otherwise <span class="fu">=</span> <span class="dt">Just</span> <span class="fu">$</span> fromIntegral x</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glDeleteShader fs</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The second helper function deals with marshalling strings to C. As we did before, we’ll make use of <code>ContT</code> to reduce our reliance on callback functions, but to make it easier to use we wrap that in the function <code>forString</code>. Since <code>Data.Text</code> doesn’t use <code>NULL</code> terminators by default we append that too. Finally we use <code>unsign</code> to determine success or failure and wrap the result in <em><code>MaybeT</code></em>.</p>
+<p>We now know that we have a valid, correctly linked program identified by <code>programID</code>. We can query this for the locations of its attributes and constants which we’ll use to set their values later.</p>
+<p>To ease the marshalling between Haskell and C I’m going to define a couple of helper functions here. The first, <code>unsign</code>, takes the C idiom of returning negative numbers on failure and converts it into the Haskell <em><code>Maybe</code></em> type.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1790,25 +1994,75 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span><span class="ot"> forString ::</span> <span class="dt">Integral</span> a</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span><span class="ot"> unsign ::</span> <span class="dt">Integral</span> a <span class="ot">⇒</span> <span class="dt">GLint</span> <span class="ot">→</span> <span class="dt">Maybe</span> a</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       unsign x </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">|</span> x <span class="fu">&lt;</span> <span class="dv">0</span>     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="dt">Nothing</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 <span class="ot">=&gt;</span> (<span class="dt">GLuint</span> <span class="ot">→</span> <span class="dt">Ptr</span> <span class="dt">GLchar</span> <span class="ot">→</span> <span class="dt">IO</span> <span class="dt">GLint</span>)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">|</span> otherwise </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="dt">Just</span> <span class="fu">$</span> fromIntegral x</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The second helper function deals with marshalling strings to C. I’m going to use <em><code>ContT</code></em> to reduce the reliance on callback functions. The <code>forString</code> function will take in a function expecting a program ID and a C string, along with a <em><code>Text</code></em> object with the actual string we want to use. It will transform this into an action wrapped in <em><code>ContT</code></em> and <em><code>MaybeT</code></em>, representing the fact that it is run as part of a sequence of callbacks, and of which might fail, in which case they should all fail. Since we’re always going to be querying the same shader program we’ll just refer to it directly in <code>fromString</code> so that we don’t have to pass it in every time. Finally we use <code>unsign</code> to return <em><code>Nothing</code></em> on failure.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> forString </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Integral</span> a</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">⇒</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">GLuint</span> <span class="ot">→</span> <span class="dt">Ptr</span> <span class="dt">GLchar</span> <span class="ot">→</span> <span class="dt">IO</span> <span class="dt">GLint</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 <span class="ot">→</span> <span class="dt">T.Text</span> <span class="ot">→</span> <span class="dt">MaybeT</span> (<span class="dt">ContT</span> r <span class="dt">IO</span>) a</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">T.Text</span> <span class="ot">→</span> <span class="dt">MaybeT</span> (<span class="dt">ContT</span> r <span class="dt">IO</span>) a</code></pre></td>
 </tr>
-<tr class="even">
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       f <span class="ot">`forString`</span> x <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
 </tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         (str, _) <span class="ot">←</span> lift <span class="fu">$</span></code></pre></td>
+</tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         (str, _) <span class="ot">←</span> lift <span class="fu">$</span> <span class="dt">ContT</span> (T.withCStringLen <span class="fu">$</span> T.concat [x, <span class="st">&quot;\0&quot;</span>])</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           <span class="dt">ContT</span> (T.withCStringLen <span class="fu">$</span> T.concat [x, <span class="st">&quot;\0&quot;</span>])</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         loc      <span class="ot">←</span> liftIO <span class="fu">$</span> f programID str</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         loc <span class="ot">←</span> liftIO <span class="fu">$</span> f programID str</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="dt">MaybeT</span> <span class="fu">.</span> return <span class="fu">$</span> unsign loc</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         <span class="dt">MaybeT</span> ∘ return <span class="fu">$</span> unsign loc</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -1821,55 +2075,399 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glShader <span class="ot">←</span> <span class="dt">MaybeT</span> <span class="fu">.</span> evalContT <span class="fu">.</span> runMaybeT <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glShader <span class="ot">←</span> <span class="dt">MaybeT</span> ∘ evalContT ∘ runMaybeT <span class="fu">$</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Shader</span> <span class="fu">&lt;$&gt;</span> pure programID</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Shader</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetAttribLocation  <span class="ot">`forString`</span> <span class="st">&quot;position&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;$&gt;</span> pure programID</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetAttribLocation  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;position&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetAttribLocation  <span class="ot">`forString`</span> <span class="st">&quot;colour&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetAttribLocation  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;colour&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetAttribLocation  <span class="ot">`forString`</span> <span class="st">&quot;normal&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetAttribLocation  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;normal&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetAttribLocation  <span class="ot">`forString`</span> <span class="st">&quot;uv&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetAttribLocation  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;uv&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;pvmMatrix&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;pvmMatrix&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;viewModelMatrix&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;viewModelMatrix&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;normalMatrix&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;normalMatrix&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;diffuseColour&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;diffuseColour&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;ambientColour&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;ambientColour&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;specularColour&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;specularColour&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;shininess&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;shininess&quot;</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;lightDirection&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;lightDirection&quot;</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>            <span class="fu">&lt;*&gt;</span> glGetUniformLocation <span class="ot">`forString`</span> <span class="st">&quot;diffuseMap&quot;</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="fu">&lt;*&gt;</span> glGetUniformLocation </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">`forString`</span> <span class="st">&quot;diffuseMap&quot;</span></code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sidenote">
-<p>Confession: I originally tried to define <code>forString</code> with the type <code>ContT r (MaybeT IO) GLuint</code> rather than the current <code>MaybeT (ContT r IO) GLuint</code>, but I couldn’t figure it out. Doing this would mean we could avoid unwrapping the <code>MaybeT</code> with <code>runMaybeT</code> and then wrapping it up again with <code>MaybeT</code> at the end, which would be a bit nicer.</p>
+<p>Confession: I originally tried to define <code>forString</code> with the type <em><code>ContT r (MaybeT IO) GLuint</code></em> rather than the current <em><code>MaybeT (ContT r IO) GLuint</code></em>, but I couldn’t figure it out. Doing this would mean we could avoid unwrapping the <em><code>MaybeT</code></em> with <code>runMaybeT</code> and then wrapping it up again with <em><code>MaybeT</code></em> at the end, which would be a bit nicer. It does rather change the meaning of what’s being expressed though, and I think for that reason it might be impossible.</p>
+</div>
+<p>Finally, here’s the mesh. We’ll initialise a <em><code>MeshSpec</code></em> describing a <span class="math">\(1\times1\times1\)</span> cube and convert that to <em><code>MeshData</code></em> using the functions described in the previous section. At that point we’ll have some raw data, such as might have been read in from a model file if we were drawing something more complicated than a cube.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> cube <span class="fu">=</span> fromMeshSpec <span class="fu">$</span> cuboid <span class="dv">1</span> <span class="dv">1</span> <span class="dv">1</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We need to create two buffer objects: our VBO and our IBO. We create buffer objects using <code>glGenBuffers</code>; this in turn will give as an ID for each buffer with which we can refer to it.</p>
+<p><code>glGenBuffers</code> takes an array and a length and fills the values in that array with that many buffers. We use the facilities in <em><code>Foreign.Marshal.Array</code></em> to allocate the array and pull out the values at the end.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   [vbo, ibo] <span class="ot">←</span> liftIO ∘ allocaArray <span class="dv">2</span> <span class="fu">$</span> \buffers <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glGenBuffers <span class="dv">2</span> buffers</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     peekArray <span class="dv">2</span> buffers</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We’ll start by setting up the vertex buffer. First we need to bind the buffer ID we just got to the <code>GL_ARRAY_BUFFER</code> target so that GL knows what we intend to do with it. Then we fill it with data. Finally, we bind 0 to <code>GL_ARRAY_BUFFER</code> to free it up.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ARRAY_BUFFER</span> vbo</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">vertices   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> vertexData cube</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">vertexBufSize </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> sizeOf (V.head vertices) <span class="fu">*</span> V.length vertices</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO ∘ SV.unsafeWith (SV.convert vertices) <span class="fu">$</span> \vsPtr <span class="ot">→</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glBufferData </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_ARRAY_BUFFER</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(fromIntegral vertexBufSize)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(castPtr vsPtr)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_STATIC_DRAW</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ARRAY_BUFFER</span> <span class="dv">0</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Again we use <code>unsafeWith</code> to get the data into C. We have to convert the vector into a <em>Storable</em> vector using <code>Data.Vector.Storable.convert</code> before we can do this.</p>
+<p>Setting up the index buffer is similar, only this time the target is <code>GL_ELEMENT_ARRAY_BUFFER</code>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span> ibo</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">indices   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> indexData cube</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">indexBufSize </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> sizeOf (V.head indices) <span class="fu">*</span> V.length indices</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   liftIO ∘ SV.unsafeWith (SV.convert indices) <span class="fu">$</span> \isPtr <span class="ot">→</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glBufferData </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_ELEMENT_ARRAY_BUFFER</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(fromIntegral indexBufSize)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(castPtr isPtr)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_STATIC_DRAW</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span> <span class="dv">0</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now that our buffer objects are set up for vertices and indices, we can wrap them up together in a <em>Vertex Array Object</em>. This collects the data together with properties about how it should be used. First we generate and bind the vertex array object, much as we did the vertex buffer objects earlier.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   vao <span class="ot">←</span> liftIO ∘ alloca <span class="fu">$</span> \vaoPtr <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glGenVertexArrays <span class="dv">1</span> vaoPtr</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     peek vaoPtr</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindVertexArray vao</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Next we bind the buffer objects we made for the vertex and index data to this new vertex array object.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ARRAY_BUFFER</span> vbo</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span> ibo</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We need to enable all four of the attributes our shader uses.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (positions glShader)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (colours glShader)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (normals glShader)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (uvs glShader)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>And finally, we fill in the attributes, which tells GL the actual layout of the data within the buffer. When talking about the layout, we’re mainly talking about two things: The <em>offset</em> and the <em>stride</em>. The offset tells us how far into the array that chunk of data begins, while the stride tells us the difference from the start of one set of values to the start of the next. Since we have all our data in one interleaved array, the stride will be the same for each kind of data: <code>11 * sizeof(GLfloat)</code>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">offset x</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> wordPtrToPtr <span class="fu">$</span> x <span class="fu">*</span> fromIntegral floatSize</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">stride    </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> fromIntegral floatSize <span class="fu">*</span> <span class="dv">11</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">floatSize </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> sizeOf (undefined<span class="ot">::</span><span class="dt">GLfloat</span>)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now we can set the values for each type using <code>glVertexAttribPointer</code>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer (positions glShader)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dv">3</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (offset <span class="dv">0</span>)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer (colours glShader)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dv">3</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (offset <span class="dv">3</span>)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer (normals glShader)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dv">3</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (offset <span class="dv">6</span>)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer (uvs glShader)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dv">2</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (offset <span class="dv">9</span>)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Our buffer objects are now set up and loaded onto to the GPU ready to use. The last thing to do is to put them in the <em><code>Mesh</code></em> structure ready to be added to our <em><code>Resources</code></em>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> glMesh <span class="fu">=</span> <span class="dt">Mesh</span> vbo ibo vao (fromIntegral <span class="fu">$</span> V.length indices)</code></pre></td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Now that we have everything we need, we call <code>initGL</code> and then return the <code>Resources</code>.</p>
 <div class="elastic-tabstops">
@@ -1947,7 +2545,7 @@
 </table>
 </div>
 <p><code>resize</code> takes the <code>IORef</code> we made to store the projection matrix, and the new width and height. It has two jobs: it needs to update the viewport, so that GL rendering can fill the window, and it needs to update the projection matrix, so that the aspect ratio doesn’t get ruined.</p>
-<p>Setting the viewport is simple – just pass the origin <code>(0, 0)</code>, and the full width and height of the window. Of course. if we only wanted to draw into a subset of the window that’s what we’d pass.</p>
+<p>Setting the viewport is simple – just pass the origin <code>(0, 0)</code>, and the full width and height of the window. Of course. if we only wanted to draw into a subset of the window that’s what we’d pass. The projection matrix is calculated using the same function we used in <code>main</code>: <code>calculateProjectionMatrix</code>. It is then written to the <code>IORef</code> so that we can access it from within our main loop.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1957,23 +2555,13 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glViewport <span class="dv">0</span> <span class="dv">0</span> (fromIntegral w) (fromIntegral h)</code></pre></td>
 </tr>
-</tbody>
-</table>
-</div>
-<p>To calculate the projection matrix we’ll make use of the <code>perspective</code> function from <code>linear</code>. <code>π/3</code> radians gives us a field of view of 60°.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
+<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   writeIORef projectionMatrix <span class="fu">$</span> calculateProjectionMatrix (w, h)</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>That projection matrix is written to the <code>IORef</code> so that we can access it from within our main loop.</p>
+<p>Here’s the <code>calculateProjectionMatrix</code> function itself. We use the <code>perspective</code> function from <code>linear</code> to do the work for us. <code>π/3</code> radians gives us a field of view of 60°.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1981,7 +2569,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; calculateProjectionMatrix ::</span> <span class="dt">Integral</span> a <span class="ot">=&gt;</span> (a, a) <span class="ot">→</span> <span class="dt">M44</span> <span class="dt">GLfloat</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; calculateProjectionMatrix ::</span> <span class="dt">Integral</span> a <span class="ot">⇒</span> (a, a) <span class="ot">→</span> <span class="dt">M44</span> <span class="dt">GLfloat</span></code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> calculateProjectionMatrix (w, h) <span class="fu">=</span></code></pre></td>
@@ -2122,24 +2710,55 @@
 </tbody>
 </table>
 </div>
-<h2 id="actually-drawing-things">Actually drawing things</h2>
+<h2 id="the-main-loop">The main loop</h2>
 <p>Our <code>runDemo</code> function will comprise the main loop for this demo. It takes the two <code>IORef</code>s we created at the start, a callback we can use to swap the framebuffers, and the <code>Resources</code> we just loaded. If the resources failed to load it just drops out straight away.</p>
 <div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> runDemo </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">::</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">IORef</span> <span class="dt">Bool</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">IORef</span> (<span class="dt">M44</span> <span class="dt">GLfloat</span>)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">IO</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Maybe</span> <span class="dt">Resources</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">→</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">IO</span> ()</code></pre></td>
+</tr>
+</tbody>
+</table>
 <table>
 <colgroup>
 <col width="100%" />
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; runDemo ::</span> <span class="dt">IORef</span> <span class="dt">Bool</span> <span class="ot">→</span> <span class="dt">IORef</span> (<span class="dt">M44</span> <span class="dt">GLfloat</span>) <span class="ot">→</span> <span class="dt">IO</span> () <span class="ot">→</span> <span class="dt">Maybe</span> <span class="dt">Resources</span> <span class="ot">→</span> <span class="dt">IO</span> ()</code></pre></td>
-</tr>
-<tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> runDemo _ _ _ <span class="dt">Nothing</span> <span class="fu">=</span> return ()</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Otherwise it runs <code>loop</code>, which runs the frame unless the value pointed to by <code>closed</code> is <code>True</code>.</p>
+<p>Otherwise it runs <code>loop</code>, which runs the frame unless the value pointed to by <code>closed</code> is <code>True</code>. When it <em>is</em> <code>True</code>, <code>loop</code> drops out and <code>cleanup</code> gets run.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -2149,16 +2768,36 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> runDemo closed projectionMatrix swapBuffers (<span class="dt">Just</span> res) <span class="fu">=</span></code></pre></td>
 </tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   loop defaultState <span class="kw">where</span></code></pre></td>
-</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   loop s <span class="fu">=</span> readIORef closed ≫<span class="fu">=</span> \isClosed <span class="ot">→</span> unless isClosed (runFrame s)</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">do</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">loop defaultState</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">cleanup res <span class="kw">where</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   loop s <span class="fu">=</span> readIORef closed ≫<span class="fu">=</span> \c <span class="ot">→</span> unless c (runFrame s)</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The frame is comprised of essentially two phases, the update and the draw phase. We pass the delta time value to the update, but not the draw. Finally we call <code>loop</code>, which checks <code>closed</code> and runs the next frame.</p>
+<p>The frame itself is comprised of essentially two phases, the update and the draw phase. We pass the delta time value to the update, but not the draw. Finally we call <code>loop</code>, which again checks <code>closed</code> and runs the next frame.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -2172,20 +2811,30 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     draw res s <span class="fu">=</span>≪ readIORef projectionMatrix</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     swapBuffers</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glFlush ≫ swapBuffers</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     GLFW.pollEvents</code></pre></td>
-</tr>
-<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     dt <span class="ot">←</span> getDeltaTime</code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     loop <span class="fu">$</span> update s dt</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="sidenote">
+<p>The order here might look a bit funny. The following is more usual:</p>
+<ol style="list-style-type: decimal">
+<li>Get delta time</li>
+<li>Run update</li>
+<li>Draw scene</li>
+<li>Swap buffers</li>
+<li>Loop</li>
+</ol>
+<p>However when you look at the function above, you’ll realise they’re equivalent. The reason I’ve done it this way is to avoid introducing a variable <code>s'</code> for the updated state, which is easy to make mistakes with (using <code>s</code> instead of <code>s'</code>), and makes the code just a little less clean.</p>
+</div>
+<h2 id="actually-drawing-things">Actually drawing things</h2>
+<p>At long last, we’re ready to implement the <code>draw</code> function, which actually renders the graphics to the screen. This function is actually surprisingly simple. A lot of the work in graphics programming goes into efficiently moving data between the CPU and the GPU – that and the shader code, of course. The actual rendering part is doing little more than passing constants to the shader to work with.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -2198,177 +2847,286 @@
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> draw res state projectionMatrix <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
 </tr>
+</tbody>
+</table>
+</div>
+<p>Note that we are taking the projection matrix directly here, rather than the <em><code>IORef</code></em>. We let the main loop deal with the fact that this might be modified in a callback – as far as the <code>draw</code> function is concerned, this is the projection matrix it is dealing with and it will not change – not during this frame, at least.</p>
+<p>We have the projection matrix, but there are a number of other matrices we’ll need to calculate. The <em>view matrix</em> offsets everything based on the position of the camera. The <em>model matrix</em> then applies the model transformations (in this case just rotation).</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="co">-- clear</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">viewMat <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glClear <span class="fu">$</span> <span class="dt">GL_COLOR_BUFFER_BIT</span> <span class="fu">.|.</span> <span class="dt">GL_DEPTH_BUFFER_BIT</span></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  lookAt (cameraPosition state) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span>)</code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">modelMat <span class="fu">=</span></code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="co">-- bind shader</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUseProgram <span class="fu">.</span> shaderProgram <span class="fu">$</span> shader res</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="co">-- bind mesh</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> fillWith f <span class="fu">=</span> liftIO <span class="fu">.</span> alloca <span class="fu">$</span> liftM2 (≫) f peek</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> floatSize <span class="fu">=</span> sizeOf (undefined<span class="ot">::</span><span class="dt">GLfloat</span>)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       stride    <span class="fu">=</span> fromIntegral floatSize <span class="fu">*</span> <span class="dv">11</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   vao <span class="ot">←</span> fillWith <span class="fu">$</span> glGenVertexArrays <span class="dv">1</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindVertexArray vao</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ARRAY_BUFFER</span> <span class="fu">.</span> meshVBO <span class="fu">$</span> mesh res</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (positions <span class="fu">$</span> shader res)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer     (positions <span class="fu">$</span> shader res) <span class="dv">3</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (wordPtrToPtr <span class="dv">0</span>)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (colours <span class="fu">$</span> shader res)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer     (colours <span class="fu">$</span> shader res) <span class="dv">3</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (wordPtrToPtr <span class="fu">$</span> <span class="dv">3</span> <span class="fu">*</span> fromIntegral floatSize)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (normals <span class="fu">$</span> shader res)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer     (normals <span class="fu">$</span> shader res) <span class="dv">3</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (wordPtrToPtr <span class="fu">$</span> <span class="dv">6</span> <span class="fu">*</span> fromIntegral floatSize)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glEnableVertexAttribArray (uvs <span class="fu">$</span> shader res)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glVertexAttribPointer     (uvs <span class="fu">$</span> shader res) <span class="dv">2</span> <span class="dt">GL_FLOAT</span> <span class="dt">GL_FALSE</span> stride (wordPtrToPtr <span class="fu">$</span> <span class="dv">9</span> <span class="fu">*</span> fromIntegral floatSize)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindBuffer <span class="dt">GL_ELEMENT_ARRAY_BUFFER</span> <span class="fu">.</span> meshIBO <span class="fu">$</span> mesh res</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="co">-- set uniforms</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">let</span> viewMat        <span class="fu">=</span> lookAt (cameraPosition state) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span>)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       modelMat       <span class="fu">=</span> mkTransformation (cubeRotation state) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       viewModelMat   <span class="fu">=</span> viewMat <span class="fu">!*!</span> modelMat</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       viewModelMat33 <span class="fu">=</span> viewModelMat <span class="fu">^.</span> _xyz <span class="fu">.</span> column _xyz</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       normalMat      <span class="fu">=</span> distribute <span class="fu">&lt;$&gt;</span> inv33 viewModelMat33</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       pvmMat         <span class="fu">=</span> projectionMatrix <span class="fu">!*!</span> viewModelMat</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">case</span> normalMat <span class="kw">of</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Nothing</span> <span class="ot">→</span> return ()</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="dt">Just</span> nm <span class="ot">→</span> <span class="kw">do</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       with pvmMat <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix4fv (pvmMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_TRUE</span> <span class="fu">.</span> castPtr</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       with viewModelMat <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix4fv (viewModelMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_TRUE</span> <span class="fu">.</span> castPtr</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       with nm <span class="fu">$</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         glUniformMatrix3fv (normalMatrix <span class="fu">$</span> shader res) <span class="dv">1</span> <span class="dt">GL_TRUE</span> <span class="fu">.</span> castPtr</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (diffuseColour <span class="fu">$</span> shader res) <span class="fl">0.6</span> <span class="fl">0.6</span> <span class="fl">0.6</span> <span class="dv">1</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (ambientColour <span class="fu">$</span> shader res) <span class="fl">0.1</span> <span class="fl">0.1</span> <span class="fl">0.1</span> <span class="dv">1</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform4f (specularColour <span class="fu">$</span> shader res) <span class="fl">0.7</span> <span class="fl">0.7</span> <span class="fl">0.7</span> <span class="dv">1</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform1f (shininess <span class="fu">$</span> shader res) <span class="fl">0.4</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="kw">let</span> (<span class="dt">V3</span> lx ly lz) <span class="fu">=</span> normalize <span class="fu">$</span> <span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform3f (lightDirection <span class="fu">$</span> shader res) lx ly lz</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glUniform1i (diffuseMap <span class="fu">$</span> shader res) <span class="dv">0</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="co">-- bind texture</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glActiveTexture <span class="dt">GL_TEXTURE0</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glBindTexture <span class="dt">GL_TEXTURE_2D</span> <span class="fu">$</span> texture res</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       <span class="co">-- draw!</span></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       glDrawElements <span class="dt">GL_TRIANGLES</span> (meshIndexCount <span class="fu">$</span> mesh res) <span class="dt">GL_UNSIGNED_INT</span> (wordPtrToPtr <span class="dv">0</span>)</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with vao <span class="fu">$</span> glDeleteVertexArrays <span class="dv">1</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glFlush</code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">  mkTransformation (cubeRotation state) (<span class="dt">V3</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span>)</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>It is convenient to precalculate the products of these matrices.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">viewModelMat </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> viewMat <span class="fu">!*!</span> modelMat</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">pvmMat       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> projectionMatrix <span class="fu">!*!</span> viewModelMat</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Finally the <em>normal matrix</em> is used to interpolate normals across faces. Since not all matrices have a valid inverse, I’ve chosen to fall back on the identity matrix in case <code>inv33</code> returns <em><code>Nothing</code></em>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">viewModelMat33 </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> viewModelMat <span class="fu">^.</span> _xyz <span class="fu">.</span> column _xyz</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">inverseMat     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> inv33 viewModelMat33</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">normalMat      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe eye3 distribute inverseMat</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now we have all the data we need, we can start sending it to GL. We start by clearing both the colour and the depth buffers.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glClear </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="fu">$</span>  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_COLOR_BUFFER_BIT</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">.|.</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_DEPTH_BUFFER_BIT</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Next, we bind the shader program, mesh, and texture ready for use. The texture is bound to texture unit 0, which will become important in a minute.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUseProgram ∘ shaderProgram <span class="fu">$</span> shader res</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindVertexArray ∘ meshVAO <span class="fu">$</span> mesh res</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glActiveTexture <span class="dt">GL_TEXTURE0</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glBindTexture <span class="dt">GL_TEXTURE_2D</span> <span class="fu">$</span> texture res</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We pass in the required uniforms to the shader. First the matrices, where the <em><code>Storable</code></em> instance for <em><code>M44</code></em> helps us a lot.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with pvmMat <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glUniformMatrix4fv </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(pvmMatrix <span class="fu">$</span> shader res)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span> <span class="dt">GL_TRUE</span> ∘ castPtr</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with viewModelMat <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glUniformMatrix4fv </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(viewModelMatrix <span class="fu">$</span> shader res)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span> <span class="dt">GL_TRUE</span> ∘ castPtr</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with normalMat <span class="fu">$</span></code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     glUniformMatrix3fv </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(normalMatrix <span class="fu">$</span> shader res)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                        </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span> <span class="dt">GL_TRUE</span> ∘ castPtr</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>And the light and texture data, which is simple. For the texture, the number passed is the index of the texture unit that texture is bound to; we specified <code>GL_TEXTURE0</code> a minute ago so we put <code>0</code> here.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUniform4f (diffuseColour <span class="fu">$</span> shader res)  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fl">0.6</span> <span class="fl">0.6</span> <span class="fl">0.6</span> <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUniform4f (ambientColour <span class="fu">$</span> shader res)  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fl">0.1</span> <span class="fl">0.1</span> <span class="fl">0.1</span> <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUniform4f (specularColour <span class="fu">$</span> shader res) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fl">0.7</span> <span class="fl">0.7</span> <span class="fl">0.7</span> <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUniform1f (shininess <span class="fu">$</span> shader res)      </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fl">0.4</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUniform3f (lightDirection <span class="fu">$</span> shader res) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glUniform1i (diffuseMap <span class="fu">$</span> shader res)     </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">0</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Finally, we’re ready to draw!</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glDrawElements </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_TRIANGLES</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(meshIndexCount <span class="fu">$</span> mesh res)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">GL_UNSIGNED_INT</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(wordPtrToPtr <span class="dv">0</span>)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>If you’ve got this far you should have a spinning cube on the screen! Pat yourself on the back; you’re ready to go.</p>
+<h2 id="resource-cleanup">Resource cleanup</h2>
+<p>OK, we’ve had our fun, now we need to clean up after oureselves. Actually, since we’re on our way out of the application we don’t as the OS will no doubt take care of it for us, but I’m going to anyway for the sake of completeness if nothing else.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; cleanup ::</span> <span class="dt">Resources</span> <span class="ot">→</span> <span class="dt">IO</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> cleanup (<span class="dt">Resources</span> m t s) <span class="fu">=</span> <span class="kw">do</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with (meshVAO m) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> glDeleteVertexArrays <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with (meshVBO m) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> glDeleteBuffers <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with (meshIBO m) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> glDeleteBuffers <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   with t           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> glDeleteTextures <span class="dv">1</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glDeleteProgram </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> shaderProgram s</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="final-thoughts">Final thoughts</h2>
 
 <div class="tagsinfo">Tagged with: <a href="../../../../../tags/haskell">haskell</a>, <a href="../../../../../tags/literate-programs">literate-programs</a></div>
 
