@@ -38,7 +38,7 @@
               <h2 class="subtitle">a pragmatic primer</h1>
             
 
-            <div class="info">12 March, 2015</div>
+            <div class="info">25 March, 2015</div>
 
 
 
@@ -64,7 +64,7 @@
 <li>It is not as complete at <a href="https://hackage.haskell.org/package/gl">gl</a> in terms of the number of extensions it supports.</li>
 <li>Because it is part of the Haskell Platform, fixes to the above issues can take a year to make their way into the library.</li>
 </ul>
-<p>For more information about the reasons behind the creation of the <a href="https://hackage.haskell.org/package/gl">gl</a> library, <a href="https://www.youtube.com/watch?v=yFXzuCFeRGM&amp;t=1h36m55s">this video</a> makes for interesting viewing.</p>
+<p>For more information about the reasons behind the creation of the <a href="https://hackage.haskell.org/package/gl">gl</a> package, <a href="https://www.youtube.com/watch?v=yFXzuCFeRGM&amp;t=1h36m55s">this video</a> makes for interesting viewing.</p>
 </div>
 <p>To me, though, the greatest advantage of the <a href="https://hackage.haskell.org/package/gl">gl</a> package is that <em>you can google it</em>. Because it is machine-generated from the actual OpenGL API, all the symbol names match, and you use them in the same way as you would in C. The <em>vast</em> majority of OpenGL tutorials on the internet are written in C or C++, so having a common vocabulary with them is immensely useful.</p>
 <h2 id="setting-up-the-project">Setting up the project</h2>
@@ -257,11 +257,11 @@
 </tr>
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">mkTransformation, (<span class="fu">!*!</span>), normalize,</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">mkTransformation, (<span class="fu">!*!</span>), inv33,</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">inv33, column, _xyz, negated, eye3)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">column, _xyz, negated, eye3)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -347,11 +347,6 @@
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Bits</span>           </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="fu">.|.</span>))</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Maybe</span>          </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(</code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">fromMaybe)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -3120,13 +3115,19 @@
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> glDeleteTextures <span class="dv">1</span></code></pre></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glDeleteProgram </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   glDeleteProgram  </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> shaderProgram s</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>The gist of this is pretty simple: for every <code>glCreate*</code> or <code>glGen*</code> function there is a <code>glDelete*</code> equivalent which we have to call.</p>
 <h2 id="final-thoughts">Final thoughts</h2>
+<p>Whew, well, that was a pretty long post! I hope that it will come in handy for anyone who, like me, wants to fiddle about with OpenGL in Haskell but doesn’t want to spend hours getting the basic pipeline up and running. Obviously you will want to build your own abstractions on top of this and presumably draw something more interesting than a rubbish cube. but at least with this as a starting point you’ll be able to build it up from a program that works.</p>
+<p>If you liked this post, please drop me a tweet <a href="http://twitter.com/danielpwright">@danielpwright</a>! If it’s popular, I might explore some other libraries in a similar way. Similarly, if you found anything lacking, please let me know.</p>
+<p>As I mentioned, this was also my first time using the <code>gl</code> library. Having played with it a bit now, I must say that I like it, despite the annoyance of having to marshal data into C manually. That marshalling of data is quite easy to abstract into something easier to use, and if it’s me doing the abstraction I can be sure it will be well-suited to my application.</p>
+<p>Apart from that, coming from a traditional games background (my day job is as a console games programmer in C++), even having garbage collection feels a bit… <em>free and easy</em>. Let alone all the other high-level constructs Haskell offers! Knowing that I’m dealing with raw GL bindings and being able to see exactly how data is marshalled between Haskell and C gives me a reassuring sense that, at least as far as my graphics pipeline is concerned, I am in control of my data. There’s nothing worse than getting a little way into something and then realising that something you hadn’t anticipated about the abstraction you’re working with prevents you from doing the thing you want to do.</p>
+<p>There is probably still a place for a package like <a href="https://hackage.haskell.org/package/OpenGL">OpenGL</a>. It is easier to get up and running with, particularly if you have no C or OpenGL experience. But I think, for my part, I will be using the <a href="https://hackage.haskell.org/package/gl">gl</a> package for any graphics projects I do from now on.</p>
 
 <div class="tagsinfo">Tagged with: <a href="../../../../../tags/haskell">haskell</a>, <a href="../../../../../tags/literate-programs">literate-programs</a></div>
 
