@@ -127,8 +127,33 @@
 <tr class="even">
 <td align="left"><pre class="cabal"><code>                    </code></pre></td>
 <td align="left"><pre class="cabal"><code>linear               </code></pre></td>
-<td align="left"><pre class="cabal"><code>== 1.17.1,</code></pre></td>
+<td align="left"><pre class="cabal"><code>== 1.18.0.1,</code></pre></td>
 </tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="cabal"><code>                        distributive         </code></pre></td>
+<td align="left"><pre class="cabal"><code>== 0.4.4,</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="cabal"><code>                        lens                 </code></pre></td>
+<td align="left"><pre class="cabal"><code>== 4.6.0.1,</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left"><pre class="cabal"><code>                    </code></pre></td>
 <td align="left"><pre class="cabal"><code>JuicyPixels          </code></pre></td>
@@ -148,19 +173,20 @@
 <p>This post is, by necessity, quite long. There is a lot that needs to be set up in order to get a spinning cube on the screen! This is basically how I’ve started every games/graphics project I’ve done in the last ten years, and <em>every time</em> I spend the majority of my time staring into the abyss of a bright pink window with nothing rendering in it, wondering which trivial step I’ve forgotten in my initial setup which is <strong>breaking everything</strong>. By collecting all the steps together in this one, massive blog post, I hope to save others (as well as my future self) from this pain.</p>
 <p>To help navigate, here’s a breakdown of what we’re going to be doing:</p>
 <ul>
-<li>Set up language pragmas / import the required modules</li>
-<li>Set up some handy error handling utilities</li>
-<li>Create a window and associate it with our GL context</li>
-<li>Define the mesh for our cube</li>
-<li>Load Resources:
+<li><a href="#preliminaries">Set up language pragmas / import the required modules</a></li>
+<li><a href="#error-handling-utilities">Set up some handy error handling utilities</a></li>
+<li><a href="#setting-up-the-window">Create a window and associate it with our GL context</a></li>
+<li><a href="#constructing-our-cube-mesh">Define the mesh for our cube</a></li>
+<li><a href="#resource-loading">Load Resources:</a>
 <ul>
-<li>Convert our mesh definition to GL buffer objects</li>
-<li>Load in the texture and upload it to the GPU</li>
-<li>Compile and link the shader, and retrieve its uniform and attribute locations</li>
+<li><a href="#load-texture">Load in the texture and upload it to the GPU</a></li>
+<li><a href="#load-shader">Compile and link the shader, and retrieve its uniform and attribute locations</a></li>
+<li><a href="#load-mesh">Convert our mesh definition to GL buffer objects</a></li>
 </ul></li>
-<li>Initialise OpenGL</li>
-<li>Update state every frame to rotate the cube</li>
-<li>Actually render the scene</li>
+<li><a href="#setting-up-gl">Initialise OpenGL</a></li>
+<li><a href="#handling-state">Update state every frame to rotate the cube</a></li>
+<li><a href="#actually-drawing-things">Actually render the scene</a></li>
+<li><a href="#resource-cleanup">Cleanup</a></li>
 </ul>
 <p>Let’s get started!</p>
 <h2 id="preliminaries">Preliminaries</h2>
@@ -260,7 +286,7 @@
 </tr>
 <tr class="even">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">column, _xyz, negated, eye3)</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">column, _xyz, negated, identity)</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -1480,6 +1506,9 @@
 <div class="sidenote">
 <p>For a more complex application, <em><code>EitherT</code></em>/<em><code>ErrorT</code></em> might be a better choice so that we can report <em>what</em> failed.</p>
 </div>
+<h3 id="load-texture">
+Loading the texture
+</h3>
 <p>First let’s set up the texture. Here’s the texture we’re going to use; you can download it if you’re following along.</p>
 <center>
 <img src="../../../../../posts/2015/03/12/getting-up-and-running-with-gl/haskell.png" title="The Haskell logo" />
@@ -1606,6 +1635,9 @@
 <p>Why is <code>unsafeWith</code> unsafe? Because it gives you a pointer to the underlying memory the <em><code>Vector</code></em> is pointing to. This is potentially unsafe because the C function you pass it to could hold onto this pointer and modify it at any time, breaking referential transparency. Stored pointers like this are also not tracked by the garbage collector, so if you hold onto it and try to use it after the original <em><code>Vector</code></em> has gone out of scope the garbage collector may already have cleaned it up.</p>
 <p>In this case, we know that <code>glTexImage2D</code> will upload the data to the GPU without modifying it, meaning that neither of these issues should concern us, so it is safe to use.</p>
 </div>
+<h3 id="load-shader">
+Loading the shaders
+</h3>
 <p>Next up are the shaders. The shader code itself is included <a href="#appendix-shader-code">at the end of this post</a>; For now let’s just assume they are loaded into <code>vertexShader.glsl</code> and <code>fragmentShader.glsl</code> respectively.</p>
 <p>Loading and compiling the two shaders is basically identical, so let’s create a utility function to help us.</p>
 <div class="elastic-tabstops">
@@ -2143,6 +2175,9 @@
 <div class="sidenote">
 <p>Confession: I originally tried to define <code>forString</code> with the type <em><code>ContT r (MaybeT IO) GLuint</code></em> rather than the current <em><code>MaybeT (ContT r IO) GLuint</code></em>, but I couldn’t figure it out. Doing this would mean we could avoid unwrapping the <em><code>MaybeT</code></em> with <code>runMaybeT</code> and then wrapping it up again with <em><code>MaybeT</code></em> at the end, which would be a bit nicer. It does rather change the meaning of what’s being expressed though, and I think for that reason it might be impossible.</p>
 </div>
+<h3 id="load-mesh">
+Loading the mesh
+</h3>
 <p>Finally, here’s the mesh. We’ll initialise a <em><code>MeshSpec</code></em> describing a <span class="math">\(1\times1\times1\)</span> cube and convert that to <em><code>MeshData</code></em> using the functions described in the previous section. At that point we’ll have some raw data, such as might have been read in from a model file if we were drawing something more complicated than a cube.</p>
 <div class="elastic-tabstops">
 <table>
@@ -2916,7 +2951,7 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>       </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">normalMat      </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe eye3 distribute inverseMat</code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe identity distribute inverseMat</code></pre></td>
 </tr>
 </tbody>
 </table>
