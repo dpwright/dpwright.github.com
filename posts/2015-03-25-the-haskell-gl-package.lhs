@@ -672,7 +672,7 @@ choice so that we can report *what* failed.
 First let's set up the texture.  Here's the texture we're going to use; you can
 download it if you're following along.
 
-<center>![](/posts/2015/03/12/getting-up-and-running-with-gl/haskell.png "The Haskell logo")</center>
+<center>![](/posts/2015/03/25/getting-up-and-running-with-gl/haskell.png "The Haskell logo")</center>
 
 Loading the data is very simple.  As it happens, I know that this image is an
 `ImageRGBA8`, so that's all I'm going to handle -- in reality you may need to
