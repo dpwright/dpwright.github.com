@@ -42,7 +42,6 @@
 
 
 
-<p><!-- TODO gfixler expressed interest in proofreading on IRC --></p>
 <p>This post demonstrates how to get to a useful, working foundation for an OpenGL application using the recent <a href="https://hackage.haskell.org/package/gl"><code>gl</code> package</a> with the minimum of fuss. By the end of the post, this is what we’ll have:</p>
 <center>
 <img src="../../../../../posts/2015/03/12/getting-up-and-running-with-gl/spinningCube.gif" title="A spinning cube" />
@@ -1405,7 +1404,7 @@
 </tbody>
 </table>
 </div>
-<p>This represents all the data we need to send to our shader. Not that contained within this structure are not the actual <em>values</em> (the positions, colours, matrices, etc), but the <em>location at which the values are stored</em> in the shader program. We’ll use these locations to set the values when we draw.</p>
+<p>This represents all the data we need to send to our shader. Note that contained within this structure are not the actual <em>values</em> (the positions, colours, matrices, etc), but the <em>location at which the values are stored</em> in the shader program. We’ll use these locations to set the values when we draw.</p>
 <p>Finally, there’s the texture, which is simple – just the ID GL uses to refer to the texture is enough.</p>
 <div class="elastic-tabstops">
 <table>
@@ -1607,7 +1606,7 @@
 <p>Why is <code>unsafeWith</code> unsafe? Because it gives you a pointer to the underlying memory the <em><code>Vector</code></em> is pointing to. This is potentially unsafe because the C function you pass it to could hold onto this pointer and modify it at any time, breaking referential transparency. Stored pointers like this are also not tracked by the garbage collector, so if you hold onto it and try to use it after the original <em><code>Vector</code></em> has gone out of scope the garbage collector may already have cleaned it up.</p>
 <p>In this case, we know that <code>glTexImage2D</code> will upload the data to the GPU without modifying it, meaning that neither of these issues should concern us, so it is safe to use.</p>
 </div>
-<p>Next up are the shaders. The shader code itself is included at the end of this post; For now let’s just assume they are loaded into <code>vertexShader.glsl</code> and <code>fragmentShader.glsl</code> respectively.</p>
+<p>Next up are the shaders. The shader code itself is included <a href="#appendix-shader-code">at the end of this post</a>; For now let’s just assume they are loaded into <code>vertexShader.glsl</code> and <code>fragmentShader.glsl</code> respectively.</p>
 <p>Loading and compiling the two shaders is basically identical, so let’s create a utility function to help us.</p>
 <div class="elastic-tabstops">
 <table>
@@ -2013,7 +2012,7 @@
 </tbody>
 </table>
 </div>
-<p>The second helper function deals with marshalling strings to C. I’m going to use <em><code>ContT</code></em> to reduce the reliance on callback functions. The <code>forString</code> function will take in a function expecting a program ID and a C string, along with a <em><code>Text</code></em> object with the actual string we want to use. It will transform this into an action wrapped in <em><code>ContT</code></em> and <em><code>MaybeT</code></em>, representing the fact that it is run as part of a sequence of callbacks, and of which might fail, in which case they should all fail. Since we’re always going to be querying the same shader program we’ll just refer to it directly in <code>fromString</code> so that we don’t have to pass it in every time. Finally we use <code>unsign</code> to return <em><code>Nothing</code></em> on failure.</p>
+<p>The second helper function deals with marshalling strings to C. I’m going to use <em><code>ContT</code></em> to reduce the reliance on callback functions. The <code>forString</code> function will take in a function expecting a program ID and a C string, along with a <em><code>Text</code></em> object with the actual string we want to use. It will transform this into an action wrapped in <em><code>ContT</code></em> and <em><code>MaybeT</code></em>, representing the fact that it is run as part of a sequence of callbacks, any of which might fail, in which case they should all fail. Since we’re always going to be querying the same shader program we’ll just refer to it directly in <code>fromString</code> so that we don’t have to pass it in every time. Finally we use <code>unsign</code> to return <em><code>Nothing</code></em> on failure.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -3126,8 +3125,231 @@
 <p>Whew, well, that was a pretty long post! I hope that it will come in handy for anyone who, like me, wants to fiddle about with OpenGL in Haskell but doesn’t want to spend hours getting the basic pipeline up and running. Obviously you will want to build your own abstractions on top of this and presumably draw something more interesting than a rubbish cube. but at least with this as a starting point you’ll be able to build it up from a program that works.</p>
 <p>If you liked this post, please drop me a tweet <a href="http://twitter.com/danielpwright">@danielpwright</a>! If it’s popular, I might explore some other libraries in a similar way. Similarly, if you found anything lacking, please let me know.</p>
 <p>As I mentioned, this was also my first time using the <code>gl</code> library. Having played with it a bit now, I must say that I like it, despite the annoyance of having to marshal data into C manually. That marshalling of data is quite easy to abstract into something easier to use, and if it’s me doing the abstraction I can be sure it will be well-suited to my application.</p>
-<p>Apart from that, coming from a traditional games background (my day job is as a console games programmer in C++), even having garbage collection feels a bit… <em>free and easy</em>. Let alone all the other high-level constructs Haskell offers! Knowing that I’m dealing with raw GL bindings and being able to see exactly how data is marshalled between Haskell and C gives me a reassuring sense that, at least as far as my graphics pipeline is concerned, I am in control of my data. There’s nothing worse than getting a little way into something and then realising that something you hadn’t anticipated about the abstraction you’re working with prevents you from doing the thing you want to do.</p>
+<p>Apart from that, coming from a traditional games background (my day job is as a console games programmer in C++), we tend to be quite obssessive over what our memory is doing. Even having garbage collection feels a bit… <em>free and easy</em>, let alone all the other high-level constructs Haskell offers! Knowing that I’m dealing with raw GL bindings and being able to see exactly how data is marshalled between Haskell and C gives me a reassuring sense that, at least as far as my graphics pipeline is concerned, I am in control of my data. There’s nothing worse than getting a little way into something and then realising that something you hadn’t anticipated about the abstraction you’re working with prevents you from doing the thing you want to do.</p>
 <p>There is probably still a place for a package like <a href="https://hackage.haskell.org/package/OpenGL">OpenGL</a>. It is easier to get up and running with, particularly if you have no C or OpenGL experience. But I think, for my part, I will be using the <a href="https://hackage.haskell.org/package/gl">gl</a> package for any graphics projects I do from now on.</p>
+<h2 id="appendix-shader-code">Appendix: shader code</h2>
+<p>Here is the code for the two shaders I use in this demo. They are cobbled together from a variety of tutorials on the internet, and aren’t really very useful for any sort of production use, given that they only allow for a single directional light, they assume coloured vertices and alpha-blended textures, and so on. The goal here wasn’t really to explore interesting shader code or graphics techniques, but rather to give an absolute baseline working environment in GL.</p>
+<p>So, I assume that once you have this up and running one of the first things you’ll want to do is throw away these shaders and replace them with something more useful, possibly by following one of the many tutorials on the internet for working with OpenGL in C/C++, since the code samples translate quite naturally when using the <code>gl</code> package.</p>
+<p>I include these two shaders, therefore, without comment.</p>
+<h3>
+vertexShader.glsl
+</h3>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> <span class="ot">#version 330</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">mat4</span> pvmMatrix;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">mat4</span> viewModelMatrix;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">mat3</span> normalMatrix;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec3</span> position;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec3</span> colour;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec3</span> normal;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec2</span> uv;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">out</span> <span class="dt">vec3</span> calculatedNormal;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">out</span> <span class="dt">vec4</span> calculatedEye;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">out</span> <span class="dt">vec4</span> rgba;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">out</span> <span class="dt">vec2</span> fragmentUV;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">void</span> <span class="fu">main</span> ()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">{</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">  <span class="dt">vec4</span> position4 = <span class="dt">vec4</span>(position, <span class="fl">1.0</span>);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">  <span class="fu">gl_Position</span> = pvmMatrix * position4;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">  calculatedNormal = <span class="fu">normalize</span>(normalMatrix * normal);</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">  calculatedEye = -(viewModelMatrix * position4);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">  rgba = <span class="dt">vec4</span>(colour, <span class="fl">1.0</span>);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">  fragmentUV = uv;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">}</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>
+fragmentShader.glsl
+</h3>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> <span class="ot">#version 330</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec4</span> diffuseColour;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec4</span> ambientColour;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec4</span> specularColour;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">float</span> shininess;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec3</span> lightDirection;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">sampler2D</span> diffuseMap;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec3</span> calculatedNormal;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec4</span> calculatedEye;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec4</span> rgba;</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">in</span> <span class="dt">vec2</span> fragmentUV;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">out</span> <span class="dt">vec4</span> colorOut;</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">void</span> <span class="fu">main</span>()</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">{</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec4</span> spec = <span class="dt">vec4</span>(<span class="fl">0.0</span>);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec3</span> n = <span class="fu">normalize</span>(calculatedNormal);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">float</span> intensity = <span class="fu">max</span>(<span class="fu">dot</span>(n,lightDirection), <span class="fl">0.0</span>);</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="kw">if</span> (intensity &gt; <span class="fl">0.0</span>)</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    {</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">vec3</span> e = <span class="fu">normalize</span>(<span class="dt">vec3</span>(calculatedEye));</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">vec3</span> h = <span class="fu">normalize</span>(lightDirection + e);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">float</span> intSpec = <span class="fu">max</span>(<span class="fu">dot</span>(h,n), <span class="fl">0.0</span>);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">        spec = specularColour * <span class="fu">pow</span>(intSpec,shininess);</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    }</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec4</span> texCol = <span class="fu">texture</span>(diffuseMap, fragmentUV);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec4</span> baseCol = <span class="fu">mix</span>(rgba, texCol, texCol.<span class="fu">a</span>);</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">    colorOut = baseCol * <span class="fu">max</span>(intensity * diffuseColour + spec, ambientColour);</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode glsl"><code class="sourceCode glsl">}</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
 
 <div class="tagsinfo">Tagged with: <a href="../../../../../tags/haskell">haskell</a>, <a href="../../../../../tags/literate-programs">literate-programs</a></div>
 
