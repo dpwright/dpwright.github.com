@@ -2157,6 +2157,7 @@ Loading the shaders
 </tbody>
 </table>
 </div>
+<p>It is important that the names of the attributes and uniforms above match those that are actually used in <a href="#appendix-shader-code">the shaders</a>, otherwise they won’t be found and we’ll drop out with <em><code>Nothing</code></em> here.</p>
 <div class="sidenote">
 <p>Confession: I originally tried to define <code>forString</code> with the type <em><code>ContT r (MaybeT IO) GLuint</code></em> rather than the current <em><code>MaybeT (ContT r IO) GLuint</code></em>, but I couldn’t figure it out. Doing this would mean we could avoid unwrapping the <em><code>MaybeT</code></em> with <code>runMaybeT</code> and then wrapping it up again with <em><code>MaybeT</code></em> at the end, which would be a bit nicer. It does rather change the meaning of what’s being expressed though, and I think for that reason it might be impossible.</p>
 </div>
