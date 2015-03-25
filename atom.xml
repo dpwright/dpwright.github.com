@@ -1957,7 +1957,7 @@ Loading the shaders
 </tbody>
 </table>
 </div>
-<p>Having linked the shader program, we can through away the individual shader objects that went into it, which will make cleaning up later easier.</p>
+<p>Having linked the shader program, we can throw away the individual shader objects that went into it, which will make cleaning up later easier.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
