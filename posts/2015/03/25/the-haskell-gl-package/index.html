@@ -78,7 +78,7 @@
 <td align="left"><pre class="cabal"><code>executable glTutorial</code></pre></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="cabal"><code>  main-is: 2015-03-12-getting-up-and-running-with-gl.lhs</code></pre></td>
+<td align="left"><pre class="cabal"><code>  main-is: 2015-03-25-the-haskell-gl-package.lhs</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -3147,7 +3147,7 @@ Loading the mesh
 <p>If you liked this post, please drop me a tweet <a href="http://twitter.com/danielpwright">@danielpwright</a>! If it’s popular, I might explore some other libraries in a similar way. Similarly, if you found anything lacking, please let me know.</p>
 <p>As I mentioned, this was also my first time using the <code>gl</code> library. Having played with it a bit now, I must say that I like it, despite the annoyance of having to marshal data into C manually. That marshalling of data is quite easy to abstract into something easier to use, and if it’s me doing the abstraction I can be sure it will be well-suited to my application.</p>
 <p>Apart from that, coming from a traditional games background (my day job is as a console games programmer in C++), we tend to be quite obssessive over what our memory is doing. Even having garbage collection feels a bit… <em>free and easy</em>, let alone all the other high-level constructs Haskell offers! Knowing that I’m dealing with raw GL bindings and being able to see exactly how data is marshalled between Haskell and C gives me a reassuring sense that, at least as far as my graphics pipeline is concerned, I am in control of my data. There’s nothing worse than getting a little way into something and then realising that something you hadn’t anticipated about the abstraction you’re working with prevents you from doing the thing you want to do.</p>
-<p>There is probably still a place for a package like <a href="https://hackage.haskell.org/package/OpenGL">OpenGL</a>. It is easier to get up and running with, particularly if you have no C or OpenGL experience. But I think, for my part, I will be using the <a href="https://hackage.haskell.org/package/gl">gl</a> package for any graphics projects I do from now on.</p>
+<p>There is probably still a place for a package like <a href="https://hackage.haskell.org/package/OpenGL">OpenGL</a>. The level of abstraction there feels much more natural for a Haskell library. But I think, for my part, I’d rather set the level of abstraction myself, so as to best match the needs of the project I’m working on, so I will be using the <a href="https://hackage.haskell.org/package/gl">gl</a> package for any graphics projects I do from now on.</p>
 <h2 id="appendix-shader-code">Appendix: shader code</h2>
 <p>Here is the code for the two shaders I use in this demo. They are cobbled together from a variety of tutorials on the internet, and aren’t really very useful for any sort of production use, given that they only allow for a single directional light, they assume coloured vertices and alpha-blended textures, and so on. The goal here wasn’t really to explore interesting shader code or graphics techniques, but rather to give an absolute baseline working environment in GL.</p>
 <p>So, I assume that once you have this up and running one of the first things you’ll want to do is throw away these shaders and replace them with something more useful, possibly by following one of the many tutorials on the internet for working with OpenGL in C/C++, since the code samples translate quite naturally when using the <code>gl</code> package.</p>
@@ -3372,7 +3372,7 @@ fragmentShader.glsl
 </table>
 </div>
 
-<div class="tagsinfo">Tagged with: <a href="../../../../../tags/haskell">haskell</a>, <a href="../../../../../tags/literate-programs">literate-programs</a></div>
+<div class="tagsinfo">Tagged with: <a href="../../../../../tags/haskell">haskell</a>, <a href="../../../../../tags/graphics">graphics</a>, <a href="../../../../../tags/gl">gl</a>, <a href="../../../../../tags/pragmatic-primers">pragmatic-primers</a>, <a href="../../../../../tags/literate-programs">literate-programs</a></div>
 
         </div>
         <div id="footer">
