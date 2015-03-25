@@ -21,7 +21,7 @@
 
 <p>This post demonstrates how to get to a useful, working foundation for an OpenGL application using the recent <a href="https://hackage.haskell.org/package/gl"><code>gl</code> package</a> with the minimum of fuss. By the end of the post, this is what we’ll have:</p>
 <center>
-<img src="/posts/2015/03/12/getting-up-and-running-with-gl/spinningCube.gif" title="A spinning cube" />
+<img src="/posts/2015/03/25/getting-up-and-running-with-gl/spinningCube.gif" title="A spinning cube" />
 </center>
 <p>Which is to say:</p>
 <ul>
@@ -31,10 +31,10 @@
 <li>A texture, alpha blended with the underlying colours.</li>
 <li>Some very simple animation (the cube spins).</li>
 </ul>
-<p>I have tended to find while trying to get set up with OpenGL that, while there are a lot of resources out there, I’ve often had to piece together various blog posts in order to get a working application that I can build off. This post aims to give you a solid jumping-off point to start on the interesting stuff straight away.</p>
+<p>I have tended to find while trying to get set up with OpenGL that, while there are a lot of resources out there, I’ve often had to piece together various blog posts in order to get a working application that I can build off. Many of these blog posts also make use of immediate mode, which may be quick and easy to learn, but is quite outdated and ultimately sets you down the wrong path if you want to learn modern OpenGL programming. This post aims to give you a solid jumping-off point to start on the interesting stuff straight away.</p>
 <p>As well as that, this post is an opportunity for me to try the <a href="https://hackage.haskell.org/package/gl">gl package</a>, introduced relatively recently by Edward Kmett and others. <code>gl</code> attempts to be a low-level but <em>complete</em> set of bindings to the OpenGL API – as opposed to the rather more longstanding <a href="https://hackage.haskell.org/package/OpenGL">OpenGL package</a>, which tries to be a bit more “Haskelly” but at the cost of certain missing parts of the OpenGL specification.</p>
 <div class="sidenote">
-<p><a href="https://hackage.haskell.org/package/OpenGL">OpenGL</a> is build on the <a href="https://hackage.haskell.org/package/OpenGLRaw">OpenGLRaw</a> package, which as the name implies is supposed to be a “raw” binding for OpenGL much as <a href="https://hackage.haskell.org/package/gl">gl</a> is. As I understand it, the problems with this package are as follows:</p>
+<p><a href="https://hackage.haskell.org/package/OpenGL">OpenGL</a> is built on the <a href="https://hackage.haskell.org/package/OpenGLRaw">OpenGLRaw</a> package, which as the name implies is supposed to be a “raw” binding for OpenGL much as <a href="https://hackage.haskell.org/package/gl">gl</a> is. As I understand it, the problems with this package are as follows:</p>
 <ul>
 <li>It doesn’t work well as an “escape hatch” for the higher-level OpenGL package because many of the abstractions don’t translate between the two libraries.</li>
 <li>It is not as complete at <a href="https://hackage.haskell.org/package/gl">gl</a> in terms of the number of extensions it supports.</li>
@@ -435,7 +435,7 @@
 </div>
 <h2 id="error-handling-utilities">Error-handling utilities</h2>
 <p>I don’t actually make use of these functions anywhere within this post, but you can bet I used them while I was writing it! Debugging graphical issues can be extremely frustrating as the GPU doesn’t have anything akin to a <code>printf</code>, and GL itself is basically a gigantic state machine where subtle mistakes can lead to strange errors down the line. Sometimes it can be useful to take a scattergun approach and just sprinkle error-checking facilities throughout your code in the hope of getting a clue as to what might be the problem. These functions help you do that.</p>
-<p>First, <code>getErrors</code> collects all the errors GL is currently reporting. Since GL allwos certain operations to be performed concurrently, it holds multiple error registers, and a single call to <code>glGetError</code> just gives you the value from one of them. Here, we keep calling it until there are no errors left, at which point we return all the available errors as a list.</p>
+<p>First, <code>getErrors</code> collects all the errors GL is currently reporting. Since GL allows certain operations to be performed concurrently, it holds multiple error registers, and a single call to <code>glGetError</code> just gives you the value from one of them. Here, we keep calling it until there are no errors left, at which point we return all the available errors as a list.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
