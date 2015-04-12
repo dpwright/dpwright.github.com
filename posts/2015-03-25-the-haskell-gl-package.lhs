@@ -19,13 +19,13 @@ Which is to say:
 - A texture, alpha blended with the underlying colours.
 - Some very simple animation (the cube spins).
 
-I have tended to find while trying to get set up with OpenGL that, while there
-are a lot of resources out there, I've often had to piece together various
-blog posts in order to get a working application that I can build off.  Many
-of these blog posts also make use of immediate mode, which may be quick and
-easy to learn, but is quite outdated and ultimately sets you down the wrong
-path if you want to learn modern OpenGL programming.  This post aims to give
-you a solid jumping-off point to start on the interesting stuff straight away.
+When trying to get set up with OpenGL, I've found that while there are a lot
+of resources out there, I've often had to piece together various blog posts in
+order to get a working application that I can build off.  Many of these blog
+posts also make use of immediate mode, which may be quick and easy to learn,
+but is quite outdated and ultimately sets you down the wrong path if you want
+to learn modern OpenGL programming.  This post aims to give you a solid
+jumping-off point to start on the interesting stuff straight away.
 
 As well as that, this post is an opportunity for me to try the [gl
 package][gl], introduced relatively recently by Edward Kmett and others.  `gl`
@@ -42,7 +42,7 @@ it, the problems with this package are as follows:
 - It doesn't work well as an "escape hatch" for the higher-level OpenGL
   package because many of the abstractions don't translate between the two
   libraries.
-- It is not as complete at [gl] in terms of the number of extensions it
+- It is not as complete as [gl] in terms of the number of extensions it
   supports.
 - Because it is part of the Haskell Platform, fixes to the above issues can
   take a year to make their way into the library.
@@ -275,7 +275,7 @@ instead.
 Note the `prefix` parameter, which just lets you put in a little string
 describing where in the code the error occurred.  Armed with this function,
 you can scatter error checks all over the place to help narrow down the
-problem.
+cause of a problem to specific regions of code.
 
 Setting up the window
 ---------------------
@@ -1295,7 +1295,7 @@ Whew, well, that was a pretty long post!  I hope that it will come in handy
 for anyone who, like me, wants to fiddle about with OpenGL in Haskell but
 doesn't want to spend hours getting the basic pipeline up and running.
 Obviously you will want to build your own abstractions on top of this and
-presumably draw something more interesting than a rubbish cube. but at least
+presumably draw something more interesting than a rubbish cube. But at least
 with this as a starting point you'll be able to build it up from a program
 that works.
 
@@ -1305,9 +1305,9 @@ you found anything lacking, please let me know.
 
 As I mentioned, this was also my first time using the `gl` library.  Having
 played with it a bit now, I must say that I like it, despite the annoyance of
-having to marshal data into C manually.  That marshalling of data is quite
-easy to abstract into something easier to use, and if it's me doing the
-abstraction I can be sure it will be well-suited to my application.
+having to marshal data into C manually.  This process is quite easy to
+abstract into something easier to use, and if it's me doing the abstraction I
+can be sure it will be well-suited to my application.
 
 Apart from that, coming from a traditional games background (my day job is as
 a console games programmer in C++), we tend to be quite obssessive over what
