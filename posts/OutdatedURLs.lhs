@@ -59,9 +59,9 @@ of the exercise!
 > outdatedURLs :: Tags → Rules ()
 > outdatedURLs tags =
 >   matchMetadata "posts/*" isOutdated ∘ version "outdated" $
->   do 	route   	$ 	metadataRoute dateAndTitle `composeRoutes`
->      	        	  	setExtension ".html"
->      	compile 	$ 	postCompiler tags
+>     do 	route   	$ 	metadataRoute dateAndTitle `composeRoutes`
+>        	        	  	setExtension ".html"
+>        	compile 	$ 	postCompiler tags
 >   where
 >     isOutdated 	= maybe False checkDate ∘ M.lookup "date"
 >     checkDate  	= (> 0) ∘ diffUTCTime cutoffDate ∘ readTime
