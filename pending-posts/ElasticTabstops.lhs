@@ -155,9 +155,8 @@ This can be represented in Haskell thus:
 
 > groupMaker :: String → [CodeGroup] → [CodeGroup]
 > groupMaker l = go $ countNumTabs l where
->   go n []              	            	= [(n, [l])]
->   go n (g@(n', ls):gs) 	| n == n'   	= (n, l:ls):gs
->                        	| otherwise 	= (n, [l]):g:gs
+>   go n ((n', ls):gs) 	| n == n' 	= (n, l:ls):gs
+>   go n gs            	          	= (n, [l]):gs
 
 There's quite a lot of list decomposition and restructuring going on in the
 above definition, but hopefully it should be clear enough what's going on.
