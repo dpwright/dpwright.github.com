@@ -261,7 +261,7 @@ entry point to this entire blog post is a pure function with type *`Pandoc`* `â†
 *`Pandoc`*.  No missiles being launched here!
 
 [generating-this-website]: http://www.dpwright.com/tags/generating%20this%20website
-[elastic-tabstops]: http://nickgravgaard.com/elastictabstops/
+[elastic-tabstops]: http://nickgravgaard.com/elastic-tabstops/
 [cm]: http://en.wikipedia.org/wiki/Computer_Modern
 [cr]: http://en.wikipedia.org/wiki/Concrete_Roman
 [cm-web-fonts]: http://checkmyworking.com/cm-web-fonts/
