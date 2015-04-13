@@ -138,18 +138,14 @@ It'll take the current line being processed, and the *`CodeGroups`* that have
 been identified so far, and return a new set of *`CodeGroups`* with the new
 line added appropriately.
 
-What does "added appropriately" mean in this case?  Well, there are three
+What does "added appropriately" mean in this case?  Well, there are two
 possibilities:
 
-- On the first line, no *`CodeGroups`* will have yet been identified, so we
-  always want to create a new *`CodeGroup`* with the number of tabs set to
-  however many tabs are in this line.
-- From that point on, we compare the number of tabs in the line with the
-  number of tabs in the most recently identified *`CodeGroup`* (that directly
-  *beneath* the current line -- remember we are working bottom-up).
-    - If they are the same, we simply add this line to that *`CodeGroup`*.
-    - Otherwise, we generate a new *`CodeGroup`* with the number of tabs set
-      to that of the current line.
+- *If* there is a group already in the list (we are not on the first line),
+  *and* the line under consideration has the same number of tabs as that group,
+  add the line to that group.
+- Otherwise, create a new group containing only that line, and cons it to the
+  list.
 
 This can be represented in Haskell thus:
 
@@ -157,9 +153,6 @@ This can be represented in Haskell thus:
 > groupMaker l = go $ countNumTabs l where
 >   go n ((n', ls):gs) 	| n == n' 	= (n, l:ls):gs
 >   go n gs            	          	= (n, [l]):gs
-
-There's quite a lot of list decomposition and restructuring going on in the
-above definition, but hopefully it should be clear enough what's going on.
 
 Generating the tables themselves
 --------------------------------
