@@ -154,10 +154,10 @@ possibilities:
 This can be represented in Haskell thus:
 
 > groupMaker :: String → [CodeGroup] → [CodeGroup]
-> groupMaker l []           	            	= [(countNumTabs l, [l])]
-> groupMaker l (g@(n, ls):gs) 	| lts == n  	= (n, l:ls):gs
->                           	| otherwise 	= (lts, [l]):g:gs
->   where lts = countNumTabs l
+> groupMaker l = go $ countNumTabs l where
+>   go lts []             	            	= [(lts, [l])]
+>   go lts (g@(n, ls):gs) 	| lts == n  	= (n, l:ls):gs
+>                        	| otherwise 	= (lts, [l]):g:gs
 
 There's quite a lot of list decomposition and restructuring going on in the
 above definition, but hopefully it should be clear enough what's going on.
