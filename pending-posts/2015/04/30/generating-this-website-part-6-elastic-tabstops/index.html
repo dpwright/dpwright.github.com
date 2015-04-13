@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=650" />
+        <title>Wright Access - Generating this website part 6: Elastic Tabstops</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-35158763-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../../../../../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            
+              <h1 class="title">Generating this website part 6: Elastic Tabstops</h1>
+            
+            
+
+            <div class="info">30 April, 2015</div>
+
+
+
+<div class="sidenote">
+<p>This is part six of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website">here</a></p>
+</div>
+<p>Over the New Year holidays this year I redesigned the site, incorporating a number of changes which (I hope) make it easier to read and nicer-looking to boot. These changes include:</p>
+<ul>
+<li>Removing most of the “link clutter” from the header, replacing it with just the title and a single <i class="fa fa-question-circle"></i> link, which takes you to an “about” page.</li>
+<li>Pulling in the margins, putting the body of the article in a single, narrower column, which is easier for the readers’ eyes to track.</li>
+<li>Changing the typefaces using a pair of fonts from Donald Knuth’s beautiful <span class="math">\(\LaTeX\)</span> typesetting system: <a href="http://en.wikipedia.org/wiki/Computer_Modern">Computer Modern</a> for the body and <a href="http://en.wikipedia.org/wiki/Concrete_Roman"><code>Concrete Roman</code></a> for preformatted/code blocks. The webfont versions of these fonts were downloaded from <a href="http://checkmyworking.com/cm-web-fonts/">this site</a>.</li>
+</ul>
+<p>The particularly perspicacious amongst you might have noticed an issue with this choice of typefaces, however. That is, <code>Concrete Roman</code> uses proportional spacing – it is <em>not</em> a monospaced font! And yet, all the code samples are aligned nicely. What dark magic is this?</p>
+<h2 id="elastic-tabstops">Elastic tabstops</h2>
+<p><a href="http://nickgravgaard.com/elastictabstops/">Elastic tabstops</a> were invented by Nick Gravgaard with the twin goals of ending the interminable tabs/spaces argument and allowing code to be lined up nicely even when using proportional fonts. The basic idea is simple – treat tabs not as a simple “jump to the next multiple of N” shortcut, but more as the delimiter of a table whose columns represent the layout you want your code to take. This animated GIF, taken from <a href="http://nickgravgaard.com/elastictabstops/">his website</a>, demonstrates the idea neatly:</p>
+<center>
+<img src="columnblocks_coloured.gif" title="Elastic tabstops demonstration" />
+</center>
+<p>Gravgaard had live editing in mind when he invented the concept, and has written plugins for a number of popular editors, however it applies just as well to static <em>display</em> of code, such as on a website. The implementation here simply does literally what the simple description of elastic tabstops says: it walks a Pandoc document looking for code blocks, and turns them into tables delimited by the tab.</p>
+<p>Incidentally, there is nothing Hakyll-specific about this implementation – it is a post-process transformation on the Pandoc document. So it should support any of Pandoc’s output formats, in case you want to do something similar with your next LaTeX paper!</p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>The standard opening:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE UnicodeSyntax #-}</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">ElasticTabstops</span> <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude.Unicode</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Note I didn’t need to import <em><code>Hakyll</code></em>. We don’t use it here; this is pure Pandoc. We do need that though:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Definition</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Text.Pandoc.Walk</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We’re also going to be doing some fiddling with lists, so we’ll import some utilities from <em><code>Data.List</code></em> and <em><code>Data.List.Split</code></em>.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List</span>       </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(delete)</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.List.Split</span> </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">(splitOn)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="code-overview">Code overview</h2>
+<p>We’re looking for a <em><code>Pandoc</code></em> <code>→</code> <em><code>Pandoc</code></em> transformation, which will walk through the tree and, if it finds a code block, “elasticate” it by transforming tabs into table columns. Seems simple enough:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; elasticTabstops ::</span> <span class="dt">Pandoc</span> <span class="ot">→</span> <span class="dt">Pandoc</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> elasticTabstops <span class="fu">=</span> walk <span class="fu">$</span> ifCodeBlock elasticate</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>walk</code> actually expects a function which takes a <em><code>Block</code></em> and returns the transformed <em><code>Block</code></em>, so we define <code>ifCodeBlock</code> to run our function if the block is a <em><code>CodeBlock</code></em>, and just return it unmodified otherwise.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; ifCodeBlock ::</span> (<span class="dt">Attr</span> <span class="ot">→</span> <span class="dt">String</span> <span class="ot">→</span> <span class="dt">Block</span>) <span class="ot">→</span> <span class="dt">Block</span> <span class="ot">→</span> <span class="dt">Block</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> ifCodeBlock f (<span class="dt">CodeBlock</span> a s) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> f a s</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> ifCodeBlock _ b               </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> b</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <code>elasticate</code> function, then, will take an <em><code>Attr</code></em> – the id, classes, and key-value pairs associated with a block – and a <em><code>String</code></em> representing the code itself, and return a new <em><code>Block</code></em>. We’ll wrap the generated “tables of code” in a <em><code>Div</code></em> with class <code>elastic-tabstops</code> in case we want to do any styling on it, or any further post-processing.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; elasticate ::</span> <span class="dt">Attr</span> <span class="ot">→</span> <span class="dt">String</span> <span class="ot">→</span> <span class="dt">Block</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> elasticate a s <span class="fu">=</span> <span class="dt">Div</span> ([], [<span class="st">&quot;elastic-tabstops&quot;</span>], []) <span class="fu">$</span> codeTables a s</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="grouping-the-code">Grouping the code</h2>
+<p>Why “tables of code”, plural? Because in order to line the code up sensibly, we actually need to split it up into groups, and generate a separate table for each group. To see what I mean, take another look at the GIF above. If that code was all in one table, as the purple column got longer, the cyan column length would get longer with it! This would push the innermost block (<code>if (isPrime(i))</code> etc.) way further to the right than it needs to be.</p>
+<p>To counteract this problem, we group the code based on the number of tabs in the line – consecutive lines containing the same number of tabs will be grouped together. We begin by defining a utility function to tell us the number of tabs in a line:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; countNumTabs ::</span> <span class="dt">String</span> <span class="ot">→</span> <span class="dt">Int</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> countNumTabs <span class="fu">=</span> length ∘ filter (<span class="fu">==</span> <span class="ch">'\t'</span>)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can consider a “group” to be a simple tuple containing the number of tabs in the lines in that group, and a list of the lines themselves:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">type</span> <span class="dt">CodeGroup</span> <span class="fu">=</span> (<span class="dt">Int</span>, [<span class="dt">String</span>])</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Our <code>group</code> function, then, is a simple fold over the lines in the code block, returning a list of these <em><code>CodeGroup</code></em>s.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; group ::</span> <span class="dt">String</span> <span class="ot">→</span> [<span class="dt">CodeGroup</span>]</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> group s <span class="fu">=</span> foldr groupMaker [] <span class="fu">$</span> lines s</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Given the definition of <code>foldr</code>, it is clear what the type of our <code>groupMaker</code> function needs to be. Because <code>foldr</code> associates to the right, you can consider it as if it’s working from the bottom of the code block upward. It’ll take the current line being processed, and the <em><code>CodeGroups</code></em> that have been identified so far, and return a new set of <em><code>CodeGroups</code></em> with the new line added appropriately.</p>
+<p>What does “added appropriately” mean in this case? Well, there are three possibilities:</p>
+<ul>
+<li>On the first line, no <em><code>CodeGroups</code></em> will have yet been identified, so we always want to create a new <em><code>CodeGroup</code></em> with the number of tabs set to however many tabs are in this line.</li>
+<li>From that point on, we compare the number of tabs in the line with the number of tabs in the most recently identified <em><code>CodeGroup</code></em> (that directly <em>beneath</em> the current line – remember we are working bottom-up).
+<ul>
+<li>If they are the same, we simply add this line to that <em><code>CodeGroup</code></em>.</li>
+<li>Otherwise, we generate a new <em><code>CodeGroup</code></em> with the number of tabs set to that of the current line.</li>
+</ul></li>
+</ul>
+<p>This can be represented in Haskell thus:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; groupMaker ::</span> <span class="dt">String</span> <span class="ot">→</span> [<span class="dt">CodeGroup</span>] <span class="ot">→</span> [<span class="dt">CodeGroup</span>]</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> groupMaker l []           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> [(countNumTabs l, [l])]</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> groupMaker l (g<span class="fu">@</span>(n, ls)<span class="fu">:</span>gs) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">|</span> lts <span class="fu">==</span> n  </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (n, l<span class="fu">:</span>ls)<span class="fu">:</span>gs</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                           </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">|</span> otherwise </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (lts, [l])<span class="fu">:</span>g<span class="fu">:</span>gs</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> lts <span class="fu">=</span> countNumTabs l</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>There’s quite a lot of list decomposition and restructuring going on in the above definition, but hopefully it should be clear enough what’s going on.</p>
+<h2 id="generating-the-tables-themselves">Generating the tables themselves</h2>
+<p>Now we have all we need to split the code into groups, we can use those to construct the tables themselves. Before we start, we’ll set up a couple of utilities which will help set up the table.</p>
+<p>Firstly, we want all columns to be left-aligned. We can do this by generating a list of <em><code>AlignLeft</code></em> of length one greater than the number of tabs. The tab character is the delimiter, so the number of columns will always be one greater than this.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; allLeft ::</span> <span class="dt">Int</span> <span class="ot">→</span> [<span class="dt">Alignment</span>]</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> allLeft n <span class="fu">=</span> replicate (n<span class="fu">+</span><span class="dv">1</span>) <span class="dt">AlignLeft</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Similarly, we need to specify the widths of the columns. We don’t need to be precise about this, and in fact it would be very complicated to try and work them out, and would require hard-coding the choice of typeface in here, which would be unfortunate. But we do need to specify <em>something</em>, otherwise the layout won’t be as predictable as we need it to be.</p>
+<p>The trick is that we always want the right-most column to fill any excess space. This will force other columns to be as narrow as they can be, while still fitting the contained code. We can represent this as follows:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; columnWidths ::</span> <span class="dt">Int</span> <span class="ot">→</span> [<span class="dt">Double</span>]</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> columnWidths n <span class="fu">=</span> replicate (n) <span class="dv">0</span> <span class="fu">++</span> [<span class="dv">1</span>]</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Where a value of <code>0</code> means 0% and <code>1</code> means 100%.</p>
+<p>Finally, we define <code>removeClass</code>, a utility to remove a certain class from a <em><code>Block</code></em>. Pandoc defines the <code>literate</code> class on Literate Haskell code blocks, which puts the leading <code>&gt;</code> at the beginning of lines – obviously we only want this in the first column of the table, so we need to remove <code>literate</code> from the attributes of subsequent columns.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; removeClass ::</span> <span class="dt">String</span> <span class="ot">→</span> <span class="dt">Attr</span> <span class="ot">→</span> <span class="dt">Attr</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> removeClass c (i, cs, kvs) <span class="fu">=</span> (i, delete c cs, kvs)</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We are now ready to generate the actual tables. We begin by splitting the code into groups and making a table for each of those groups.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; codeTables ::</span> <span class="dt">Attr</span> <span class="ot">→</span> <span class="dt">String</span> <span class="ot">→</span> [<span class="dt">Block</span>]</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> codeTables a <span class="fu">=</span> map (makeTable a) ∘ group</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>“Making a table” is itself a question of making a row for each line of code in the group, and wrapping that up in a Pandoc <em><code>Table</code></em> construct.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; makeTable ::</span> <span class="dt">Attr</span> <span class="ot">→</span> <span class="dt">CodeGroup</span> <span class="ot">→</span> <span class="dt">Block</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> makeTable a (n, g) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> constructTable <span class="fu">$</span> map makeRow g <span class="kw">where</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   constructTable   </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> <span class="dt">Table</span> [] (allLeft n) (columnWidths n) []</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>To make a row, then, we split the line up based on the tab delimiter, then wrap it in a <em><code>CodeBlock</code></em> constructor. <em><code>CodeBlock</code></em> expects a set of attributes, so we pass the attributes of the original <em><code>CodeBlock</code></em> unchanged in the first column, and then pass a version with the <code>literate</code> class removed for all other columns. Finally we wrap the whole thing in a list.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   makeRow </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> map (<span class="fu">:</span>[]) ∘ zipWith (<span class="fu">$</span>) codeRow ∘ splitOn <span class="st">&quot;\t&quot;</span></code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   codeRow </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> map <span class="dt">CodeBlock</span> <span class="fu">$</span> a<span class="fu">:</span>removeLiterates (repeat a)</code></pre></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   removeLiterates <span class="fu">=</span> map <span class="fu">$</span> removeClass <span class="st">&quot;literate&quot;</span></code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>And that’s it! Beautifully aligned code, using a proportional font.</p>
+<h2 id="epilogue">Epilogue</h2>
+<p>There are a couple of issues with using elastic tabstops on this website.</p>
+<p>Firstly, while Nick Gravgaard has written plugins for a number of editors, neither of the editors I use regularly (vim and emacs) are supported. This is for the very good reason that they <em>can’t</em> be – both of them use characters as their fundamental building block in terms of layout, so you can’t modify the layout by an arbitrary number of pixels.</p>
+<p>As a result, I use a monospaced font when editing the posts and insert the tabs as I think appropriate. To see how that will actually affect the layout, I have to open the page in the browser, which is somewhat inconvenient. As well as that, I have apparently-superfluous tabs all over my file!</p>
+<p>I have found that I get pretty good results by setting the tabstop length to 1, and making tabs visible. That way I can use spaces to align as usual, but use a tab as the last “space”. This way it will look good in my editor but also on the site, and I can also see what’s going on thanks to the visible tabs.</p>
+<p>Another issue is the way post previews come up in RSS feeds. The reader that I use, feedly, renders the tables representing my code quite badly – I end up with single-character columns with all the code written vertically! I think the solution to this is not to do the elastic tabstops transformation when generating the RSS feed, but I haven’t got around to this yet.</p>
+<p>All in all, though, I’m pleased with the way it looks – and it’s a testament both to Haskell and to Pandoc’s design that it was so easy to add as a post-process to my site. There’s something lovely about the fact that the entry point to this entire blog post is a pure function with type <em><code>Pandoc</code></em> <code>→</code> <em><code>Pandoc</code></em>. No missiles being launched here!</p>
+
+<div class="tagsinfo">Tagged with: <a href="../../../../../tags/hakyll">hakyll</a>, <a href="../../../../../tags/literate-programs">literate-programs</a>, <a href="../../../../../tags/generating%20this%20website">generating this website</a></div>
+
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../../../../../pages/about#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>
