@@ -225,14 +225,10 @@
 </table>
 </div>
 <p>Given the definition of <code>foldr</code>, it is clear what the type of our <code>groupMaker</code> function needs to be. Because <code>foldr</code> associates to the right, you can consider it as if it’s working from the bottom of the code block upward. It’ll take the current line being processed, and the <em><code>CodeGroups</code></em> that have been identified so far, and return a new set of <em><code>CodeGroups</code></em> with the new line added appropriately.</p>
-<p>What does “added appropriately” mean in this case? Well, there are three possibilities:</p>
+<p>What does “added appropriately” mean in this case? Well, there are two possibilities:</p>
 <ul>
-<li>On the first line, no <em><code>CodeGroups</code></em> will have yet been identified, so we always want to create a new <em><code>CodeGroup</code></em> with the number of tabs set to however many tabs are in this line.</li>
-<li>From that point on, we compare the number of tabs in the line with the number of tabs in the most recently identified <em><code>CodeGroup</code></em> (that directly <em>beneath</em> the current line – remember we are working bottom-up).
-<ul>
-<li>If they are the same, we simply add this line to that <em><code>CodeGroup</code></em>.</li>
-<li>Otherwise, we generate a new <em><code>CodeGroup</code></em> with the number of tabs set to that of the current line.</li>
-</ul></li>
+<li><em>If</em> there is a group already in the list (we are not on the first line), <em>and</em> the line under consideration has the same number of tabs as that group, add the line to that group.</li>
+<li>Otherwise, create a new group containing only that line, and cons it to the list.</li>
 </ul>
 <p>This can be represented in Haskell thus:</p>
 <div class="elastic-tabstops">
@@ -244,6 +240,9 @@
 <tr class="odd">
 <td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; groupMaker ::</span> <span class="dt">String</span> <span class="ot">→</span> [<span class="dt">CodeGroup</span>] <span class="ot">→</span> [<span class="dt">CodeGroup</span>]</code></pre></td>
 </tr>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> groupMaker l <span class="fu">=</span> go <span class="fu">$</span> countNumTabs l <span class="kw">where</span></code></pre></td>
+</tr>
 </tbody>
 </table>
 <table>
@@ -254,34 +253,18 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> groupMaker l []           </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">            </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> [(countNumTabs l, [l])]</code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> groupMaker l (g<span class="fu">@</span>(n, ls)<span class="fu">:</span>gs) </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">|</span> lts <span class="fu">==</span> n  </code></pre></td>
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   go n ((n', ls)<span class="fu">:</span>gs) </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">|</span> n <span class="fu">==</span> n' </code></pre></td>
 <td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (n, l<span class="fu">:</span>ls)<span class="fu">:</span>gs</code></pre></td>
 </tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                           </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">|</span> otherwise </code></pre></td>
-<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (lts, [l])<span class="fu">:</span>g<span class="fu">:</span>gs</code></pre></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> lts <span class="fu">=</span> countNumTabs l</code></pre></td>
+<tr class="even">
+<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   go n gs            </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell">          </code></pre></td>
+<td align="left"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (n, [l])<span class="fu">:</span>gs</code></pre></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>There’s quite a lot of list decomposition and restructuring going on in the above definition, but hopefully it should be clear enough what’s going on.</p>
 <h2 id="generating-the-tables-themselves">Generating the tables themselves</h2>
 <p>Now we have all we need to split the code into groups, we can use those to construct the tables themselves. Before we start, we’ll set up a couple of utilities which will help set up the table.</p>
 <p>Firstly, we want all columns to be left-aligned. We can do this by generating a list of <em><code>AlignLeft</code></em> of length one greater than the number of tabs. The tab character is the delimiter, so the number of columns will always be one greater than this.</p>
