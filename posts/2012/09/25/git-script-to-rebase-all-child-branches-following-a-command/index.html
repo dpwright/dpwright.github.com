@@ -50,37 +50,37 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">#!/usr/bin/ruby</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">#!/usr/bin/ruby</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co">#GistID: 3779324</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co">#GistID: 3779324</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">'escape'</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">'escape'</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">exit <span class="kw">if</span> <span class="dt">ARGV</span>.empty?</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">exit <span class="kw">if</span> <span class="dt">ARGV</span>.empty?</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">current_branch = <span class="st">`git symbolic-ref -q HEAD`</span>.sub(<span class="ot">/^refs\/heads\//</span>, <span class="st">&quot;&quot;</span>).strip</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">current_branch = <span class="st">`git symbolic-ref -q HEAD`</span>.sub(<span class="ot">/^refs\/heads\//</span>, <span class="st">&quot;&quot;</span>).strip</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">exit <span class="kw">if</span> current_branch.empty?</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">exit <span class="kw">if</span> current_branch.empty?</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> branch_output_to_array(output)</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> branch_output_to_array(output)</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -91,8 +91,8 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">output.gsub(<span class="ot">/^[ *]*/</span>, <span class="st">&quot;&quot;</span>).split(<span class="st">&quot;\n&quot;</span>).collect{ |e| e.strip }</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">output.gsub(<span class="ot">/^[ *]*/</span>, <span class="st">&quot;&quot;</span>).split(<span class="st">&quot;\n&quot;</span>).collect{ |e| e.strip }</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -102,19 +102,19 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">IGNORED_BRANCHES</span> = branch_output_to_array(<span class="st">`git branch --no-color -r`</span>) &lt;&lt; <span class="st">&quot;HEAD&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">IGNORED_BRANCHES</span> = branch_output_to_array(<span class="st">`git branch --no-color -r`</span>) &lt;&lt; <span class="st">&quot;HEAD&quot;</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> branches_on(commit)</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> branches_on(commit)</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -125,8 +125,8 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">ignored = <span class="dt">IGNORED_BRANCHES</span> &lt;&lt; commit</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">ignored = <span class="dt">IGNORED_BRANCHES</span> &lt;&lt; commit</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -136,43 +136,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">log = <span class="st">`git log --pretty=%d --simplify-by-decoration </span><span class="ot">#{</span>commit<span class="ot">}</span><span class="st"> | head -n 1`</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">branches = log.sub(<span class="ot">/^ \(([^)]+)\).*$/</span>, <span class="st">'\1'</span>).split(<span class="st">&quot;, &quot;</span>)</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">branches.collect{ |e| e.strip }.reject{ |b| ignored.include? b }</code></pre></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> children_of(branch)</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -183,12 +147,16 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">c = branch_output_to_array(<span class="st">`git branch --no-color --contains </span><span class="ot">#{</span>branch<span class="ot">}</span><span class="st">`</span>)</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">log = <span class="st">`git log --pretty=%d --simplify-by-decoration </span><span class="ot">#{</span>commit<span class="ot">}</span><span class="st"> | head -n 1`</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">c.reject!{ |b| b == branch }</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">branches = log.sub(<span class="ot">/^ \(([^)]+)\).*$/</span>, <span class="st">'\1'</span>).split(<span class="st">&quot;, &quot;</span>)</code></pre></div></td>
+</tr>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">branches.collect{ |e| e.strip }.reject{ |b| ignored.include? b }</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -198,7 +166,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
+</tr>
+<tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+</tr>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> children_of(branch)</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -209,12 +183,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">grandchildren = c.collect{|c| children_of c}.flatten</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">c = branch_output_to_array(<span class="st">`git branch --no-color --contains </span><span class="ot">#{</span>branch<span class="ot">}</span><span class="st">`</span>)</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">c.reject{ |b| grandchildren.include? b }</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">c.reject!{ |b| b == branch }</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -224,13 +198,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> branch_tree_from(branch)</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -241,12 +209,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">siblings = branches_on branch</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">grandchildren = c.collect{|c| children_of c}.flatten</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">children = children_of(branch).reject{|c| siblings.include? c}</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">c.reject{ |b| grandchildren.include? b }</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -256,7 +224,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
+</tr>
+<tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+</tr>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> branch_tree_from(branch)</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -267,12 +241,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">tail = siblings.collect{|s| [s]} + children.collect{|c| branch_tree_from(c)}</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">siblings = branches_on branch</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">tail.empty? ? [branch] : [branch, tail]</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">children = children_of(branch).reject{|c| siblings.include? c}</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -282,13 +256,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
-</tr>
-<tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> rebase_all_children(tree)</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -299,30 +267,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">parent = tree.shift</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">tail = siblings.collect{|s| [s]} + children.collect{|c| branch_tree_from(c)}</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">children = tree.shift</code></pre></td>
-</tr>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">children.map <span class="kw">do</span> |e|</code></pre></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">system <span class="st">&quot;git rebase </span><span class="ot">#{</span>parent<span class="ot">}</span><span class="st"> </span><span class="ot">#{</span>e.first<span class="ot">}</span><span class="st">&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">tail.empty? ? [branch] : [branch, tail]</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -332,7 +282,33 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
+</tr>
+<tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+</tr>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> rebase_all_children(tree)</code></pre></div></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">parent = tree.shift</code></pre></div></td>
+</tr>
+<tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">children = tree.shift</code></pre></div></td>
+</tr>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">children.map <span class="kw">do</span> |e|</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -344,9 +320,33 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">if</span> e.size &gt; <span class="dv">1</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">system <span class="st">&quot;git rebase </span><span class="ot">#{</span>parent<span class="ot">}</span><span class="st"> </span><span class="ot">#{</span>e.first<span class="ot">}</span><span class="st">&quot;</span></code></pre></div></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">if</span> e.size &gt; <span class="dv">1</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -359,10 +359,10 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">rebase_all_children e</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">rebase_all_children e</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -374,9 +374,9 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -387,8 +387,8 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -398,19 +398,19 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">initial_tree = branch_tree_from current_branch</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">initial_tree = branch_tree_from current_branch</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">if</span> system <span class="st">&quot;git </span><span class="ot">#{</span><span class="dt">Escape</span>.shell_command(<span class="dt">ARGV</span>)<span class="ot">}</span><span class="st">&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">if</span> system <span class="st">&quot;git </span><span class="ot">#{</span><span class="dt">Escape</span>.shell_command(<span class="dt">ARGV</span>)<span class="ot">}</span><span class="st">&quot;</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -421,12 +421,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">rebase_all_children initial_tree</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">rebase_all_children initial_tree</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">system <span class="st">&quot;git checkout </span><span class="ot">#{</span>current_branch<span class="ot">}</span><span class="st">&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">system <span class="st">&quot;git checkout </span><span class="ot">#{</span>current_branch<span class="ot">}</span><span class="st">&quot;</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -436,7 +436,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>

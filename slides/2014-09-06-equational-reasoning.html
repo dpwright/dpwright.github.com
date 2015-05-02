@@ -84,7 +84,7 @@
 <p>このスライド自体をコンパイルして実行できる！</p>
 <div class="incremental">
 <p>Haskellの基本関数を再定義するつもりなんで、とりあえず隠さないと</p>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude</span> <span class="kw">hiding</span> (sum, foldr, sequence_, replicate, take, repeat, (&gt;&gt;))</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude</span> <span class="kw">hiding</span> (sum, foldr, sequence_, replicate, take, repeat, (&gt;&gt;))</code></pre></div>
 </div>
 </div>
 <div id="等式推論" class="slide section level2 titlepage">
@@ -185,18 +185,18 @@ y  &amp;= 2
 <div id="簡単な例" class="slide section level2">
 <h1>簡単な例</h1>
 <p>Haskell Reportによると、<code>foldr</code>はこんな感じ</p>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> foldr f z []     <span class="fu">=</span> z
-<span class="ot">&gt;</span> foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f z xs)</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> foldr f z []     <span class="fu">=</span> z
+<span class="ot">&gt;</span> foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f z xs)</code></pre></div>
 <p><code>foldr (+) 0 [1, 2, 3, 4]</code> ≡ <code>1 + 2 + 3 + 4</code> を証明してみよ</p>
 
 </div>
 <div id="もっと一般的に" class="slide section level2">
 <h1>もっと一般的に</h1>
 <p><code>sum</code>と<code>foldr (+) 0</code>の等しさを証明しよう</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">foldr f z []     <span class="fu">=</span> z
-foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f z xs)</code></pre>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> sum []           <span class="fu">=</span> <span class="dv">0</span>
-<span class="ot">&gt;</span> sum (x<span class="fu">:</span>xs)       <span class="fu">=</span> x <span class="fu">+</span> sum xs</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">foldr f z []     <span class="fu">=</span> z
+foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f z xs)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> sum []           <span class="fu">=</span> <span class="dv">0</span>
+<span class="ot">&gt;</span> sum (x<span class="fu">:</span>xs)       <span class="fu">=</span> x <span class="fu">+</span> sum xs</code></pre></div>
 <div class="incremental">
 <p>やり方は帰納法証明みたいな感じになる</p>
 
@@ -205,36 +205,36 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f 
 <div id="もっともっと一般的に" class="slide section level2">
 <h1>もっともっと一般的に</h1>
 <p>リストは下記のように考えられる</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>] ≡ <span class="dv">1</span> <span class="fu">:</span> <span class="dv">2</span> <span class="fu">:</span> <span class="dv">3</span> <span class="fu">:</span> <span class="dv">4</span> <span class="fu">:</span> []</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>] ≡ <span class="dv">1</span> <span class="fu">:</span> <span class="dv">2</span> <span class="fu">:</span> <span class="dv">3</span> <span class="fu">:</span> <span class="dv">4</span> <span class="fu">:</span> []</code></pre></div>
 <ul class="incremental">
 <li><code>[]</code> は空リスト</li>
 <li><code>(:)</code> （コンズ）はリストの先頭に追加する関数</li>
 </ul>
 <div class="incremental">
 <p>実は<code>foldr</code>は、<code>(:)</code>に<code>f</code>と<code>[]</code>に<code>z</code>を交換するものだ！</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">foldr  f  z (<span class="dv">1</span><span class="fu">:</span><span class="dv">2</span><span class="fu">:</span><span class="dv">3</span><span class="fu">:</span><span class="dv">4</span><span class="fu">:</span>[])  <span class="fu">=</span> <span class="dv">1</span> <span class="ot">`f`</span> <span class="dv">2</span> <span class="ot">`f`</span> <span class="dv">3</span> <span class="ot">`f`</span> <span class="dv">4</span> <span class="ot">`f`</span> z
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">foldr  f  z (<span class="dv">1</span><span class="fu">:</span><span class="dv">2</span><span class="fu">:</span><span class="dv">3</span><span class="fu">:</span><span class="dv">4</span><span class="fu">:</span>[])  <span class="fu">=</span> <span class="dv">1</span> <span class="ot">`f`</span> <span class="dv">2</span> <span class="ot">`f`</span> <span class="dv">3</span> <span class="ot">`f`</span> <span class="dv">4</span> <span class="ot">`f`</span> z
 foldr (<span class="fu">+</span>) <span class="dv">0</span> (<span class="dv">1</span><span class="fu">:</span><span class="dv">2</span><span class="fu">:</span><span class="dv">3</span><span class="fu">:</span><span class="dv">4</span><span class="fu">:</span>[])  <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> <span class="dv">2</span> <span class="fu">+</span> <span class="dv">3</span> <span class="fu">+</span> <span class="dv">4</span> <span class="fu">+</span> <span class="dv">0</span>
 foldr (<span class="fu">*</span>) <span class="dv">1</span> (<span class="dv">1</span><span class="fu">:</span><span class="dv">2</span><span class="fu">:</span><span class="dv">3</span><span class="fu">:</span><span class="dv">4</span><span class="fu">:</span>[])  <span class="fu">=</span> <span class="dv">1</span> <span class="fu">*</span> <span class="dv">2</span> <span class="fu">*</span> <span class="dv">3</span> <span class="fu">*</span> <span class="dv">4</span> <span class="fu">*</span> <span class="dv">1</span>
 foldr (<span class="fu">:</span>) [] (<span class="dv">1</span><span class="fu">:</span><span class="dv">2</span><span class="fu">:</span><span class="dv">3</span><span class="fu">:</span><span class="dv">4</span><span class="fu">:</span>[]) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">:</span> <span class="dv">2</span> <span class="fu">:</span> <span class="dv">3</span> <span class="fu">:</span> <span class="dv">4</span> <span class="fu">:</span> []
-  <span class="co">-- ∴ foldr (:) [] ≡ id</span></code></pre>
+  <span class="co">-- ∴ foldr (:) [] ≡ id</span></code></pre></div>
 <p>証明は？</p>
 <p>証明は定義による</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">foldr f z []     <span class="fu">=</span> z                    <span class="co">-- `[]`と`z`の交換</span>
-foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="ot">`f`</span> (foldr f z xs) <span class="co">-- `(:)`と`f`の交換</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">foldr f z []     <span class="fu">=</span> z                    <span class="co">-- `[]`と`z`の交換</span>
+foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class="ot">`f`</span> (foldr f z xs) <span class="co">-- `(:)`と`f`の交換</span></code></pre></div>
 </div>
 </div>
 <div id="命令的なコードでも使える" class="slide section level2">
 <h1>命令的なコードでも使える</h1>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main <span class="fu">=</span> <span class="kw">do</span>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main <span class="fu">=</span> <span class="kw">do</span>
 <span class="ot">&gt;</span>   putStrLn <span class="st">&quot;What is your name?&quot;</span>
 <span class="ot">&gt;</span>   name <span class="ot">&lt;-</span> getLine
-<span class="ot">&gt;</span>   replicateM_ <span class="dv">3</span> <span class="fu">$</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre>
+<span class="ot">&gt;</span>   replicateM_ <span class="dv">3</span> <span class="fu">$</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre></div>
 <div class="incremental">
 <p>do記法から翻訳すると…</p>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main' <span class="fu">=</span>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main' <span class="fu">=</span>
 <span class="ot">&gt;</span>   putStrLn <span class="st">&quot;What is your name?&quot;</span> <span class="fu">&gt;&gt;</span>
 <span class="ot">&gt;</span>   getLine                       <span class="fu">&gt;&gt;=</span> \name <span class="ot">-&gt;</span>
-<span class="ot">&gt;</span>   replicateM_ <span class="dv">3</span> <span class="fu">$</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre>
+<span class="ot">&gt;</span>   replicateM_ <span class="dv">3</span> <span class="fu">$</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre></div>
 <p>出力は本当に３回出るか？</p>
 <p>（この例は <a href="http://www.haskellforall.com/2013/12/equational-reasoning.html" class="uri">http://www.haskellforall.com/2013/12/equational-reasoning.html</a> による）</p>
 </div>
@@ -249,57 +249,57 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class
 <li>Googleで“hackage <関数名>”を検索してみる</li>
 </ul>
 <div class="incremental">
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> replicateM_ n x <span class="fu">=</span> sequence_ (replicate n x)</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> replicateM_ n x <span class="fu">=</span> sequence_ (replicate n x)</code></pre></div>
 </div>
 </div>
 <div id="sequence_を調べると" class="slide section level2">
 <h1><code>sequence_</code>を調べると</h1>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> sequence_ ms <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) ms</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> sequence_ ms <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) ms</code></pre></div>
 <p><code>foldr</code>でたーー！</p>
 <div class="incremental">
 <p>置換してみよ</p>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> replicateM_' n x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (replicate n x)</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> replicateM_' n x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (replicate n x)</code></pre></div>
 <p><code>foldr</code>はもうよく分かっているので、<code>replicate</code>の方をみてみよう</p>
 </div>
 </div>
 <div id="replicateとは" class="slide section level2">
 <h1><code>replicate</code>とは</h1>
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> replicate n x          <span class="fu">=</span> take n (repeat x)</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> replicate n x          <span class="fu">=</span> take n (repeat x)</code></pre></div>
 <div class="incremental">
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> take n _      <span class="fu">|</span> n <span class="fu">&lt;=</span> <span class="dv">0</span> <span class="fu">=</span> []
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> take n _      <span class="fu">|</span> n <span class="fu">&lt;=</span> <span class="dv">0</span> <span class="fu">=</span> []
 <span class="ot">&gt;</span> take _ []              <span class="fu">=</span> []
-<span class="ot">&gt;</span> take n (x<span class="fu">:</span>xs)          <span class="fu">=</span> x <span class="fu">:</span> take (n<span class="fu">-</span><span class="dv">1</span>) xs</code></pre>
+<span class="ot">&gt;</span> take n (x<span class="fu">:</span>xs)          <span class="fu">=</span> x <span class="fu">:</span> take (n<span class="fu">-</span><span class="dv">1</span>) xs</code></pre></div>
 </div>
 <div class="incremental">
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> repeat x               <span class="fu">=</span> xs <span class="kw">where</span> xs <span class="fu">=</span> x<span class="fu">:</span>xs</code></pre>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> repeat x               <span class="fu">=</span> xs <span class="kw">where</span> xs <span class="fu">=</span> x<span class="fu">:</span>xs</code></pre></div>
 <p><code>n</code>の値を知らないと<code>take</code>の置換できないので、<code>3</code>を入れる</p>
 
 </div>
 </div>
 <div id="定義を広げる" class="slide section level2">
 <h1>定義を広げる</h1>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (replicate <span class="dv">3</span> x)
-replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (x <span class="fu">:</span> x <span class="fu">:</span> x <span class="fu">:</span> [])</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (replicate <span class="dv">3</span> x)
+replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (x <span class="fu">:</span> x <span class="fu">:</span> x <span class="fu">:</span> [])</code></pre></div>
 <ul class="incremental">
 <li><code>(:)</code>は、<code>(&gt;&gt;)</code>になる</li>
 <li><code>[]</code>は、<code>return ()</code>になる</li>
 </ul>
 <div class="incremental">
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> return ()</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> return ()</code></pre></div>
 </div>
 </div>
 <div id="xを置換する" class="slide section level2">
 <h1><code>x</code>を置換する</h1>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> return ()
-  <span class="kw">where</span> x <span class="fu">=</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> return ()
+  <span class="kw">where</span> x <span class="fu">=</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre></div>
 <div class="incremental">
-<pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main'' <span class="fu">=</span>
+<div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main'' <span class="fu">=</span>
 <span class="ot">&gt;</span>   putStrLn <span class="st">&quot;What is your name?&quot;</span> <span class="fu">&gt;&gt;</span>
 <span class="ot">&gt;</span>   getLine                       <span class="fu">&gt;&gt;=</span> \name <span class="ot">-&gt;</span>
 <span class="ot">&gt;</span>   putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)   <span class="fu">&gt;&gt;</span> 
 <span class="ot">&gt;</span>   putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)   <span class="fu">&gt;&gt;</span> 
 <span class="ot">&gt;</span>   putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)   <span class="fu">&gt;&gt;</span> 
-<span class="ot">&gt;</span>   return ()</code></pre>
+<span class="ot">&gt;</span>   return ()</code></pre></div>
 </div>
 <div class="incremental">
 <p>疲れた。</p>
@@ -327,23 +327,23 @@ a \times (b + c) &amp;= a \times b + a \times c \\
 <p><code>replicateM_</code> に似たような法則を証明できたら、 何の数字を入れても、方程式を「１」について書き直せる。</p>
 </div>
 <div class="incremental">
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> return ()                          <span class="co">-- 和</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> return ()                          <span class="co">-- 和</span>
 replicateM_ (m <span class="fu">+</span> n) x <span class="fu">=</span> replicateM_ m x <span class="fu">&gt;&gt;</span> replicateM_ n x
 replicateM_ <span class="dv">1</span>         <span class="fu">=</span> id                                 <span class="co">-- 積</span>
-replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicateM_ m <span class="fu">.</span> replicateM_ n</code></pre>
+replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicateM_ m <span class="fu">.</span> replicateM_ n</code></pre></div>
 </div>
 <div class="incremental">
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">3</span> x <span class="fu">=</span> replicateM_ (<span class="dv">1</span> <span class="fu">+</span> <span class="dv">1</span> <span class="fu">+</span> <span class="dv">1</span> <span class="fu">+</span> <span class="dv">0</span>) x
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">3</span> x <span class="fu">=</span> replicateM_ (<span class="dv">1</span> <span class="fu">+</span> <span class="dv">1</span> <span class="fu">+</span> <span class="dv">1</span> <span class="fu">+</span> <span class="dv">0</span>) x
                 <span class="fu">=</span> replicateM_ <span class="dv">1</span> x <span class="fu">&gt;&gt;</span> replicateM_ <span class="dv">1</span> x <span class="fu">&gt;&gt;</span> replicateM_ <span class="dv">1</span> x <span class="fu">&gt;&gt;</span> return ()
                 <span class="fu">=</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> return ()
-  <span class="kw">where</span> x <span class="fu">=</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre>
+  <span class="kw">where</span> x <span class="fu">=</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre></div>
 <p>どうやって証明する？</p>
 
 </div>
 </div>
 <div id="便利な法則を探す" class="slide section level2">
 <h1>便利な法則を探す</h1>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ n x <span class="fu">=</span> sequence_ (replicate n x)</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ n x <span class="fu">=</span> sequence_ (replicate n x)</code></pre></div>
 <p>この方程式を見ると、分配法則を証明する方法は明らかでない。</p>
 <p>ただ、プログラミング的に考えると当たり前でしょう。</p>
 <div class="incremental">
@@ -361,49 +361,49 @@ replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicat
 <h3>
 <code>replicate</code>の「分配法則」
 </h3>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicate <span class="dv">0</span>       x <span class="fu">=</span> []                             <span class="co">-- 和</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicate <span class="dv">0</span>       x <span class="fu">=</span> []                             <span class="co">-- 和</span>
 replicate (m <span class="fu">+</span> n) x <span class="fu">=</span> replicate m x <span class="fu">++</span> replicate n x
 replicate <span class="dv">1</span>         <span class="fu">=</span> return                         <span class="co">-- 積</span>
-replicate (m <span class="fu">*</span> n)   <span class="fu">=</span> replicate m <span class="fu">&lt;=&lt;</span> replicate n</code></pre>
+replicate (m <span class="fu">*</span> n)   <span class="fu">=</span> replicate m <span class="fu">&lt;=&lt;</span> replicate n</code></pre></div>
 
 <h3>
 <code>sequence_</code>の「順序化」
 </h3>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">sequence_ []          <span class="fu">=</span> return ()                    <span class="co">-- 連結　→　順序制御</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">sequence_ []          <span class="fu">=</span> return ()                    <span class="co">-- 連結　→　順序制御</span>
 sequence_ (xs <span class="fu">++</span> ys)  <span class="fu">=</span> sequence_ xs <span class="fu">&gt;&gt;</span> sequence_ ys
 sequence_ <span class="fu">.</span> return    <span class="fu">=</span> void <span class="fu">.</span> id                    <span class="co">-- リスト関数　→　普通関数</span>
-sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <span class="fu">=</span> (sequence_ <span class="fu">.</span> f) <span class="fu">.</span> (sequence_ <span class="fu">.</span> g)</code></pre>
+sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <span class="fu">=</span> (sequence_ <span class="fu">.</span> f) <span class="fu">.</span> (sequence_ <span class="fu">.</span> g)</code></pre></div>
 
 <h3>
 <code>replicateM_</code>の「分配法則」の証明
 </h3>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> sequence_ (replicate <span class="dv">0</span> x)
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> sequence_ (replicate <span class="dv">0</span> x)
                       <span class="fu">=</span> sequence_ []
                       <span class="fu">=</span> return ()
 
 replicateM_ (m <span class="fu">+</span> n) x <span class="fu">=</span> sequence_ (replicate (m <span class="fu">+</span> n) x)
                       <span class="fu">=</span> sequence_ (replicate m x <span class="fu">++</span> replicate n x)
                       <span class="fu">=</span> sequence_ (replicate m x) <span class="fu">&gt;&gt;</span> sequence_ (replicate n x)
-                      <span class="fu">=</span> replicateM_ m x <span class="fu">&gt;&gt;</span> replicateM_ n x</code></pre>
+                      <span class="fu">=</span> replicateM_ m x <span class="fu">&gt;&gt;</span> replicateM_ n x</code></pre></div>
 </div>
 </div>
 <div id="必要な証明が増えてきた" class="slide section level2">
 <h1>必要な証明が増えてきた　☹</h1>
 <p>この方程式は証明できた</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> return ()
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> return ()
 replicateM_ (m <span class="fu">+</span> n) x <span class="fu">=</span> replicateM_ m x <span class="fu">&gt;&gt;</span> replicateM_ n x
 replicateM_ <span class="dv">1</span>         <span class="fu">=</span> id
-replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicateM_ m <span class="fu">.</span> replicateM_ n</code></pre>
+replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicateM_ m <span class="fu">.</span> replicateM_ n</code></pre></div>
 <div class="incremental">
 <p>ただ、その証明をするため、下記の法則を使った</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">replicate <span class="dv">0</span>       x   <span class="fu">=</span> []
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicate <span class="dv">0</span>       x   <span class="fu">=</span> []
 replicate (m <span class="fu">+</span> n) x   <span class="fu">=</span> replicate m x <span class="fu">++</span> replicate n x
 replicate <span class="dv">1</span>           <span class="fu">=</span> return
 replicate (m <span class="fu">*</span> n)     <span class="fu">=</span> replicate m <span class="fu">&lt;=&lt;</span> replicate n
 sequence_ []          <span class="fu">=</span> return ()
 sequence_ (xs <span class="fu">++</span> ys)  <span class="fu">=</span> sequence_ xs <span class="fu">&gt;&gt;</span> sequence_ ys
 sequence_ <span class="fu">.</span> return    <span class="fu">=</span> void <span class="fu">.</span> id
-sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <span class="fu">=</span> (sequence_ <span class="fu">.</span> f) <span class="fu">.</span> (sequence_ <span class="fu">.</span> g)</code></pre>
+sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <span class="fu">=</span> (sequence_ <span class="fu">.</span> f) <span class="fu">.</span> (sequence_ <span class="fu">.</span> g)</code></pre></div>
 <p>これも証明しようと思ったら、逆に証明しないといけない方程式は２倍増えた！</p>
 
 

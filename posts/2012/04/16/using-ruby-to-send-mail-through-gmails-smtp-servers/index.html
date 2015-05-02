@@ -64,55 +64,55 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">#!/usr/bin/env ruby</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">#!/usr/bin/env ruby</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">'rubygems'</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">'rubygems'</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">'tlsmail'</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">'tlsmail'</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">msg=&lt;&lt;<span class="dt">EOF</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">msg=&lt;&lt;<span class="dt">EOF</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">From</span>: <span class="dt">Test</span> <span class="dt">Sender</span> &lt;sender<span class="ot">@domain</span>.com&gt;</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">From</span>: <span class="dt">Test</span> <span class="dt">Sender</span> &lt;sender<span class="ot">@domain</span>.com&gt;</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">To</span>: <span class="dt">Test</span> <span class="dt">Recipient</span> &lt;recipient<span class="ot">@domain</span>.com&gt;</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">To</span>: <span class="dt">Test</span> <span class="dt">Recipient</span> &lt;recipient<span class="ot">@domain</span>.com&gt;</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Subject</span>: test</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Subject</span>: test</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">This</span> is a test</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">This</span> is a test</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">EOF</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">EOF</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Net</span>::<span class="dt">SMTP</span>.enable_tls(<span class="dt">OpenSSL</span>::<span class="dt">SSL</span>::<span class="dt">VERIFY_NONE</span>)</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Net</span>::<span class="dt">SMTP</span>.enable_tls(<span class="dt">OpenSSL</span>::<span class="dt">SSL</span>::<span class="dt">VERIFY_NONE</span>)</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Net</span>::<span class="dt">SMTP</span>.start(<span class="st">'smtp.gmail.com'</span>, <span class="dv">587</span>, <span class="st">'domain.com'</span>, <span class="st">'sender@domain.com'</span>, <span class="st">'password'</span>, <span class="st">:login</span>) <span class="kw">do</span> |smtp|</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dt">Net</span>::<span class="dt">SMTP</span>.start(<span class="st">'smtp.gmail.com'</span>, <span class="dv">587</span>, <span class="st">'domain.com'</span>, <span class="st">'sender@domain.com'</span>, <span class="st">'password'</span>, <span class="st">:login</span>) <span class="kw">do</span> |smtp|</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby">        smtp.send_message msg, <span class="st">&quot;sender@domain.com&quot;</span>, <span class="st">&quot;recipient@domain.com&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">        smtp.send_message msg, <span class="st">&quot;sender@domain.com&quot;</span>, <span class="st">&quot;recipient@domain.com&quot;</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">end</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>

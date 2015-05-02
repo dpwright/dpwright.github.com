@@ -72,13 +72,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[alias]</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[alias]</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    remote-for-branch </span><span class="ot">=</span><span class="st"> &quot;!f() { git for-each-ref --format='%(upstream:short)' `for b in $@</span><span class="co">; do echo refs/heads/$b; done` | sed 's:/.*$::'; }; f&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    remote-for-branch </span><span class="ot">=</span><span class="st"> &quot;!f() { git for-each-ref --format='%(upstream:short)' `for b in $@</span><span class="co">; do echo refs/heads/$b; done` | sed 's:/.*$::'; }; f&quot;</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    sync </span><span class="ot">=</span><span class="st"> &quot;!f() { for b in $@</span><span class="co">; do git fetch `git remote-for-branch $b` $b:$b; done }; f&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">    sync </span><span class="ot">=</span><span class="st"> &quot;!f() { for b in $@</span><span class="co">; do git fetch `git remote-for-branch $b` $b:$b; done }; f&quot;</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>

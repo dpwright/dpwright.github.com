@@ -47,13 +47,13 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Crossposting</span> <span class="kw">where</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Crossposting</span> <span class="kw">where</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -65,10 +65,10 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Hakyll</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Hakyll</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -80,37 +80,37 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; getCrosspostHeader ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Identifier</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; getCrosspostHeader ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Identifier</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> getCrosspostHeader key n <span class="fu">=</span> getMetadata n <span class="fu">&gt;&gt;=</span> toHeader <span class="fu">.</span> M.lookup key</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> getCrosspostHeader key n <span class="fu">=</span> getMetadata n <span class="fu">&gt;&gt;=</span> toHeader <span class="fu">.</span> M.lookup key</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> loadHeader        <span class="fu">=</span> fmap itemBody <span class="fu">.</span> header</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> loadHeader        <span class="fu">=</span> fmap itemBody <span class="fu">.</span> header</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         toHeader          <span class="fu">=</span> maybe (return <span class="st">&quot;&quot;</span>) loadHeader</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         toHeader          <span class="fu">=</span> maybe (return <span class="st">&quot;&quot;</span>) loadHeader</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         header name       <span class="fu">=</span> makeItem <span class="st">&quot;&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         header name       <span class="fu">=</span> makeItem <span class="st">&quot;&quot;</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                         <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate (templatePath name) xpContext</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                         <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate (templatePath name) xpContext</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         templatePath name <span class="fu">=</span> fromFilePath <span class="fu">$</span> <span class="st">&quot;templates/xp/&quot;</span> <span class="fu">++</span> name <span class="fu">++</span> <span class="st">&quot;.html&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         templatePath name <span class="fu">=</span> fromFilePath <span class="fu">$</span> <span class="st">&quot;templates/xp/&quot;</span> <span class="fu">++</span> name <span class="fu">++</span> <span class="st">&quot;.html&quot;</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         xpContext         <span class="fu">=</span> defaultContext</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         xpContext         <span class="fu">=</span> defaultContext</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; crosspostField ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> a</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; crosspostField ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> a</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> crosspostField key <span class="fu">=</span> field key <span class="fu">$</span> getCrosspostHeader key <span class="fu">.</span> itemIdentifier</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> crosspostField key <span class="fu">=</span> field key <span class="fu">$</span> getCrosspostHeader key <span class="fu">.</span> itemIdentifier</code></pre></div></td>
 </tr>
 </tbody>
 </table>

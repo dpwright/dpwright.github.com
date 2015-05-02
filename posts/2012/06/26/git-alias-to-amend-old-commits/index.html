@@ -50,7 +50,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">amend-commit</span> = <span class="st">&quot;!f() { START=</span><span class="kw">`(git</span> symbolic-ref -q HEAD <span class="kw">||</span> <span class="kw">git</span> rev-parse HEAD<span class="kw">)</span> <span class="kw">|</span> <span class="kw">cut</span> -d<span class="st">&quot;/&quot;</span> -f 3<span class="kw">`</span><span class="st">; git checkout -q </span><span class="ot">$1</span><span class="st"> &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD </span><span class="ot">$1</span><span class="st"> </span><span class="ot">$START</span><span class="st">; }; f&quot;</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">amend-commit</span> = <span class="st">&quot;!f() { START=</span><span class="kw">`(git</span> symbolic-ref -q HEAD <span class="kw">||</span> <span class="kw">git</span> rev-parse HEAD<span class="kw">)</span> <span class="kw">|</span> <span class="kw">cut</span> -d<span class="st">&quot;/&quot;</span> -f 3<span class="kw">`</span><span class="st">; git checkout -q </span><span class="ot">$1</span><span class="st"> &amp;&amp; git commit --amend &amp;&amp; git rebase --onto HEAD </span><span class="ot">$1</span><span class="st"> </span><span class="ot">$START</span><span class="st">; }; f&quot;</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>

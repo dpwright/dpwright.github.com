@@ -53,16 +53,16 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep MY version when there is a conflict</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep MY version when there is a conflict</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Nothing to do: %A (the second parameter) already contains my version</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Nothing to do: %A (the second parameter) already contains my version</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Just indicate the merge has been successfully &quot;resolved&quot; with the exit status</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Just indicate the merge has been successfully &quot;resolved&quot; with the exit status</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">exit</span> 0</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">exit</span> 0</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -75,16 +75,16 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep THEIR version when there is a conflict</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># I want to keep THEIR version when there is a conflict</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Copy their version over ours and report success</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Copy their version over ours and report success</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cp</span> -f <span class="ot">$3</span> <span class="ot">$2</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cp</span> -f <span class="ot">$3</span> <span class="ot">$2</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">exit</span> 0</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">exit</span> 0</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -97,7 +97,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-mine&quot;]</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-mine&quot;]</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -108,12 +108,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">name </span><span class="ot">=</span><span class="st"> Always keep mine during merge</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">name </span><span class="ot">=</span><span class="st"> Always keep mine during merge</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">driver </span><span class="ot">=</span><span class="st"> git-merge-keep-mine.sh %O %A %B</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">driver </span><span class="ot">=</span><span class="st"> git-merge-keep-mine.sh %O %A %B</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -123,7 +123,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-theirs&quot;]</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="kw">[merge &quot;keep-theirs&quot;]</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -134,12 +134,12 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">name </span><span class="ot">=</span><span class="st"> Always keep theirs during merge</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">name </span><span class="ot">=</span><span class="st"> Always keep theirs during merge</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></td>
-<td align="left"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">driver </span><span class="ot">=</span><span class="st"> git-merge-keep-theirs.sh %O %A %B</span></code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">driver </span><span class="ot">=</span><span class="st"> git-merge-keep-theirs.sh %O %A %B</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -151,10 +151,10 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">*.exe</span> -crlf -diff merge=keep-mine</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">*.exe</span> -crlf -diff merge=keep-mine</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">*.tga</span> -crlf -diff merge=keep-mine</code></pre></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">*.tga</span> -crlf -diff merge=keep-mine</code></pre></div></td>
 </tr>
 </tbody>
 </table>
