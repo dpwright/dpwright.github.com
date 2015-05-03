@@ -15,6 +15,11 @@ body {
 p {
 }
 
+div .sourceCode {
+    padding: 0px;
+    margin: 0px;
+}
+
 code {
     font-family: "Computer Modern Concrete", monospace;
 }
