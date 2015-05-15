@@ -55,7 +55,7 @@
 <center>
 <img src="columnblocks_coloured.gif" title="Elastic tabstops demonstration" />
 </center>
-<p>Gravgaard had live editing in mind when he invented the concept, and has written plugins for a number of popular editors, however it applies just as well to static <em>display</em> of code, such as on a website. The implementation here simply does literally what the simple description of elastic tabstops says: it walks a Pandoc document looking for code blocks, and turns them into tables delimited by the tab.</p>
+<p>Gravgaard had live editing in mind when he invented the concept, and has written plugins for a number of popular editors, however it applies just as well to static <em>display</em> of code, such as on a website. The implementation here simply does literally what the description of elastic tabstops says: it walks a Pandoc document looking for code blocks, and turns them into tables delimited by the tab.</p>
 <p>Incidentally, there is nothing Hakyll-specific about this implementation – it is a post-process transformation on the Pandoc document. So it should support any of Pandoc’s output formats, in case you want to do something similar with your next LaTeX paper!</p>
 <h2 id="preliminaries">Preliminaries</h2>
 <p>The standard opening:</p>
@@ -396,7 +396,7 @@
 <p>There are a couple of issues with using elastic tabstops on this website.</p>
 <p>Firstly, while Nick Gravgaard has written plugins for a number of editors, neither of the editors I use regularly (vim and emacs) are supported. This is for the very good reason that they <em>can’t</em> be – both of them use characters as their fundamental building block in terms of layout, so you can’t modify the layout by an arbitrary number of pixels.</p>
 <p>As a result, I use a monospaced font when editing the posts and insert the tabs as I think appropriate. To see how that will actually affect the layout, I have to open the page in the browser, which is somewhat inconvenient. As well as that, I have apparently-superfluous tabs all over my file!</p>
-<p>I have found that I get pretty good results by setting the tabstop length to 1, and making tabs visible. That way I can use spaces to align as usual, but use a tab as the last “space”. This way it will look good in my editor but also on the site, and I can also see what’s going on thanks to the visible tabs.</p>
+<p>I have found that I get pretty good results by setting the tabstop length to 1, and making tabs visible. That way I can use spaces to align as usual, but use a tab as the last “space”. This looks good in my editor and also on the site, <em>and</em> I can see what’s going on thanks to the visible tabs.</p>
 <p>Another issue is the way post previews come up in RSS feeds. The reader that I use, feedly, renders the tables representing my code quite badly – I end up with single-character columns with all the code written vertically! I think the solution to this is not to do the elastic tabstops transformation when generating the RSS feed, but I haven’t got around to this yet.</p>
 <p>All in all, though, I’m pleased with the way it looks – and it’s a testament both to Haskell and to Pandoc’s design that it was so easy to add as a post-process to my site. There’s something lovely about the fact that the entry point to this entire blog post is a pure function with type <em><code>Pandoc</code></em> <code>→</code> <em><code>Pandoc</code></em>. No missiles being launched here!</p>
 
