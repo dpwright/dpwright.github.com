@@ -16,10 +16,10 @@ do that:
 
 Use it like this:
 
-```
+```bash
 # Get the version of README.md from commit 456e17b
 $ git get-file 456e17b README.md
-
+ 
 # Get the version of foo.cpp from the 'stable' branch
 $ git get-file stable path/to/foo.cpp
 ```
