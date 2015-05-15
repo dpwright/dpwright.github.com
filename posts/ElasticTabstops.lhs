@@ -44,9 +44,9 @@ website][elastic-tabstops], demonstrates the idea neatly:
 Gravgaard had live editing in mind when he invented the concept, and has
 written plugins for a number of popular editors, however it applies just as
 well to static *display* of code, such as on a website.  The implementation
-here simply does literally what the simple description of elastic tabstops
-says: it walks a Pandoc document looking for code blocks, and turns them into
-tables delimited by the tab.
+here simply does literally what the description of elastic tabstops says: it
+walks a Pandoc document looking for code blocks, and turns them into tables
+delimited by the tab.
 
 Incidentally, there is nothing Hakyll-specific about this implementation -- it
 is a post-process transformation on the Pandoc document.  So it should support
@@ -236,9 +236,8 @@ well as that, I have apparently-superfluous tabs all over my file!
 
 I have found that I get pretty good results by setting the tabstop length to
 1, and making tabs visible.  That way I can use spaces to align as usual, but
-use a tab as the last "space".  This way it will look good in my editor but
-also on the site, and I can also see what's going on thanks to the visible
-tabs.
+use a tab as the last "space".  This looks good in my editor and also on the
+site, *and* I can see what's going on thanks to the visible tabs.
 
 Another issue is the way post previews come up in RSS feeds.  The reader that
 I use, feedly, renders the tables representing my code quite badly -- I end up
