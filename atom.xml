@@ -95,7 +95,7 @@
 <ul>
 <li>Removing most of the “link clutter” from the header, replacing it with just the title and a single <i class="fa fa-question-circle"></i> link, which takes you to an “about” page.</li>
 <li>Pulling in the margins, putting the body of the article in a single, narrower column, which is easier for the readers’ eyes to track.</li>
-<li>Changing the typefaces using a pair of fonts from Donald Knuth’s beautiful <span class="math">\(\LaTeX\)</span> typesetting system: <a href="http://en.wikipedia.org/wiki/Computer_Modern">Computer Modern</a> for the body and <a href="http://en.wikipedia.org/wiki/Concrete_Roman"><code>Concrete Roman</code></a> for preformatted/code blocks. The webfont versions of these fonts were downloaded from <a href="http://checkmyworking.com/cm-web-fonts/">this site</a>.</li>
+<li>Changing the typefaces using a pair of fonts from Donald Knuth’s beautiful <span class="math inline">\(\LaTeX\)</span> typesetting system: <a href="http://en.wikipedia.org/wiki/Computer_Modern">Computer Modern</a> for the body and <a href="http://en.wikipedia.org/wiki/Concrete_Roman"><code>Concrete Roman</code></a> for preformatted/code blocks. The webfont versions of these fonts were downloaded from <a href="http://checkmyworking.com/cm-web-fonts/">this site</a>.</li>
 </ul>
 <p>The particularly perspicacious amongst you might have noticed an issue with this choice of typefaces, however. That is, <code>Concrete Roman</code> uses proportional spacing – it is <em>not</em> a monospaced font! And yet, all the code samples are aligned nicely. What dark magic is this?</p>
 <h2 id="elastic-tabstops">Elastic tabstops</h2>
@@ -1488,7 +1488,7 @@
 </tbody>
 </table>
 </div>
-<p>We’re going to be defining a lot of these values all at once. Unfortunately, this starts to look pretty ugly in Haskell because negative numbers have to be wrapped in brackets, so that the vector <span class="math">\((0, -1, 0)\)</span> is expressed <code>V3 0 (-1) 0</code>. To try and ease the pain here, let’s define an alternate constructor for <em><code>V3</code></em> values which takes a tuple instead of three parameters.</p>
+<p>We’re going to be defining a lot of these values all at once. Unfortunately, this starts to look pretty ugly in Haskell because negative numbers have to be wrapped in brackets, so that the vector <span class="math inline">\((0, -1, 0)\)</span> is expressed <code>V3 0 (-1) 0</code>. To try and ease the pain here, let’s define an alternate constructor for <em><code>V3</code></em> values which takes a tuple instead of three parameters.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1557,8 +1557,8 @@
 </tbody>
 </table>
 </div>
-<p>Each line here is a single face: The right, top, front, left, bottom and back faces respectively. I’m going to colour them so that the <span class="math">\((r, g, b)\)</span> values are mapped to the (normalised) <span class="math">\((x, y, z)\)</span> values. So the left, bottom, back point <span class="math">\((-l, -h, -d)\)</span> is black, the right, bottom, back point <span class="math">\((l, -h, -d)\)</span> is red, the right, top, front point <span class="math">\((l, h, d)\)</span> is white… and so forth. This can be done by saying that for a particular point <span class="math">\((x, y, z)\)</span> its RGB value can be calculated thus:</p>
-<p><span class="math">\[
+<p>Each line here is a single face: The right, top, front, left, bottom and back faces respectively. I’m going to colour them so that the <span class="math inline">\((r, g, b)\)</span> values are mapped to the (normalised) <span class="math inline">\((x, y, z)\)</span> values. So the left, bottom, back point <span class="math inline">\((-l, -h, -d)\)</span> is black, the right, bottom, back point <span class="math inline">\((l, -h, -d)\)</span> is red, the right, top, front point <span class="math inline">\((l, h, d)\)</span> is white… and so forth. This can be done by saying that for a particular point <span class="math inline">\((x, y, z)\)</span> its RGB value can be calculated thus:</p>
+<p><span class="math display">\[
 \left(\frac{x + l}{l&#39;}, \frac{y + h}{h&#39;}, \frac{z + d}{d&#39;}\right)
 \]</span></p>
 <p>This can be expressed quite succinctly in Haskell.</p>
@@ -1590,7 +1590,7 @@
 </tbody>
 </table>
 </div>
-<p>The texture co-ordinates for this shape are quite simple – they simply stretch from <span class="math">\((0, 0)\)</span> in the bottom-left corner to <span class="math">\((1, 1)\)</span> in the top-right. We want the same set of co-ordinates across each face, which again we can do using <code>replicate</code>.</p>
+<p>The texture co-ordinates for this shape are quite simple – they simply stretch from <span class="math inline">\((0, 0)\)</span> in the bottom-left corner to <span class="math inline">\((1, 1)\)</span> in the top-right. We want the same set of co-ordinates across each face, which again we can do using <code>replicate</code>.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -1606,7 +1606,7 @@
 </tbody>
 </table>
 </div>
-<p>Finally we set up the indices for our shape. The quads we defined in <code>positions</code> above follow a regular pattern: <span class="math">\((0, 1, 2, 3)\)</span>, <span class="math">\((4, 5, 6, 7)\)</span>… essentially we just make a 4-tuple of incrementing numbers from an offset of <span class="math">\(faceIndex \times 4\)</span>.</p>
+<p>Finally we set up the indices for our shape. The quads we defined in <code>positions</code> above follow a regular pattern: <span class="math inline">\((0, 1, 2, 3)\)</span>, <span class="math inline">\((4, 5, 6, 7)\)</span>… essentially we just make a 4-tuple of incrementing numbers from an offset of <span class="math inline">\(faceIndex \times 4\)</span>.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -2761,7 +2761,7 @@ Loading the shaders
 <h3 id="load-mesh">
 Loading the mesh
 </h3>
-<p>Finally, here’s the mesh. We’ll initialise a <em><code>MeshSpec</code></em> describing a <span class="math">\(1\times1\times1\)</span> cube and convert that to <em><code>MeshData</code></em> using the functions described in the previous section. At that point we’ll have some raw data, such as might have been read in from a model file if we were drawing something more complicated than a cube.</p>
+<p>Finally, here’s the mesh. We’ll initialise a <em><code>MeshSpec</code></em> describing a <span class="math inline">\(1\times1\times1\)</span> cube and convert that to <em><code>MeshData</code></em> using the functions described in the previous section. At that point we’ll have some raw data, such as might have been read in from a model file if we were drawing something more complicated than a cube.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -5244,7 +5244,7 @@ fragmentShader.glsl
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> nengajou fs photo <span class="fu">=</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">topImage θ photoShiftedRight <span class="st"># inViewport</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">topImage θ photoShiftedRight <span class="fu">#</span> inViewport</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></div></td>
@@ -5308,7 +5308,7 @@ fragmentShader.glsl
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     photoShiftedRight </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">photo <span class="st"># translateX 40</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">photo <span class="fu">#</span> translateX <span class="dv">40</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -5364,7 +5364,7 @@ fragmentShader.glsl
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   clippedPhoto </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> photo <span class="st"># clipBy (rect </span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> photo <span class="fu">#</span> clipBy (rect </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(centralTriangleBase <span class="fu">-</span> <span class="dv">2</span>)</code></pre></div></td>
 </tr>
 <tr class="even">
@@ -5536,7 +5536,7 @@ fragmentShader.glsl
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   centralTriangle   </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> outlineTriangle photoHeight <span class="st"># reflectY</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> outlineTriangle photoHeight <span class="fu">#</span> reflectY</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -6062,7 +6062,7 @@ fragmentShader.glsl
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="st"># pad 1.1 # bg black</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="fu">#</span> pad <span class="fl">1.1</span> <span class="fu">#</span> bg black</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -6498,7 +6498,7 @@ fragmentShader.glsl
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> nengajou fs photo <span class="fu">=</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">topImage θ photoShiftedRight <span class="st"># inViewport</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">topImage θ photoShiftedRight <span class="fu">#</span> inViewport</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></div></td>
@@ -6562,7 +6562,7 @@ fragmentShader.glsl
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     photoShiftedRight </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">photo <span class="st"># translateX 40</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">photo <span class="fu">#</span> translateX <span class="dv">40</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -6618,7 +6618,7 @@ fragmentShader.glsl
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   clippedPhoto </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> photo <span class="st"># clipBy (rect </span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> photo <span class="fu">#</span> clipBy (rect </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(centralTriangleBase <span class="fu">-</span> <span class="dv">2</span>)</code></pre></div></td>
 </tr>
 <tr class="even">
@@ -6790,7 +6790,7 @@ fragmentShader.glsl
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   centralTriangle   </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> outlineTriangle photoHeight <span class="st"># reflectY</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> outlineTriangle photoHeight <span class="fu">#</span> reflectY</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -7316,7 +7316,7 @@ fragmentShader.glsl
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="st"># pad 1.1 # bg black</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="fu">#</span> pad <span class="fl">1.1</span> <span class="fu">#</span> bg black</code></pre></div></td>
 </tr>
 </tbody>
 </table>

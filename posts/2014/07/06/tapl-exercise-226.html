@@ -41,33 +41,33 @@
 
 
 <blockquote>
-<p>Suppose we are given a relation <span class="math">\(R\)</span> on a set <span class="math">\(S\)</span>. Define the relation <span class="math">\(R^{\prime}\)</span> as follows:</p>
-<p><span class="math">\[
+<p>Suppose we are given a relation <span class="math inline">\(R\)</span> on a set <span class="math inline">\(S\)</span>. Define the relation <span class="math inline">\(R^{\prime}\)</span> as follows:</p>
+<p><span class="math display">\[
 R^{\prime} = R \cup \left\{ (s, s) | s \in S \right\}
 \]</span></p>
-<p>That is, <span class="math">\(R^{\prime}\)</span> contains all the pairs in <span class="math">\(R\)</span> plus all pairs of the form <span class="math">\((s, s)\)</span>. Show that <span class="math">\(R^{\prime}\)</span> is the reflexive closure of <span class="math">\(R\)</span>.</p>
+<p>That is, <span class="math inline">\(R^{\prime}\)</span> contains all the pairs in <span class="math inline">\(R\)</span> plus all pairs of the form <span class="math inline">\((s, s)\)</span>. Show that <span class="math inline">\(R^{\prime}\)</span> is the reflexive closure of <span class="math inline">\(R\)</span>.</p>
 </blockquote>
-<p>The reflexive closure is defined as the smallest reflexive relation that contains <span class="math">\(R\)</span>. So I need to prove:</p>
+<p>The reflexive closure is defined as the smallest reflexive relation that contains <span class="math inline">\(R\)</span>. So I need to prove:</p>
 <ol style="list-style-type: decimal">
-<li>That the relation <span class="math">\(R^{\prime}\)</span> contains <span class="math">\(R\)</span>;</li>
+<li>That the relation <span class="math inline">\(R^{\prime}\)</span> contains <span class="math inline">\(R\)</span>;</li>
 <li>That it is reflexive;</li>
 <li>That it is the smallest relation satisfying the above two properties.</li>
 </ol>
-<p>The first property is given in the definition of <span class="math">\(R^{\prime}\)</span>; <span class="math">\(R^{\prime}\)</span> is formed by the union of <span class="math">\(R\)</span> and some other relation, so it must contain <span class="math">\(R\)</span>.</p>
+<p>The first property is given in the definition of <span class="math inline">\(R^{\prime}\)</span>; <span class="math inline">\(R^{\prime}\)</span> is formed by the union of <span class="math inline">\(R\)</span> and some other relation, so it must contain <span class="math inline">\(R\)</span>.</p>
 <p>To understand the second property we must consider what is meant by the term <em>reflexive</em>; luckily this is given to us by definition 2.2.1 in the text:</p>
 <blockquote>
-<p>A binary relation <span class="math">\(R\)</span> on a set <span class="math">\(S\)</span> is <em>reflexive</em> if <span class="math">\(R\)</span> relates every element of <span class="math">\(S\)</span> to itself – that is, <span class="math">\(s R s\)</span> (or <span class="math">\((s, s) \in R\)</span>) for all <span class="math">\(s \in S\)</span>.</p>
+<p>A binary relation <span class="math inline">\(R\)</span> on a set <span class="math inline">\(S\)</span> is <em>reflexive</em> if <span class="math inline">\(R\)</span> relates every element of <span class="math inline">\(S\)</span> to itself – that is, <span class="math inline">\(s R s\)</span> (or <span class="math inline">\((s, s) \in R\)</span>) for all <span class="math inline">\(s \in S\)</span>.</p>
 </blockquote>
-<p>So, for <span class="math">\(R^{\prime}\)</span> to be reflexive, the following must hold:</p>
-<p><span class="math">\[
+<p>So, for <span class="math inline">\(R^{\prime}\)</span> to be reflexive, the following must hold:</p>
+<p><span class="math display">\[
 \forall s \in S: (s, s) \in R
 \]</span></p>
 <p>or in other words, it must contain the relations:</p>
-<p><span class="math">\[
+<p><span class="math display">\[
 \left\{ (s, s) | s \in S \right\}
 \]</span></p>
-<p>which, as fortune would have it, is <em>also</em> given in the definition of <span class="math">\(R^{\prime}\)</span>, so the second property turns out to be as trivially true as the first.</p>
-<p>That leaves only one thing left to prove, which is that <span class="math">\(R^{\prime}\)</span> is the smallest relation satisfying the above two properties. Well, let’s consider a relation <span class="math">\(R^{\prime\prime}\)</span> that satisfies the first two properties but is smaller than <span class="math">\(R^{\prime}\)</span>. In order for <span class="math">\(R^{\prime\prime}\)</span> to be smaller than <span class="math">\(R^{\prime}\)</span>, there must be some <span class="math">\(x\)</span> where <span class="math">\(x \in R^{\prime}\)</span> and <span class="math">\(x \not \in R^{\prime\prime}\)</span>. But, in order to satisfy the first two properties, for every <span class="math">\(x\)</span> in <span class="math">\(R^{\prime\prime}\)</span>, either <span class="math">\(x \in R\)</span> or <span class="math">\(x \in \left\{ (s, s) | s \in S \right\}\)</span>. Since <span class="math">\(R^{\prime}\)</span> is the union of these two sets by definition, there can be no <span class="math">\(x \not \in R^{\prime}\)</span> which is in either set, thus there can be no <span class="math">\(R^{\prime\prime}\)</span> smaller than <span class="math">\(R^{\prime}\)</span> which is a reflexive relation containing <span class="math">\(R\)</span>.</p>
+<p>which, as fortune would have it, is <em>also</em> given in the definition of <span class="math inline">\(R^{\prime}\)</span>, so the second property turns out to be as trivially true as the first.</p>
+<p>That leaves only one thing left to prove, which is that <span class="math inline">\(R^{\prime}\)</span> is the smallest relation satisfying the above two properties. Well, let’s consider a relation <span class="math inline">\(R^{\prime\prime}\)</span> that satisfies the first two properties but is smaller than <span class="math inline">\(R^{\prime}\)</span>. In order for <span class="math inline">\(R^{\prime\prime}\)</span> to be smaller than <span class="math inline">\(R^{\prime}\)</span>, there must be some <span class="math inline">\(x\)</span> where <span class="math inline">\(x \in R^{\prime}\)</span> and <span class="math inline">\(x \not \in R^{\prime\prime}\)</span>. But, in order to satisfy the first two properties, for every <span class="math inline">\(x\)</span> in <span class="math inline">\(R^{\prime\prime}\)</span>, either <span class="math inline">\(x \in R\)</span> or <span class="math inline">\(x \in \left\{ (s, s) | s \in S \right\}\)</span>. Since <span class="math inline">\(R^{\prime}\)</span> is the union of these two sets by definition, there can be no <span class="math inline">\(x \not \in R^{\prime}\)</span> which is in either set, thus there can be no <span class="math inline">\(R^{\prime\prime}\)</span> smaller than <span class="math inline">\(R^{\prime}\)</span> which is a reflexive relation containing <span class="math inline">\(R\)</span>.</p>
 
 <div class="tagsinfo">Tagged with: <a href="../../../../tags/maths">maths</a>, <a href="../../../../tags/pl">pl</a>, <a href="../../../../tags/TaPL">TaPL</a></div>
 

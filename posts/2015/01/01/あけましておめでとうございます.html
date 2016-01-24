@@ -455,7 +455,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> nengajou fs photo <span class="fu">=</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">topImage θ photoShiftedRight <span class="st"># inViewport</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">topImage θ photoShiftedRight <span class="fu">#</span> inViewport</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                     </code></pre></div></td>
@@ -519,7 +519,7 @@
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     photoShiftedRight </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">photo <span class="st"># translateX 40</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">photo <span class="fu">#</span> translateX <span class="dv">40</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -575,7 +575,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   clippedPhoto </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> photo <span class="st"># clipBy (rect </span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> photo <span class="fu">#</span> clipBy (rect </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(centralTriangleBase <span class="fu">-</span> <span class="dv">2</span>)</code></pre></div></td>
 </tr>
 <tr class="even">
@@ -747,7 +747,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   centralTriangle   </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> outlineTriangle photoHeight <span class="st"># reflectY</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> outlineTriangle photoHeight <span class="fu">#</span> reflectY</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -1273,7 +1273,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="st"># pad 1.1 # bg black</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   mainWith <span class="fu">$</span> nengajou fonts photo <span class="fu">#</span> pad <span class="fl">1.1</span> <span class="fu">#</span> bg black</code></pre></div></td>
 </tr>
 </tbody>
 </table>
