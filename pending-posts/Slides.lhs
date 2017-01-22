@@ -1,7 +1,7 @@
 ---
 date: 2014-08-16 14:23:00
 tags: literate-programs, hakyll, generating this website
-title: Generating this website part x: Slideshows
+title: "Generating this website part x: Slideshows"
 ---
 
 Occasionally I give talks for which I want to write up an accompanying blog

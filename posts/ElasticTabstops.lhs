@@ -1,7 +1,7 @@
 ---
 date: 2015-05-02 22:02:26
 tags: hakyll, literate-programs, generating this website
-title: Generating this website part 6: Elastic Tabstops
+title: "Generating this website part 6: Elastic Tabstops"
 ---
 
 <div class="sidenote">

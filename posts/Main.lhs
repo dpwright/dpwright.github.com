@@ -1,7 +1,7 @@
 ---
 date: 2014-08-04 08:38:23
 tags: literate-programs, hakyll, generating this website
-title: Generating this website part 1: Introduction
+title: "Generating this website part 1: Introduction"
 ---
 
 <div class="sidenote">

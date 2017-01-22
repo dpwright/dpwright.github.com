@@ -1,7 +1,7 @@
 ---
 date: 2014-07-28 09:57:39
 tags: hakyll, literate-programs, generating this website
-title: Generating this website part x: Crossposting
+title: "Generating this website part x: Crossposting"
 ---
 
 > {-# LANGUAGE OverloadedStrings #-}

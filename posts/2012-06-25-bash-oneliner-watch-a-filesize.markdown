@@ -1,5 +1,5 @@
 ---
-title: Bash oneliner: watch a filesize
+title: "Bash oneliner: watch a filesize"
 date: 2012-06-25 11:16
 tags: bash, oneliners, shell
 ---

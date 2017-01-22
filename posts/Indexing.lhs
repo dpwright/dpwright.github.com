@@ -1,7 +1,7 @@
 ---
 date: 2015-03-04 09:57:39
 tags: hakyll, literate-programs, generating this website
-title: Generating this website part 3: Indexing
+title: "Generating this website part 3: Indexing"
 ---
 
 <div class="sidenote">
