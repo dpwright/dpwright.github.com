@@ -63,10 +63,6 @@ so I'll want to reuse that.
 
 > import Posts
 
-And finally, we need access to `Data.Map` to work with metadata
-
-> import qualified Data.Map as M
-
 Locating slideshow files
 ------------------------
 
@@ -98,7 +94,7 @@ slideshow as above.
 >   do 	route $ setExtension ".html"
 >      	compileSlideshow
 >   where
->     isSlideshow = maybe False (const True) . M.lookup "slides"
+>     isSlideshow = maybe False (const True) . lookupString "slides"
 
 The `compileSlideshow` rule extracts the `slides` metadata in order to decide
 which type of slideshow to generate, then passes it to `slidesCompiler`.

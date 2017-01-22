@@ -52,22 +52,17 @@ importing from where.
 I'm going to be making use of a few system/date related functions to handle the
 date specified in the header and rename the file appropriately.
 
-> import System.FilePath     	(replaceBaseName, takeDirectory,
->                            	 takeBaseName, splitFileName, (</>))
-> import System.Locale       	(defaultTimeLocale)
-> import Data.Time.Clock     	(UTCTime (..))
-> import Data.Time.Format    	(formatTime, parseTime)
+> import System.FilePath  	(replaceBaseName, takeDirectory,
+>                         	 takeBaseName, splitFileName, (</>))
+> import Data.Time.Clock  	(UTCTime (..))
+> import Data.Time.Format 	(formatTime, parseTimeM, defaultTimeLocale)
 
-The `Map` and `Set` data structures export function names that clash with those
-from the standard prelude for working with lists, so I'll import those qualified
-here.  In fact, I only make use of one function from each (`lookup` and `union`
-respectively), so I could have just imported those functions and had done with
-it, but it's common form to import data structures like this qualified, so I'm
-in the habit of it.  It's also nice to be able to look at code called `M.lookup`
-and know straight away that it's looking up the value in a map and not an
-association list.
+The `Set` module exports function names that clash with those from the standard
+prelude for working with lists, so I'll import it qualified here.  In fact, I
+only make use of one function from it (`union`), so I could have just imported
+this function and had done with it, but it's common form to import data
+structures like this qualified, so I'm in the habit of it.
 
-> import qualified Data.Map as M
 > import qualified Data.Set as S
 
 Finally some more specific imports.  I'll be overriding some of Pandoc's
@@ -282,7 +277,7 @@ define here.
 > dateAndTitle meta = fromMaybe idRoute $
 >   mkName <$> getField "title" <*> getField "date"
 >   where 	mkName t d 	= 	setBaseName $ date d </> title t
->         	getField   	= 	(`M.lookup` meta)
+>         	getField   	= 	(`lookupString` meta)
 >         	date       	= 	formatTime defaultTimeLocale
 >         	           	  	"%Y/%m/%d" . readTime
 >         	title      	= 	map toLower . intercalate "-"
@@ -306,9 +301,9 @@ There's a lot going on in this definition so we'll go through it carefully.
       and nested `if` statements into a single line of code which, when you are
       used to this style, reads extremely clearly.  It's a very powerful
       technique.
-- Moving onto the local definitions: `getField` is simply a shortcut for calling
-  `Map`'s `lookup` function in order to get the respective fields out of the
-  passed `Metadata`.
+- Moving onto the local definitions: `getField` is simply a shortcut for
+  calling the `lookupString` function in order to get the respective fields out
+  of the passed `Metadata`.
 - `mkName` takes the title and the date as parameters, calls the `date`
   and `title` functions in order to turn them into strings, and then sticks them
   together with a `/`.  Finally it calls `setBaseName` (defined below), which
@@ -360,7 +355,7 @@ string and converts it to a `UTCTime` which we can manipulate.
 
 > readTime :: String -> UTCTime
 > readTime t = fromMaybe empty' . msum $ attempts where
->   attempts 	= [parseTime defaultTimeLocale fmt t | fmt <- formats]
+>   attempts 	= [parseTimeM True defaultTimeLocale fmt t | fmt <- formats]
 >   empty'   	= error $ "Could not parse date field: " ++ t
 >   formats  	= [ "%a, %d %b %Y %H:%M:%S %Z"
 >            	  , "%Y-%m-%dT%H:%M:%S%Z"

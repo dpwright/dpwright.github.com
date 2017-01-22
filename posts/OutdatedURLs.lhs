@@ -31,11 +31,9 @@ posts exactly like their correctly-addressed counterparts.
 
 > import Posts
 
-Finally, we import `Map` to look up metadata, and `Data.Time` so that we can
-check the dates.  Note we hide `readTime` because we're going to use the
-version from the `Posts` module.
+Finally, we import `Data.Time` so that we can check the dates.  Note we hide
+`readTime` because we're going to use the version from the `Posts` module.
 
-> import qualified Data.Map as M
 > import Data.Time hiding (readTime)
 
 Setting up the rules
@@ -63,7 +61,7 @@ of the exercise!
 >        	        	  	setExtension ".html"
 >        	compile 	$ 	postCompiler tags
 >   where
->     isOutdated 	= maybe False checkDate ∘ M.lookup "date"
+>     isOutdated 	= maybe False checkDate ∘ lookupString "date"
 >     checkDate  	= (> 0) ∘ diffUTCTime cutoffDate ∘ readTime
 
 That's it!

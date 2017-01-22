@@ -8,11 +8,10 @@ title: Generating this website part x: Crossposting
 >
 > module Crossposting where
 
-> import qualified Data.Map as M
-> import           Hakyll
+> import Hakyll
 
 > getCrosspostHeader :: String -> Identifier -> Compiler String
-> getCrosspostHeader key n = getMetadata n >>= toHeader . M.lookup key
+> getCrosspostHeader key n = getMetadata n >>= toHeader . lookupString key
 >   where loadHeader        = fmap itemBody . header
 >         toHeader          = maybe (return "") loadHeader
 >         header name       = makeItem ""

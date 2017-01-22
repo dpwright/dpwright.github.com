@@ -14,11 +14,13 @@ flag site-only
 
 executable site
   main-is:             Main.lhs
-  build-depends:       base >=4.6 && <4.8,
+  build-depends:       base >=4.6 && <4.10,
                        containers,
+                       unordered-containers,
                        filepath,
                        -- `matchMetadata` was introduced in hakyll 4.6.4.0
-                       hakyll >= 4.6.4,
+                       hakyll >= 4.9.3.1,
+                       aeson,
                        -- `hakyll watch` with versions of snap-core
                        -- earlier than 0.9.6.4 can't serve unicode paths
                        snap-core >= 0.9.6.4,
@@ -27,7 +29,7 @@ executable site
                        pandoc,
                        pandoc-types,
                        time,
-                       text == 1.2.0.3,
+                       text,
                        split,
                        base-unicode-symbols
   hs-source-dirs:      pending-posts, posts
