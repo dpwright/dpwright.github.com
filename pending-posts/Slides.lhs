@@ -1,8 +1,13 @@
 ---
-date: 2014-08-16 14:23:00
+date: 2016-01-22 18:50:00
 tags: literate-programs, hakyll, generating this website
-title: "Generating this website part x: Slideshows"
+title: "Generating this website part 7: Slideshows"
 ---
+
+<div class="sidenote">
+This is part seven of the "generating this website" series.  To read the rest
+of the series, go to the series index [here][generating-this-website]
+</div>
 
 Occasionally I give talks for which I want to write up an accompanying blog
 post.  Since Pandoc supports various slideshow formats directly, I can actually
