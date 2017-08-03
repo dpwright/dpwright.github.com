@@ -124,3 +124,13 @@ executable glTutorial
     extra-libraries:     glfw3
   else
     extra-libraries:     glfw
+
+executable lambdaman
+  main-is:             2015-07-17-writing-a-zx-spectrum-game-in-haskell.lhs
+  hs-source-dirs:      posts
+  build-depends:       base >=4.7 && <4.10,
+                       bytestring,
+                       base-unicode-symbols,
+                       z80,
+                       zxspectrum
+  default-language:    Haskell2010
