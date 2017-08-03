@@ -64,7 +64,8 @@ so we'll need to bring the appropriate pandoc options into scope.
 
 I'm also going to import the `Posts` module as the compiler I use for generating
 slideshows will be similar to the one used for generating standard blog posts,
-so I'll want to reuse that.
+so I'll want to reuse that.  Check out the [post on posts][posts] for more
+information on what's in this module.
 
 > import Posts
 
@@ -78,7 +79,7 @@ alternatives:
 * Files in the `posts` directory which *must* contain the `slides` metadata
   field (otherwise they won't be recognised as slideshows).
 * Files in the `slides` directory which *may* contain a `slides` field (and if
-  not default to `RevealJSSlides`.
+  not default to `RevealJSSlides`).
 
 The easiest of the two is the latter -- just match the files and compile them.
 
@@ -88,7 +89,7 @@ The easiest of the two is the latter -- just match the files and compile them.
 >   compileSlideshow
 
 Picking out those posts which contain a `slides` metadata field requires the
-`matchMetadata`function which was introduced in hakyll 4.6.4.0.  We use
+`matchMetadata` function which was introduced in hakyll 4.6.4.0.  We use
 `version` to keep slides distinct from normal posts, allowing both to be built
 and preventing slideshows from being indexed.  After that, we compile the
 slideshow as above.
@@ -171,5 +172,6 @@ yet to add the reverse functionality but I can't imagine it would be too
 difficult.  All that can be done with a bit of CSS cleverness, though, with no
 special support from Hakyll itself.
 
+[generating-this-website]: /tags/generating%20this%20website
 [pandocs-slides]: https://hackage.haskell.org/package/pandoc-1.13/docs/Text-Pandoc-Options.html#t:HTMLSlideVariant
-[posts]:          /posts/2014-09-29-generating-this-website-part-2-posts
+[posts]:          /posts/2014/09/29/generating-this-website-part-2-posts
