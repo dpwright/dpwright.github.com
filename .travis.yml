@@ -1,20 +1,33 @@
-language: haskell
-ghc: 7.8
+sudo: false
+language: generic
 branches:
   only:
     - source
 env:
   global:
     - secure: "Jc7XHdzAuXpQHX9w5H8ij8u/c4+eLSlyPTv+gT7Yjwf4n1xUwoUujHG5RoFrTUUUuNSc5qtsCBUXcaYHaF1yFWfmCuhNGc6H5VszFy8keXr4LBmtn8pIoKRSqs4EJ+NDp3v8fz/9znCzUHcaCPJFHET2pN7G8UwV/WpGT2JevDw="
+cache:
+  directories:
+    - $HOME/.stack
+addons:
+  apt:
+    packages:
+      - libgmp-dev
+before_install:
+  - mkdir -p ~/.local/bin
+  - export PATH=$HOME/.local/bin:$PATH
+  - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 install:
-  - cabal install --only-dependencies -f site-only
+  - travis_wait 50 stack -j2 --no-terminal --install-ghc build --only-dependencies
 before_script:
   - cd _site
   - git checkout master
   - git pull origin master
   - rm -rf *
   - cd ..
-script: cabal run site build
+script:
+  - stack --no-terminal build
+  - stack --no-terminal exec site build
 after_success:
   - cd _site
   - git status
