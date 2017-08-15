@@ -47,16 +47,16 @@
 <li><a href="https://github.com/dpwright/z80">z80</a>, a fully-functional Z80 macro-assembler embedded in Haskell, and</li>
 <li><a href="https://github.com/dpwright/zxspectrum">zxspectrum</a>, a set of utilities and macros to make working with the ZX Spectrum specifically easier, including labels for important routines in the Spectrum 48k ROM.</li>
 </ul>
-<p>Here’s the game we’re going to be making. It’s basically a port of the project pursued over the course of <a href="https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/">this excellent set of ZX Spectrum tutorials</a>, which itself is a clone of the game centipede. You can play it directly on this webpage, or you can download the <code>.tap</code> file for playing in an emulator <a href="writing-a-zx-spectrum-game-in-haskell/lambdaman.tap">here</a>.</p>
-<script src="writing-a-zx-spectrum-game-in-haskell/jdataview.js"></script>
-<script src="writing-a-zx-spectrum-game-in-haskell/jsspeccy-core.min.js"></script>
+<p>Here’s the game we’re going to be making. It’s basically a port of the project pursued over the course of <a href="https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/">this excellent set of ZX Spectrum tutorials</a>, which itself is a clone of the game centipede. You can play it directly on this webpage, or you can download the <code>.tap</code> file for playing in an emulator <a href="lambdaman.tap">here</a>.</p>
+<script src="jdataview.js"></script>
+<script src="jsspeccy-core.min.js"></script>
 <script>
   function go() {
     var jsspeccy = JSSpeccy('speccy', {
       'autostart': false,
       'autoload': true,
       'scaleFactor': 1.5,
-      'loadFile': 'writing-a-zx-spectrum-game-in-haskell/lambdaman.tap'
+      'loadFile': 'lambdaman.tap'
     });
   }
 </script>
@@ -168,7 +168,7 @@ Movement: QAOP/HJKL Fire: Space
 </tbody>
 </table>
 </div>
-<p>For convenience, I’m also going to put the title screen into a global constant since it’s rather a long filename. You can download the title screen (a result of my unparalleled skill in art, as I’m sure you’ll agree), <a href="writing-a-zx-spectrum-game-in-haskell/lvtc.scr">here</a>. You’ll need a ZX Spectrum SCR viewer to view it, though.</p>
+<p>For convenience, I’m also going to put the title screen into a global constant since it’s rather a long filename. You can download the title screen (a result of my unparalleled skill in art, as I’m sure you’ll agree), <a href="lvtc.scr">here</a>. You’ll need a ZX Spectrum SCR viewer to view it, though.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -378,7 +378,7 @@ Movement: QAOP/HJKL Fire: Space
 <h2 id="user-defined-graphics">User-Defined Graphics</h2>
 <p>Finally, let’s define our “assets” – graphic and sound data that will be used in the game. Back in the day, this is how you used to define new graphics for the ZX Spectrum:</p>
 <center>
-<img src="writing-a-zx-spectrum-game-in-haskell/udg.png" />
+<img src="udg.png" />
 </center>
 <p>The <a href="https://github.com/dpwright/zxspectrum">zxspectrum</a> package defines a macro called <code>udg</code> which can perform this calculation for you. We use it here to define our four main single-charater sprites:</p>
 <div class="elastic-tabstops">
