@@ -1,10 +1,10 @@
 ---
-title: OGRE #include tree
+title: "OGRE #include tree"
 date: 2012-04-10 10:54
 tags: c++, graphs, ogre, visualisation
 ---
 
-![OGRE include tree](http://files.dpwright.com/ogre-includes.png)\ 
+![OGRE include tree](ogre-include-tree/ogre-includes-th.png)\ 
 
 My [include graph generator script][1] being run on ogre.h from the [OGRE][2]
 rendering engine.  The graph is far too complicated to read, but idly scrolling
@@ -20,4 +20,4 @@ libraries, that doesn't help you much.
 
 [1]: https://github.com/vitei/generate-include-graph.rb
 [2]: http://www.ogre3d.org/
-[3]: http://files.dpwright.com/ogre-includes.png
+[3]: ogre-include-tree/ogre-includes.png

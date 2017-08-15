@@ -1,10 +1,10 @@
 ---
-title: Visualising #include trees
+title: "Visualising #include trees"
 date: 2012-04-10 08:31
 tags: c, c++, graphs, ruby, scripts, visualisation
 ---
 
-![OpenGL include tree](http://files.dpwright.com/opengl-includes.png)\ 
+![OpenGL include tree](visualising-include-trees/opengl-includes.png)\ 
 
 Just put a new script up [on github][1] which generates graphs visualising
 <code>#include</code> trees.  The above image shows what actually gets pulled in
