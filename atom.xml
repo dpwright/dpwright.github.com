@@ -490,7 +490,7 @@
 <img src onerror="go()" />
 </div>
 <figcaption>
-Movement: QAOP/HJKL Fire: Space
+Movement: QAOP/HJKL Fire: Space<br /> Powered by <a href="http://jsspeccy.zxdemo.org">jsspeccy</a>
 </figcaption>
 </figure>
 </center>
