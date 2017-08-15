@@ -43,7 +43,7 @@
 </div>
 
 <div id="自己紹介" class="slide section level2">
-<h1>自己紹介</h1>
+<h2>自己紹介</h2>
 <ul class="incremental">
 <li><i class="fa fa-twitter"></i> <a href="http://twitter.com/tataminomusi">@tataminomusi</a> （日本語）</li>
 <li><i class="fa fa-twitter"></i> <a href="http://twitter.com/danielpwright">@danielpwright</a> （英語）</li>
@@ -60,7 +60,7 @@
 </ul>
 </div>
 <div id="このセッション" class="slide section level2">
-<h1>このセッション</h1>
+<h2>このセッション</h2>
 <div class="incremental">
 <h3>
 どの言語に向いてる？
@@ -80,7 +80,7 @@
 </div>
 </div>
 <div id="文芸的プログラミング" class="slide section level2">
-<h1>文芸的プログラミング</h1>
+<h2>文芸的プログラミング</h2>
 <p>このスライド自体をコンパイルして実行できる！</p>
 <div class="incremental">
 <p>Haskellの基本関数を再定義するつもりなんで、とりあえず隠さないと</p>
@@ -88,7 +88,7 @@
 </div>
 </div>
 <div id="等式推論" class="slide section level2 titlepage">
-<h1>等式推論</h1>
+<h2>等式推論</h2>
 <div class="incremental">
 <h3>
 は、いったい何ですか？！
@@ -96,7 +96,7 @@
 </div>
 </div>
 <div id="例変数置換" class="slide section level2">
-<h1>例　変数置換</h1>
+<h2>例　変数置換</h2>
 <p>基本的に、中学校で代数学を勉強したときの変数置換と近い</p>
 <div class="incremental">
 <p><span class="math display">\[
@@ -110,7 +110,7 @@ y &amp;= 1049
 </div>
 </div>
 <div id="例連立方程式" class="slide section level2">
-<h1>例　連立方程式</h1>
+<h2>例　連立方程式</h2>
 <p><span class="math display">\[
 \begin{align}
 2x + y &amp;= 4 \\
@@ -128,7 +128,7 @@ x &amp;= y - 1
 </div>
 </div>
 <div id="例連立方程式-1" class="slide section level2">
-<h1>例　連立方程式</h1>
+<h2>例　連立方程式</h2>
 <table style="width:60%;">
 <colgroup>
 <col width="30%" />
@@ -136,7 +136,7 @@ x &amp;= y - 1
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><p><span class="math display">\[
+<td><p><span class="math display">\[
 \begin{align}
 x  &amp;= y - 1        \\
    &amp;= (4 - 2x) - 1 \\
@@ -145,7 +145,7 @@ x  &amp;= y - 1        \\
 x  &amp;= 1            \\
 \end{align}
 \]</span></p></td>
-<td align="left"><p><span class="math display">\[
+<td><p><span class="math display">\[
 \begin{align}
 y  &amp;= 4 - 2x       \\
    &amp;= 4 - 2(y - 1) \\
@@ -159,12 +159,12 @@ y  &amp;= 2
 </table>
 </div>
 <div id="例数学的証明" class="slide section level2">
-<h1>例　数学的証明</h1>
+<h2>例　数学的証明</h2>
 <p>「黄金数」と呼ばれる　<span class="math inline">\(\phi = \frac{1 + \sqrt{5}}{2}\)</span></p>
 <p><span class="math inline">\(\phi^2 = \phi + 1\)</span>　を証明せよ</p>
 </div>
 <div id="例数学的証明-1" class="slide section level2">
-<h1>例　数学的証明</h1>
+<h2>例　数学的証明</h2>
 <p><span class="math display">\[
 \begin{align}
 \phi^2 &amp;= \frac{1 + \sqrt{5}}{2} \times \frac{1 + \sqrt{5}}{2} \\
@@ -177,13 +177,13 @@ y  &amp;= 2
 \]</span></p>
 </div>
 <div id="数学はもうええ" class="slide section level2 titlepage">
-<h1>数学はもうええ。。。</h1>
+<h2>数学はもうええ。。。</h2>
 <h3>
 コードを見せよ！
 </h3>
 </div>
 <div id="簡単な例" class="slide section level2">
-<h1>簡単な例</h1>
+<h2>簡単な例</h2>
 <p>Haskell Reportによると、<code>foldr</code>はこんな感じ</p>
 <div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> foldr f z []     <span class="fu">=</span> z
 <span class="ot">&gt;</span> foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f z xs)</code></pre></div>
@@ -191,7 +191,7 @@ y  &amp;= 2
 
 </div>
 <div id="もっと一般的に" class="slide section level2">
-<h1>もっと一般的に</h1>
+<h2>もっと一般的に</h2>
 <p><code>sum</code>と<code>foldr (+) 0</code>の等しさを証明しよう</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">foldr f z []     <span class="fu">=</span> z
 foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f z xs)</code></pre></div>
@@ -203,7 +203,7 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> f x (foldr f 
 </div>
 </div>
 <div id="もっともっと一般的に" class="slide section level2">
-<h1>もっともっと一般的に</h1>
+<h2>もっともっと一般的に</h2>
 <p>リストは下記のように考えられる</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>] ≡ <span class="dv">1</span> <span class="fu">:</span> <span class="dv">2</span> <span class="fu">:</span> <span class="dv">3</span> <span class="fu">:</span> <span class="dv">4</span> <span class="fu">:</span> []</code></pre></div>
 <ul class="incremental">
@@ -224,7 +224,7 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class
 </div>
 </div>
 <div id="命令的なコードでも使える" class="slide section level2">
-<h1>命令的なコードでも使える</h1>
+<h2>命令的なコードでも使える</h2>
 <div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> main <span class="fu">=</span> <span class="kw">do</span>
 <span class="ot">&gt;</span>   putStrLn <span class="st">&quot;What is your name?&quot;</span>
 <span class="ot">&gt;</span>   name <span class="ot">&lt;-</span> getLine
@@ -240,7 +240,7 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class
 </div>
 </div>
 <div id="ソースコード参照" class="slide section level2">
-<h1>ソースコード参照</h1>
+<h2>ソースコード参照</h2>
 
 <ul class="incremental">
 <li>Haskell Report Standard Prelude <a href="http://www.haskell.org/onlinereport/standard-prelude.html" class="uri">http://www.haskell.org/onlinereport/standard-prelude.html</a></li>
@@ -253,7 +253,7 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class
 </div>
 </div>
 <div id="sequence_を調べると" class="slide section level2">
-<h1><code>sequence_</code>を調べると</h1>
+<h2><code>sequence_</code>を調べると</h2>
 <div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> sequence_ ms <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) ms</code></pre></div>
 <p><code>foldr</code>でたーー！</p>
 <div class="incremental">
@@ -263,7 +263,7 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class
 </div>
 </div>
 <div id="replicateとは" class="slide section level2">
-<h1><code>replicate</code>とは</h1>
+<h2><code>replicate</code>とは</h2>
 <div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> replicate n x          <span class="fu">=</span> take n (repeat x)</code></pre></div>
 <div class="incremental">
 <div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> take n _      <span class="fu">|</span> n <span class="fu">&lt;=</span> <span class="dv">0</span> <span class="fu">=</span> []
@@ -277,7 +277,7 @@ foldr f z (x<span class="fu">:</span>xs) <span class="fu">=</span> x <span class
 </div>
 </div>
 <div id="定義を広げる" class="slide section level2">
-<h1>定義を広げる</h1>
+<h2>定義を広げる</h2>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (replicate <span class="dv">3</span> x)
 replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span class="fu">&gt;&gt;</span>) (return ()) (x <span class="fu">:</span> x <span class="fu">:</span> x <span class="fu">:</span> [])</code></pre></div>
 <ul class="incremental">
@@ -289,7 +289,7 @@ replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span 
 </div>
 </div>
 <div id="xを置換する" class="slide section level2">
-<h1><code>x</code>を置換する</h1>
+<h2><code>x</code>を置換する</h2>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_' <span class="dv">3</span> x <span class="fu">=</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> x <span class="fu">&gt;&gt;</span> return ()
   <span class="kw">where</span> x <span class="fu">=</span> putStrLn (<span class="st">&quot;Hello &quot;</span> <span class="fu">++</span> name)</code></pre></div>
 <div class="incremental">
@@ -306,7 +306,7 @@ replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span 
 </div>
 </div>
 <div id="もっと一般的にできる" class="slide section level2">
-<h1>もっと一般的にできる？</h1>
+<h2>もっと一般的にできる？</h2>
 <blockquote>
 <code>n</code>の値を知らないと<code>take</code>の置換できないので、<code>3</code>を入れる
 </blockquote>
@@ -315,7 +315,7 @@ replicateM_' <span class="dv">3</span> x <span class="fu">=</span> foldr (<span 
 <p>もっといい方法あるのでしょうか？</p>
 </div>
 <div id="数学的法則" class="slide section level2">
-<h1>数学的法則</h1>
+<h2>数学的法則</h2>
 <p>数学では、分配法則という法則がある。</p>
 <p><span class="math display">\[
 \begin{align}
@@ -342,7 +342,7 @@ replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicat
 </div>
 </div>
 <div id="便利な法則を探す" class="slide section level2">
-<h1>便利な法則を探す</h1>
+<h2>便利な法則を探す</h2>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ n x <span class="fu">=</span> sequence_ (replicate n x)</code></pre></div>
 <p>この方程式を見ると、分配法則を証明する方法は明らかでない。</p>
 <p>ただ、プログラミング的に考えると当たり前でしょう。</p>
@@ -356,7 +356,7 @@ replicateM_ (m <span class="fu">*</span> n)   <span class="fu">=</span> replicat
 </div>
 </div>
 <div id="はいできる" class="slide section level2">
-<h1>はい、できる</h1>
+<h2>はい、できる</h2>
 <div class="incremental">
 <h3>
 <code>replicate</code>の「分配法則」
@@ -388,7 +388,7 @@ replicateM_ (m <span class="fu">+</span> n) x <span class="fu">=</span> sequence
 </div>
 </div>
 <div id="必要な証明が増えてきた" class="slide section level2">
-<h1>必要な証明が増えてきた　☹</h1>
+<h2>必要な証明が増えてきた　☹</h2>
 <p>この方程式は証明できた</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">replicateM_ <span class="dv">0</span>       x <span class="fu">=</span> return ()
 replicateM_ (m <span class="fu">+</span> n) x <span class="fu">=</span> replicateM_ m x <span class="fu">&gt;&gt;</span> replicateM_ n x
@@ -410,39 +410,39 @@ sequence_ <span class="fu">.</span> (f <span class="fu">&lt;=&lt;</span> g) <spa
 </div>
 </div>
 <div id="何の価値" class="slide section level2 titlepage">
-<h1>何の価値？</h1>
+<h2>何の価値？</h2>
 
 </div>
 <div id="正確さを証明できること" class="slide section level2 titlepage">
-<h1>正確さを証明できること</h1>
+<h2>正確さを証明できること</h2>
 <h3>
 あるいは、ある法則に従っていることを証明できること
 </h3>
 </div>
 <div id="最適化をできること" class="slide section level2 titlepage">
-<h1>最適化をできること</h1>
+<h2>最適化をできること</h2>
 <h3>
 ＝最適化されたバージョンは元のバージョンに等しいと証明すること
 </h3>
 
 </div>
 <div id="ドキュメンテーション" class="slide section level2 titlepage">
-<h1>ドキュメンテーション</h1>
+<h2>ドキュメンテーション</h2>
 <h3>
 Hackageではよく使われている
 </h3>
 </div>
 <div id="難しいコンセプトを理解すること" class="slide section level2 titlepage">
-<h1>難しいコンセプトを理解すること</h1>
+<h2>難しいコンセプトを理解すること</h2>
 <h3>
 分からないモナドがあったら等式推論をやってみ！
 </h3>
 </div>
 <div id="なれたら実は楽しい" class="slide section level2 titlepage">
-<h1>なれたら実は楽しい！</h1>
+<h2>なれたら実は楽しい！</h2>
 </div>
 <div id="等式推論やってみたいアドバイスとコツ" class="slide section level2">
-<h1>等式推論やってみたい！アドバイスとコツ</h1>
+<h2>等式推論やってみたい！アドバイスとコツ</h2>
 <ul class="incremental">
 <li>自分のコードに便利な法則を探す
 <ul class="incremental">
@@ -459,7 +459,7 @@ Hackageではよく使われている
 </ul>
 </div>
 <div id="参考文献" class="slide section level2">
-<h1>参考文献</h1>
+<h2>参考文献</h2>
 <ul class="incremental">
 <li>Gabriel Gonzalezさん (Tekmo)　がよく使っている
 <ul class="incremental">
@@ -477,7 +477,7 @@ Hackageではよく使われている
 </ul>
 </div>
 <div id="終" class="slide section level2 titlepage">
-<h1>終</h1>
+<h2>終</h2>
 <div class="incremental">
 <h3>
 ありがとうございました

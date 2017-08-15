@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - Visualising #include trees</title>
+        <title>Wright Access - OGRE</title>
         <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -32,7 +32,7 @@
 
         <div id="content">
             
-              <h1 class="title">Visualising #include trees</h1>
+              <h1 class="title">OGRE</h1>
             
             
 
@@ -40,10 +40,12 @@
 
 
 
-<p><img src="http://files.dpwright.com/opengl-includes.png" alt="OpenGL include tree" /> </p>
-<p>Just put a new script up <a href="https://github.com/vitei/generate-include-graph.rb">on github</a> which generates graphs visualising <code>#include</code> trees. The above image shows what actually gets pulled in when you <code>#include</code> the main header for <a href="http://www.opengl.org/">OpenGL</a>.</p>
+<p><img src="http://files.dpwright.com/ogre-includes.png" alt="OGRE include tree" /> </p>
+<p>My <a href="https://github.com/vitei/generate-include-graph.rb">include graph generator script</a> being run on ogre.h from the <a href="http://www.ogre3d.org/">OGRE</a> rendering engine. The graph is far too complicated to read, but idly scrolling around is quite mesmerising. These files are ALL included the moment you type <code>#include &lt;OGRE/Ogre.h&gt;</code>.</p>
+<p>This isn’t really a criticism of the design of OGRE (which is actually not all that bad), just a general interest thing. Of course you can avoid including quite so many files by only including the specific classes you need. With some libraries, that doesn’t help you much.</p>
+<p>(Full resolution image <a href="http://files.dpwright.com/ogre-includes.png">here</a>)</p>
 
-<div class="tagsinfo">Tagged with: <a href="../../../../../tags/c">c</a>, <a href="../../../../../tags/c%2B%2B">c++</a>, <a href="../../../../../tags/graphs">graphs</a>, <a href="../../../../../tags/ruby">ruby</a>, <a href="../../../../../tags/scripts">scripts</a>, <a href="../../../../../tags/visualisation">visualisation</a></div>
+<div class="tagsinfo">Tagged with: <a href="../../../../../tags/c%2B%2B">c++</a>, <a href="../../../../../tags/graphs">graphs</a>, <a href="../../../../../tags/ogre">ogre</a>, <a href="../../../../../tags/visualisation">visualisation</a></div>
 
         </div>
         <div id="footer">

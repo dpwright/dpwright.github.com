@@ -109,29 +109,25 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.FilePath</span>     </code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.FilePath</span>  </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(replaceBaseName, takeDirectory,</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                            </code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                         </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"> takeBaseName, splitFileName, (<span class="fu">&lt;/&gt;</span>))</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">System.Locale</span>       </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(defaultTimeLocale)</code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Clock</span>     </code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Clock</span>  </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">UTCTime</span> (<span class="fu">..</span>))</code></pre></div></td>
 </tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Format</span>    </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(formatTime, parseTime)</code></pre></div></td>
+<tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time.Format</span> </code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(formatTime, parseTimeM, defaultTimeLocale)</code></pre></div></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The <code>Map</code> and <code>Set</code> data structures export function names that clash with those from the standard prelude for working with lists, so I’ll import those qualified here. In fact, I only make use of one function from each (<code>lookup</code> and <code>union</code> respectively), so I could have just imported those functions and had done with it, but it’s common form to import data structures like this qualified, so I’m in the habit of it. It’s also nice to be able to look at code called <code>M.lookup</code> and know straight away that it’s looking up the value in a map and not an association list.</p>
+<p>The <code>Set</code> module exports function names that clash with those from the standard prelude for working with lists, so I’ll import it qualified here. In fact, I only make use of one function from it (<code>union</code>), so I could have just imported this function and had done with it, but it’s common form to import data structures like this qualified, so I’m in the habit of it.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -139,9 +135,6 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></div></td>
-</tr>
-<tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Set</span> <span class="kw">as</span> <span class="dt">S</span></code></pre></div></td>
 </tr>
 </tbody>
@@ -569,7 +562,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">getField   </code></pre></div></td>
 <td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="ot">`M.lookup`</span> meta)</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="ot">`lookupString`</span> meta)</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         </code></pre></div></td>
@@ -605,7 +598,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <ul>
 <li>If you are familiar with applicative style this will have been immediately obvious. If not, it is worth reading through the previous bullet-point and associated code a few times until you get a feeling for what’s happening. We’ve reduced what would have been a lot of sanity checking and nested <code>if</code> statements into a single line of code which, when you are used to this style, reads extremely clearly. It’s a very powerful technique.</li>
 </ul></li>
-<li>Moving onto the local definitions: <code>getField</code> is simply a shortcut for calling <code>Map</code>’s <code>lookup</code> function in order to get the respective fields out of the passed <code>Metadata</code>.</li>
+<li>Moving onto the local definitions: <code>getField</code> is simply a shortcut for calling the <code>lookupString</code> function in order to get the respective fields out of the passed <code>Metadata</code>.</li>
 <li><code>mkName</code> takes the title and the date as parameters, calls the <code>date</code> and <code>title</code> functions in order to turn them into strings, and then sticks them together with a <code>/</code>. Finally it calls <code>setBaseName</code> (defined below), which works similarly to Hakyll’s native <code>setExtension</code> except that, obviously, it sets the basename.</li>
 <li><code>date</code> normalises the <code>date</code> field to the simple <code>YYYY/mm/dd</code> format we want to use for our filenames. This means you can write the date in any of Hakyll’s supported date formats and the filename will turn out OK.</li>
 <li><code>title</code> splits the title up into words, filters out any strange symbols using <code>isAlphaNum</code> (which, thankfully, is Unicode-friendly so that Japanese titles aren’t considered “strange symbols”), and then joins those words back up with <code>-</code> dashes so that we don’t have to worry about <code>%20</code>s appearing all over our URLs. Finally, it makes the whole thing lower-case.</li>
@@ -636,7 +629,7 @@ I also make use of Hakyll to allow me to write the post here in markdown and hav
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   attempts </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> [parseTime defaultTimeLocale fmt t <span class="fu">|</span> fmt <span class="ot">&lt;-</span> formats]</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> [parseTimeM <span class="dt">True</span> defaultTimeLocale fmt t <span class="fu">|</span> fmt <span class="ot">&lt;-</span> formats]</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   empty'   </code></pre></div></td>

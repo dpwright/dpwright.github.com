@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - Generating this website part x: Crossposting</title>
+        <title>Wright Access - Generating this website part 8: Crossposting</title>
         <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -32,14 +32,20 @@
 
         <div id="content">
             
-              <h1 class="title">Generating this website part x: Crossposting</h1>
+              <h1 class="title">Generating this website part 8: Crossposting</h1>
             
             
 
-            <div class="info">28 July, 2014</div>
+            <div class="info"> 2 August, 2017</div>
 
 
 
+<div class="sidenote">
+<p>This is part eight of the “generating this website” series. To read the rest of the series, go to the series index <a href="../../../../../tags/generating%20this%20website">here</a></p>
+</div>
+<p>Occasionally (very occasionally in fact – this has only happened once!) I write something which is intended to be cross-posted to another site as well as being hosted on my own. I did this with my post on <a href="../../../../../posts/2013/08/21/writing-a-tcp-server-in-haskell-using-proxies-and-pipes">proxies and pipes</a>, which was also pretty much the first bit of Haskell code I put out, and is probably hopelessly outdated by this point, but there it is.</p>
+<p>The idea here is that I want to be able to write a post on my site as usual, but also have it uploaded to the site that I’m contributing to. I have another script which deals with uploading the post to WordPress, so all this part of the generator has to do is add a header to the top of the post linking to the other version of the site.</p>
+<p>Let’s begin with the standard fluff…</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -50,14 +56,15 @@
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Crossposting</span> <span class="kw">where</span></code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Crossposting</span> <span class="kw">where</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>All this module really does is expose a function, <code>crosspostField</code>, which returns the content of the header we want to insert at the top of the page if it’s a crosspost. This is fed into the template for <a href="../../../../../posts/2014/09/29/generating-this-website-part-2-posts">posts</a>.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -65,14 +72,15 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; crosspostField ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> a</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import           </span><span class="dt">Hakyll</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> crosspostField key <span class="fu">=</span> field key <span class="fu">$</span> getCrosspostHeader key <span class="fu">.</span> itemIdentifier</code></pre></div></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>The idea behind this is to extract the field identified by <code>key</code> from the metadata at the top of the post file, and pass it off to <code>getCrosspostHeader</code> to turn into a header body. The job of this function, then, is to look in the <code>templates/xp/</code> folder for a template file whose name matches the value of the field, render that template if found, and return it – otherwise we return an empty string. This is given below.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -83,7 +91,7 @@
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; getCrosspostHeader ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Identifier</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> getCrosspostHeader key n <span class="fu">=</span> getMetadata n <span class="fu">&gt;&gt;=</span> toHeader <span class="fu">.</span> M.lookup key</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> getCrosspostHeader key n <span class="fu">=</span> getMetadata n <span class="fu">&gt;&gt;=</span> toHeader <span class="fu">.</span> lookupString key</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> loadHeader        <span class="fu">=</span> fmap itemBody <span class="fu">.</span> header</code></pre></div></td>
@@ -103,18 +111,10 @@
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>         xpContext         <span class="fu">=</span> defaultContext</code></pre></div></td>
 </tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"></code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; crosspostField ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Context</span> a</code></pre></div></td>
-</tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> crosspostField key <span class="fu">=</span> field key <span class="fu">$</span> getCrosspostHeader key <span class="fu">.</span> itemIdentifier</code></pre></div></td>
-</tr>
 </tbody>
 </table>
 </div>
+<p>Note that the header itself is a template, rendered using the <code>defaultContext</code> context. This means it has access to other fields in the post’s metadata – useful if you want to link to the other version of the site, as you can put its URL or ID into the metadata.</p>
 
 <div class="tagsinfo">Tagged with: <a href="../../../../../tags/hakyll">hakyll</a>, <a href="../../../../../tags/literate-programs">literate-programs</a>, <a href="../../../../../tags/generating%20this%20website">generating this website</a></div>
 

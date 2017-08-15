@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - Generating this website part x: Slideshows</title>
+        <title>Wright Access - Generating this website part 7: Slideshows</title>
         <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -32,14 +32,17 @@
 
         <div id="content">
             
-              <h1 class="title">Generating this website part x: Slideshows</h1>
+              <h1 class="title">Generating this website part 7: Slideshows</h1>
             
             
 
-            <div class="info">16 August, 2014</div>
+            <div class="info">22 January, 2016</div>
 
 
 
+<div class="sidenote">
+<p>This is part seven of the “generating this website” series. To read the rest of the series, go to the series index <a href="../../../../../tags/generating%20this%20website">here</a></p>
+</div>
 <p>Occasionally I give talks for which I want to write up an accompanying blog post. Since Pandoc supports various slideshow formats directly, I can actually use the same system both for my blog posts and for writing my slides – in fact, I can use the same source to produce all three: the post, the slides, and any accompanying code – using literate programming!</p>
 <p>Of course, this won’t always work. Sometimes, the way you present things in a talk must flow quite differently from the way you present them in a blog post. But this is a limitation of the presentation media, not a technical limitation, and so I’d like to support both formats. Here’s an outline of what we’re going to try and achieve:</p>
 <ul>
@@ -103,7 +106,7 @@
 </tbody>
 </table>
 </div>
-<p>I’m also going to import the <code>Posts</code> module as the compiler I use for generating slideshows will be similar to the one used for generating standard blog posts, so I’ll want to reuse that.</p>
+<p>I’m also going to import the <code>Posts</code> module as the compiler I use for generating slideshows will be similar to the one used for generating standard blog posts, so I’ll want to reuse that. Check out the <a href="../../../../../posts/2014/09/29/generating-this-website-part-2-posts">post on posts</a> for more information on what’s in this module.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -116,24 +119,11 @@
 </tbody>
 </table>
 </div>
-<p>And finally, we need access to <code>Data.Map</code> to work with metadata</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
 <h2 id="locating-slideshow-files">Locating slideshow files</h2>
 <p>The first step is to create some Hakyll <code>Rules</code> specifying which files to match and where to put them. The requirements outlined above essentially specify two alternatives:</p>
 <ul>
 <li>Files in the <code>posts</code> directory which <em>must</em> contain the <code>slides</code> metadata field (otherwise they won’t be recognised as slideshows).</li>
-<li>Files in the <code>slides</code> directory which <em>may</em> contain a <code>slides</code> field (and if not default to <code>RevealJSSlides</code>.</li>
+<li>Files in the <code>slides</code> directory which <em>may</em> contain a <code>slides</code> field (and if not default to <code>RevealJSSlides</code>).</li>
 </ul>
 <p>The easiest of the two is the latter – just match the files and compile them.</p>
 <div class="elastic-tabstops">
@@ -157,7 +147,7 @@
 </tbody>
 </table>
 </div>
-<p>Picking out those posts which contain a <code>slides</code> metadata field requires the <code>matchMetadata</code>function which was introduced in hakyll 4.6.4.0. We use <code>version</code> to keep slides distinct from normal posts, allowing both to be built and preventing slideshows from being indexed. After that, we compile the slideshow as above.</p>
+<p>Picking out those posts which contain a <code>slides</code> metadata field requires the <code>matchMetadata</code> function which was introduced in hakyll 4.6.4.0. We use <code>version</code> to keep slides distinct from normal posts, allowing both to be built and preventing slideshows from being indexed. After that, we compile the slideshow as above.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -200,7 +190,7 @@
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isSlideshow <span class="fu">=</span> maybe <span class="dt">False</span> (const <span class="dt">True</span>) <span class="fu">.</span> M.lookup <span class="st">&quot;slides&quot;</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isSlideshow <span class="fu">=</span> maybe <span class="dt">False</span> (const <span class="dt">True</span>) <span class="fu">.</span> lookupString <span class="st">&quot;slides&quot;</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -333,7 +323,7 @@
 </tbody>
 </table>
 </div>
-<p>Finally, the compiler itself! This takes a standard pandoc compiler, adds the <code>readerOptions</code> and <code>writerOptions</code> we defined in the entry on standard <a href="../../../../../posts/2014-09-29-generating-this-website-part-2-posts">posts</a>, and then customizes them with slideshow-specific functionality.</p>
+<p>Finally, the compiler itself! This takes a standard pandoc compiler, adds the <code>readerOptions</code> and <code>writerOptions</code> we defined in the entry on standard <a href="../../../../../posts/2014/09/29/generating-this-website-part-2-posts">posts</a>, and then customizes them with slideshow-specific functionality.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>

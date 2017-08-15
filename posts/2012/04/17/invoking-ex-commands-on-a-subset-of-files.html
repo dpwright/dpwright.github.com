@@ -50,10 +50,10 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="kw">read</span> <span class="ot">FILE</span>; <span class="kw">do</span> <span class="kw">sed</span> -i <span class="st">&quot;&quot;</span> <span class="st">&quot;/LINE/d&quot;</span> <span class="ot">$FILE</span><span class="kw">;</span> <span class="kw">done</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="bu">read</span> <span class="va">FILE</span>; <span class="kw">do</span> <span class="fu">sed</span> -i <span class="st">&quot;&quot;</span> <span class="st">&quot;/LINE/d&quot;</span> <span class="va">$FILE</span><span class="kw">;</span> <span class="kw">done</span></code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="kw">read</span> <span class="ot">FILE</span>; <span class="kw">do</span> <span class="kw">sed</span> <span class="st">&quot;/LINE/d&quot;</span> <span class="ot">$FILE</span> <span class="kw">&gt;</span> tmp<span class="kw">;</span> <span class="kw">mv</span> tmp <span class="ot">$FILE</span> <span class="kw">;</span> <span class="kw">done</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="bu">read</span> <span class="va">FILE</span>; <span class="kw">do</span> <span class="fu">sed</span> <span class="st">&quot;/LINE/d&quot;</span> <span class="va">$FILE</span> <span class="op">&gt;</span> tmp<span class="kw">;</span> <span class="fu">mv</span> tmp <span class="va">$FILE</span> <span class="kw">;</span> <span class="kw">done</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -67,7 +67,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="kw">read</span> <span class="ot">FILE</span>; <span class="kw">do</span> <span class="kw">(echo</span> <span class="st">&quot;g/LINE/d&quot;</span><span class="kw">;</span> <span class="kw">echo</span> <span class="st">'wq'</span><span class="kw">)</span> <span class="kw">|</span> <span class="kw">ex</span> -s FILE<span class="kw">;</span> <span class="kw">done</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">grep</span> -Rl <span class="st">&quot;SEARCH&quot;</span> . <span class="kw">|</span> <span class="kw">while</span> <span class="bu">read</span> <span class="va">FILE</span>; <span class="kw">do</span> <span class="kw">(</span><span class="bu">echo</span> <span class="st">&quot;g/LINE/d&quot;</span><span class="kw">;</span> <span class="bu">echo</span> <span class="st">'wq'</span><span class="kw">)</span> <span class="kw">|</span> <span class="ex">ex</span> -s FILE<span class="kw">;</span> <span class="kw">done</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>

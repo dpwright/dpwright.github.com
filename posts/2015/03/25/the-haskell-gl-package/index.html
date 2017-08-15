@@ -3162,19 +3162,19 @@ vertexShader.glsl
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> <span class="ot">#version 330</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> <span class="pp">#version 330</span></code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">mat4</span> pvmMatrix;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">mat4</span> pvmMatrix;</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">mat4</span> viewModelMatrix;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">mat4</span> viewModelMatrix;</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">mat3</span> normalMatrix;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">mat3</span> normalMatrix;</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
@@ -3219,13 +3219,13 @@ vertexShader.glsl
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">  <span class="dt">vec4</span> position4 = <span class="dt">vec4</span>(position, <span class="fl">1.0</span>);</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">  <span class="fu">gl_Position</span> = pvmMatrix * position4;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">  <span class="bu">gl_Position</span> = pvmMatrix * position4;</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">  calculatedNormal = <span class="fu">normalize</span>(normalMatrix * normal);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">  calculatedNormal = <span class="bu">normalize</span>(normalMatrix * normal);</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">  calculatedEye = -(viewModelMatrix * position4);</code></pre></div></td>
@@ -3255,34 +3255,34 @@ fragmentShader.glsl
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> <span class="ot">#version 330</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> <span class="pp">#version 330</span></code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec4</span> diffuseColour;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">vec4</span> diffuseColour;</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec4</span> ambientColour;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">vec4</span> ambientColour;</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec4</span> specularColour;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">vec4</span> specularColour;</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">float</span> shininess;</code></pre></div></td>
-</tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">vec3</span> lightDirection;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">float</span> shininess;</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="dt">uniform</span> <span class="dt">sampler2D</span> diffuseMap;</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">vec3</span> lightDirection;</code></pre></div></td>
+</tr>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
+</tr>
+<tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"><span class="kw">uniform</span> <span class="dt">sampler2D</span> diffuseMap;</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
@@ -3321,10 +3321,10 @@ fragmentShader.glsl
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec3</span> n = <span class="fu">normalize</span>(calculatedNormal);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec3</span> n = <span class="bu">normalize</span>(calculatedNormal);</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">float</span> intensity = <span class="fu">max</span>(<span class="fu">dot</span>(n,lightDirection), <span class="fl">0.0</span>);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">float</span> intensity = <span class="bu">max</span>(<span class="bu">dot</span>(n,lightDirection), <span class="fl">0.0</span>);</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
@@ -3336,19 +3336,19 @@ fragmentShader.glsl
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    {</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">vec3</span> e = <span class="fu">normalize</span>(<span class="dt">vec3</span>(calculatedEye));</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">vec3</span> e = <span class="bu">normalize</span>(<span class="dt">vec3</span>(calculatedEye));</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">vec3</span> h = <span class="fu">normalize</span>(lightDirection + e);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">vec3</span> h = <span class="bu">normalize</span>(lightDirection + e);</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">float</span> intSpec = <span class="fu">max</span>(<span class="fu">dot</span>(h,n), <span class="fl">0.0</span>);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        <span class="dt">float</span> intSpec = <span class="bu">max</span>(<span class="bu">dot</span>(h,n), <span class="fl">0.0</span>);</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        spec = specularColour * <span class="fu">pow</span>(intSpec,shininess);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">        spec = specularColour * <span class="bu">pow</span>(intSpec,shininess);</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    }</code></pre></div></td>
@@ -3357,13 +3357,13 @@ fragmentShader.glsl
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl"> </code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec4</span> texCol = <span class="fu">texture</span>(diffuseMap, fragmentUV);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec4</span> texCol = <span class="bu">texture</span>(diffuseMap, fragmentUV);</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec4</span> baseCol = <span class="fu">mix</span>(rgba, texCol, texCol.<span class="fu">a</span>);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    <span class="dt">vec4</span> baseCol = <span class="bu">mix</span>(rgba, texCol, texCol.<span class="fu">a</span>);</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    colorOut = baseCol * <span class="fu">max</span>(intensity * diffuseColour + spec, ambientColour);</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">    colorOut = baseCol * <span class="bu">max</span>(intensity * diffuseColour + spec, ambientColour);</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode glsl"><code class="sourceCode glsl">}</code></pre></div></td>

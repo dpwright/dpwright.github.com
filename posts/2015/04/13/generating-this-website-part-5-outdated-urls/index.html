@@ -83,7 +83,7 @@
 </tbody>
 </table>
 </div>
-<p>Finally, we import <code>Map</code> to look up metadata, and <code>Data.Time</code> so that we can check the dates. Note we hide <code>readTime</code> because we’re going to use the version from the <code>Posts</code> module.</p>
+<p>Finally, we import <code>Data.Time</code> so that we can check the dates. Note we hide <code>readTime</code> because we’re going to use the version from the <code>Posts</code> module.</p>
 <div class="elastic-tabstops">
 <table>
 <colgroup>
@@ -91,9 +91,6 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">M</span></code></pre></div></td>
-</tr>
-<tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time</span> <span class="kw">hiding</span> (readTime)</code></pre></div></td>
 </tr>
 </tbody>
@@ -193,7 +190,7 @@
 <tbody>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isOutdated </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe <span class="dt">False</span> checkDate ∘ M.lookup <span class="st">&quot;date&quot;</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe <span class="dt">False</span> checkDate ∘ lookupString <span class="st">&quot;date&quot;</span></code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     checkDate  </code></pre></div></td>
