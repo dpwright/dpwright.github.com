@@ -5,7 +5,9 @@ branches:
     - source
 env:
   global:
-    - secure: "Jc7XHdzAuXpQHX9w5H8ij8u/c4+eLSlyPTv+gT7Yjwf4n1xUwoUujHG5RoFrTUUUuNSc5qtsCBUXcaYHaF1yFWfmCuhNGc6H5VszFy8keXr4LBmtn8pIoKRSqs4EJ+NDp3v8fz/9znCzUHcaCPJFHET2pN7G8UwV/WpGT2JevDw="
+    - GH_REPO="dpwright/dpwright.github.com"
+    - secure: ljOo/ngWTRMbbXyvkZaXKXZG+vIn+NxTqJnn3UBqgocVTQTmBGUwQ6xYyoOOy4eYg9Ezsm6R490xNJFcVtLpBcKF/iHlzXewwFwluFeVD750vlo98UtqEGkW8/rku+Q+uqAcOiSXulHGdwei/QB/9Wa5RV4+EGqsxvZMcJl4EAk=
+    - REPO_URL="https://$GH_TOKEN@github.com/$GH_REPO.git"
 cache:
   directories:
     - $HOME/.stack
