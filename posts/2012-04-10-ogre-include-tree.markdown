@@ -4,7 +4,7 @@ date: 2012-04-10 10:54
 tags: c++, graphs, ogre, visualisation
 ---
 
-![OGRE include tree](ogre-include-tree/ogre-includes-th.png)\ 
+<div class="page"><div>![OGRE include tree](ogre-include-tree/ogre-includes-th.png)</div></div>
 
 My [include graph generator script][1] being run on ogre.h from the [OGRE][2]
 rendering engine.  The graph is far too complicated to read, but idly scrolling

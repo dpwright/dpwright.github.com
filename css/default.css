@@ -188,6 +188,11 @@ div.tagsinfo {
     text-align: right;
 }
 
+.page > div {
+    margin: 0 -1000%;
+    text-align: center;
+}
+
 td.postdate {
     vertical-align: middle;
 }
