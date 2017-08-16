@@ -2,17 +2,20 @@
 title: about this site
 ---
 
-This is the personal website of Daniel P. Wright, a games programmer living and
-working in Japan.  My main interests are in functional programming, automation,
-maths and games, so I mainly blog about those.  The two tools I probably make
-the most use of are vim and git, so when I come across a useful tip for either
-of those I'll often note it here, for my own benefit more than anybody else's!
+This is the personal website of Daniel P. Wright, a programmer currently living
+in California.  Previously, I've worked in the games industry in the UK and
+Japan.  My main interests are in functional programming, automation, maths and
+games, so I mainly blog about those.  The two tools I probably make the most
+use of are vim and git, so when I come across a useful tip for either of those
+I'll often note it here, for my own benefit more than anybody else's!
 
-I mostly blog in English, but given that I live in Japan and am involved in the
-functional programming community in Kansai I will sometimes post in Japanese as
-well.  This is particularly true of writeups for any talks I give here.  If you
-are interested in Japanese content in particular, there is a [tag][日本語] for
-that.
+I mostly blog in English, but given that I used to live in Japan and was
+involved in the functional programming community in Kansai I sometimes post in
+Japanese as well.  This is particularly true of writeups for any talks I gave
+there.  If you are interested in Japanese content in particular, there is a
+[tag][日本語] for that.
+
+I also have a podcast, [Station 13].  You should subscribe to it!
 
 Profile
 -------
@@ -22,12 +25,6 @@ Here is a summary of my presence on the various social media networks:
 - <i class="fa fa-github"></i>  [dpwright][github]
 - <i class="fa fa-twitter"></i> [\@danielpwright][danielpwright] （English）
 - <i class="fa fa-twitter"></i> [\@tataminomusi][tataminomusi] （日本語）
-
-<!-- TODO: No it isn't, yet
-My CV is available in [pdf][cv-pdf], [html][cv-html], and [json][cv-json]
-formats.  It is generated automatically from the JSON source by
-<http://jsonresume.org>.
--->
 
 Literate Programming
 --------------------
@@ -70,12 +67,10 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-[日本語]:                  http://www.dpwright.com/tags/日本語
+[日本語]:                  https://www.dpwright.com/tags/日本語
+[Station 13]:              https://station13.fm
 [tataminomusi]:            http://twitter.com/tataminomusi
 [danielpwright]:           http://twitter.com/danielpwright
 [github]:                  http://github.com/dpwright
-[cv-pdf]:                  #
-[cv-html]:                 #
-[cv-json]:                 #
-[generating this website]: http://www.dpwright.com/tags/generating%20this%20website
-[literate-programs]:       http://www.dpwright.com/tags/literate-programs
+[generating this website]: https://www.dpwright.com/tags/generating%20this%20website
+[literate-programs]:       https://www.dpwright.com/tags/literate-programs
