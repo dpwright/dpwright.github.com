@@ -2,14 +2,24 @@
 @import url(../fonts/ComputerModern/Concrete/cmun-concrete.css);
 
 body {
-    max-width: 600px;
+    max-width: 800px;
     background-color: #fafafa;
     color: #333;
     font-family: "Computer Modern Serif", serif;
     font-size: 20px;
-    margin: 0px auto 0px auto;
+    margin: 0 auto;
     text-rendering: optimizeLegibility;
     text-align: justify;
+}
+
+div#content  div#titlematter{
+    max-width: 700px;
+    margin: auto;
+}
+
+div#content div#mainmatter {
+    max-width: 600px;
+    margin: auto;
 }
 
 p {

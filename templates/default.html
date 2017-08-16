@@ -33,14 +33,18 @@
         </div>
 
         <div id="content">
-            $if(title)$
-              <h1 class="title">$title$</h1>
-            $endif$
-            $if(subtitle)$
-              <h2 class="subtitle">$subtitle$</h1>
-            $endif$
+            <div id="titlematter">
+              $if(title)$
+                <h1 class="title">$title$</h1>
+              $endif$
+              $if(subtitle)$
+                <h2 class="subtitle">$subtitle$</h2>
+              $endif$
+            </div>
 
-            $body$
+            <div id="mainmatter">
+              $body$
+            </div>
         </div>
         <div id="footer">
           <div id="text-licence">
