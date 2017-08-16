@@ -1,7 +1,9 @@
 ---
 date: 2015-03-18 10:08:39
 tags: hakyll, literate-programs, generating this website
-title: "Generating this website part 4: Atom Feed"
+title: Generating this website part 4
+subtitle: Atom Feed
+clone: posts/2015/03/18/generating-this-website-part-4-atom-feed/index.html
 ---
 
 <div class="sidenote">

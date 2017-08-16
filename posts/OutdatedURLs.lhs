@@ -1,7 +1,9 @@
 ---
 date: 2015-04-13 07:57:17
 tags: hakyll, literate-programs, generating this website
-title: "Generating this website part 5: Outdated URLs"
+title: Generating this website part 5
+subtitle: Outdated URLs
+clone: posts/2015/04/13/generating-this-website-part-5-outdated-urls/index.html
 ---
 
 <div class="sidenote">

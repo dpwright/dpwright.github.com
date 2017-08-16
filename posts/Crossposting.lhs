@@ -1,7 +1,9 @@
 ---
 date: 2017-08-02 20:09:00
 tags: hakyll, literate-programs, generating this website
-title: "Generating this website part 8: Crossposting"
+title: Generating this website part 8
+subtitle: Crossposting
+clone: posts/2017/08/02/generating-this-website-part-8-crossposting/index.html
 ---
 
 <div class="sidenote">

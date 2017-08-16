@@ -1,7 +1,9 @@
 ---
 date: 2014-09-29 09:57:39
 tags: hakyll, literate-programs, generating this website
-title: "Generating this website part 2: Posts"
+title: Generating this website part 2
+subtitle: Posts
+clone: posts/2014/09/29/generating-this-website-part-2-posts/index.html
 ---
 
 <div class="sidenote">
