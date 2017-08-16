@@ -6,7 +6,7 @@ body {
     background-color: #fafafa;
     color: #333;
     font-family: "Computer Modern Serif", serif;
-    font-size: 1.0em;
+    font-size: 1.1em;
     margin: 0 auto;
     padding: 0 2em;
     text-rendering: optimizeLegibility;
@@ -238,20 +238,20 @@ td.postdate {
     padding: 0px;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
     h1#logomain {
-        font-size: 10vw;
-    }
-
-    div#header #navigation a {
         font-size: 8vw;
     }
 
+    div#header #navigation a {
+        font-size: 7vw;
+    }
+
     h1.title {
-        font-size: 6vw;
+        font-size: 4.6vw;
     }
 
     h2.subtitle {
-        font-size: 4vw;
+        font-size: 3.0vw;
     }
 }
