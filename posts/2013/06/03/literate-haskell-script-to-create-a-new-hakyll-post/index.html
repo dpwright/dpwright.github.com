@@ -31,12 +31,15 @@
         </div>
 
         <div id="content">
-            
-              <h1 class="title">(Literate) Haskell script to create a new Hakyll post</h1>
-            
-            
+            <div id="titlematter">
+              
+                <h1 class="title">(Literate) Haskell script to create a new Hakyll post</h1>
+              
+              
+            </div>
 
-            <div class="info"> 3 June, 2013</div>
+            <div id="mainmatter">
+              <div class="info"> 3 June, 2013</div>
 
 
 
@@ -312,10 +315,15 @@
 <p>The biggest thing that sticks out to me is my frequent use of <code>printf</code>, particularly when it comes to generating commands to pass to <code>system</code>. This feels a little like overkill, and I’m sure there must be a better way.</p>
 <p>Another problem is that punctuation in blog titles won’t be handled well. The filename generator simply makes everything lower-case and adds hyphens; it should perhaps strip out any characters which are not URL-friendly, too. The call to vim is worse – since it passes the header text as a command-line parameter, it must keep the title as-is, but will break if the title contains quotation marks. The only solution I can think of for this is to write the header text to a temporary file and then read it in from vim, but I’ll leave that as an exercise for the reader and just avoid using quotation marks in my blog posts for now ;-)</p>
 <h2 id="in-summary">In Summary</h2>
-<p><img src="http://cdn.memegenerator.net/instances/400x/38355687.jpg" alt="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" /> </p>
+<div class="page">
+<div>
+<img src="../../../../../posts/2013/06/03/literate-haskell-script-to-create-a-new-hakyll-post/yodawg.jpg" alt="Yo dawg I heard you like scripts and blogs so I put a script to make blogs inside a blog about the script to make blogs so you can blog about scripts while you script about blogs" />
+</div>
+</div>
 
 <div class="tagsinfo">Tagged with: <a href="../../../../../tags/literate-programs">literate-programs</a>, <a href="../../../../../tags/functional-programming">functional-programming</a>, <a href="../../../../../tags/haskell">haskell</a>, <a href="../../../../../tags/hakyll">hakyll</a></div>
 
+            </div>
         </div>
         <div id="footer">
           <div id="text-licence">

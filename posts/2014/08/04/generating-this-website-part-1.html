@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=650" />
-        <title>Wright Access - Generating this website part 1: Introduction</title>
+        <title>Wright Access - Generating this website part 1</title>
         <link rel="stylesheet" type="text/css" href="../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../css/syntax.css" />
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
@@ -31,12 +31,17 @@
         </div>
 
         <div id="content">
-            
-              <h1 class="title">Generating this website part 1: Introduction</h1>
-            
-            
+            <div id="titlematter">
+              
+                <h1 class="title">Generating this website part 1</h1>
+              
+              
+                <h2 class="subtitle">Introduction</h2>
+              
+            </div>
 
-            <div class="info"> 4 August, 2014</div>
+            <div id="mainmatter">
+              <div class="info"> 4 August, 2014</div>
 
 
 
@@ -258,7 +263,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; taggedRules ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> taggedRules <span class="fu">=</span> posts <span class="fu">&amp;</span> outdatedURLs <span class="fu">&amp;</span> index <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> tagCloud <span class="fu">&amp;</span> feed</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> taggedRules <span class="fu">=</span> posts <span class="fu">&amp;</span> outdatedURLs <span class="fu">&amp;</span> clonedURLs <span class="fu">&amp;</span> index <span class="fu">&amp;</span> tagIndex <span class="fu">&amp;</span> tagCloud <span class="fu">&amp;</span> feed</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span> (<span class="fu">&amp;</span>) <span class="fu">=</span> liftA2 (<span class="fu">&gt;&gt;</span>)</code></pre></div></td>
@@ -310,6 +315,7 @@ Note: the <code>slideshows</code> rule above will be defined in future blog post
 
 <div class="tagsinfo">Tagged with: <a href="../../../../tags/literate-programs">literate-programs</a>, <a href="../../../../tags/hakyll">hakyll</a>, <a href="../../../../tags/generating%20this%20website">generating this website</a></div>
 
+            </div>
         </div>
         <div id="footer">
           <div id="text-licence">
