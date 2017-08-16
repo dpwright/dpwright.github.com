@@ -20,15 +20,22 @@ tutorials][speccy-tuts], which itself is a clone of the game centipede.  You
 can play it directly on this webpage, or you can download the `.tap` file for
 playing in an emulator [here][tapfile].
 
-<script src="jdataview.js"></script>
-<script src="jsspeccy-core.min.js"></script>
+<script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jdataview.js"></script>
+<script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jsspeccy-core.min.js"></script>
 <script>
   function go() {
+    var scaleFactor = 1.5;
+    var startResizingWidth = 700;
+    var resizeFactor = startResizingWidth * (1.0 / scaleFactor);
+    var windowWidth = window.innerWidth
+    if(windowWidth < startResizingWidth) {
+      scaleFactor = windowWidth / resizeFactor;
+    }
     var jsspeccy = JSSpeccy('speccy', {
       'autostart': false,
       'autoload': true,
-      'scaleFactor': 1.5,
-      'loadFile': 'lambdaman.tap'
+      'scaleFactor': scaleFactor,
+      'loadFile': '/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/lambdaman.tap'
     });
   }
 </script>
