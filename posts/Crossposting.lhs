@@ -26,15 +26,18 @@ other version of the site.
 Let's begin with the standard fluff...
 
 > {-# LANGUAGE OverloadedStrings #-}
+> {-# LANGUAGE UnicodeSyntax #-}
 > module Crossposting where
+> import Prelude.Unicode
+> import Control.Monad.Unicode
 > import Hakyll
 
 All this module really does is expose a function, `crosspostField`, which
 returns the content of the header we want to insert at the top of the page if
 it's a crosspost.  This is fed into the template for [posts][posts].
 
-> crosspostField :: String -> Context a
-> crosspostField key = field key $ getCrosspostHeader key . itemIdentifier
+> crosspostField :: String → Context a
+> crosspostField key = field key $ getCrosspostHeader key ∘ itemIdentifier
 
 The idea behind this is to extract the field identified by `key` from the
 metadata at the top of the post file, and pass it off to `getCrosspostHeader`
@@ -43,14 +46,14 @@ to turn into a header body.  The job of this function, then, is to look in the
 field, render that template if found, and return it -- otherwise we return an
 empty string.  This is given below.
 
-> getCrosspostHeader :: String -> Identifier -> Compiler String
-> getCrosspostHeader key n = getMetadata n >>= toHeader . lookupString key
->   where loadHeader        = fmap itemBody . header
->         toHeader          = maybe (return "") loadHeader
->         header name       = makeItem ""
->                         >>= loadAndApplyTemplate (templatePath name) xpContext
->         templatePath name = fromFilePath $ "templates/xp/" ++ name ++ ".html"
->         xpContext         = defaultContext
+> getCrosspostHeader :: String → Identifier → Compiler String
+> getCrosspostHeader key n = getMetadata n ≫= toHeader ∘ lookupString key
+>   where loadHeader        	= fmap itemBody ∘ header
+>         toHeader          	= maybe (return "") loadHeader
+>         header name       	= makeItem ""
+>                           	≫= loadAndApplyTemplate (templatePath name) xpContext
+>         templatePath name 	= fromFilePath $ "templates/xp/" ++ name ++ ".html"
+>         xpContext         	= defaultContext
 
 Note that the header itself is a template, rendered using the `defaultContext`
 context.  This means it has access to other fields in the post's metadata --

@@ -51,7 +51,9 @@ Preliminaries
 As always, we begin by specifying `OverloadedStrings` and importing `Hakyll`.
 
 > {-# LANGUAGE OverloadedStrings #-}
+> {-# LANGUAGE UnicodeSyntax #-}
 > module Slides where
+> import Control.Monad.Unicode
 > import Hakyll
 
 Monoid's `mappend` operator is also useful to have.
@@ -110,9 +112,9 @@ which type of slideshow to generate, then passes it to `slidesCompiler`.
 > compileSlideshow :: Rules ()
 > compileSlideshow =
 >   compile $ getUnderlying
->     >>= (`getMetadataField` "slides")
->     >>= slidesCompiler . maybe SlidySlides read
->     >>= relativizeUrls
+>     ≫= (`getMetadataField` "slides")
+>     ≫= slidesCompiler . maybe SlidySlides read
+>     ≫= relativizeUrls
 
 Generating the slideshows
 -------------------------
@@ -130,7 +132,7 @@ on one in particular, so I'll add support for them individually as I try them
 out.  Each slideshow engine requires a different template, so we'll make a quick
 lookup for that.
 
-> slidesTemplate :: HTMLSlideVariant -> Identifier
+> slidesTemplate :: HTMLSlideVariant → Identifier
 > slidesTemplate RevealJsSlides 	= "templates/slides/reveal.js.html"
 > slidesTemplate S5Slides       	= "templates/slides/s5.html"
 > slidesTemplate SlidySlides    	= "templates/slides/slidy.html"
@@ -144,7 +146,7 @@ expect to be working with!  Reveal.js expects HTML 5, while the others I've
 tried all work better with HTML 4 source.  I've made a quick lookup for that as
 well.
 
-> slidesExpectHTML5 :: HTMLSlideVariant -> Bool
+> slidesExpectHTML5 :: HTMLSlideVariant → Bool
 > slidesExpectHTML5 RevealJsSlides 	= True
 > slidesExpectHTML5 _              	= False
 
@@ -152,10 +154,10 @@ Finally, the compiler itself!  This takes a standard pandoc compiler, adds the
 `readerOptions` and `writerOptions` we defined in the entry on standard
 [posts], and then customizes them with slideshow-specific functionality.
 
-> slidesCompiler :: HTMLSlideVariant -> Compiler (Item String)
+> slidesCompiler :: HTMLSlideVariant → Compiler (Item String)
 > slidesCompiler sv =
 >   pandocCompilerWith readerOptions slideWriterOpts
->   >>= loadAndApplyTemplate (slidesTemplate sv) slidesCtx
+>   ≫= loadAndApplyTemplate (slidesTemplate sv) slidesCtx
 >   where
 >     slideWriterOpts 	= writerOptions	
 >                     	{ writerSlideVariant 	= sv
