@@ -35,6 +35,13 @@ executable site
   hs-source-dirs:      pending-posts, posts
   default-language:    Haskell2010
   ghc-options:         -Wall
+  other-modules:       Crossposting,
+                       ElasticTabstops,
+                       Feed,
+                       Indexing,
+                       OutdatedURLs,
+                       Posts,
+                       Slides
 
 executable new-post
   main-is:             2013-06-03-literate-haskell-script-to-create-a-new-hakyll-post.lhs
