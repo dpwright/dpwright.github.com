@@ -6,7 +6,7 @@ body {
     background-color: #fafafa;
     color: #333;
     font-family: "Computer Modern Serif", serif;
-    font-size: 20px;
+    font-size: 1.0em;
     margin: 0 auto;
     padding: 0 2em;
     text-rendering: optimizeLegibility;
