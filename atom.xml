@@ -919,15 +919,22 @@
 <li><a href="https://github.com/dpwright/zxspectrum">zxspectrum</a>, a set of utilities and macros to make working with the ZX Spectrum specifically easier, including labels for important routines in the Spectrum 48k ROM.</li>
 </ul>
 <p>Here’s the game we’re going to be making. It’s basically a port of the project pursued over the course of <a href="https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/">this excellent set of ZX Spectrum tutorials</a>, which itself is a clone of the game centipede. You can play it directly on this webpage, or you can download the <code>.tap</code> file for playing in an emulator <a href="lambdaman.tap">here</a>.</p>
-<script src="jdataview.js"></script>
-<script src="jsspeccy-core.min.js"></script>
+<script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jdataview.js"></script>
+<script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jsspeccy-core.min.js"></script>
 <script>
   function go() {
+    var scaleFactor = 1.5;
+    var startResizingWidth = 700;
+    var resizeFactor = startResizingWidth * (1.0 / scaleFactor);
+    var windowWidth = window.innerWidth
+    if(windowWidth < startResizingWidth) {
+      scaleFactor = windowWidth / resizeFactor;
+    }
     var jsspeccy = JSSpeccy('speccy', {
       'autostart': false,
       'autoload': true,
-      'scaleFactor': 1.5,
-      'loadFile': 'lambdaman.tap'
+      'scaleFactor': scaleFactor,
+      'loadFile': '/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/lambdaman.tap'
     });
   }
 </script>
