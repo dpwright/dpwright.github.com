@@ -71,7 +71,13 @@
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></div></td>
 </tr>
 <tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE UnicodeSyntax #-}</span></code></pre></div></td>
+</tr>
+<tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">Slides</span> <span class="kw">where</span></code></pre></div></td>
+</tr>
+<tr class="even">
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Control.Monad.Unicode</span></code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></div></td>
@@ -217,13 +223,13 @@
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   compile <span class="fu">$</span> getUnderlying</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> (<span class="ot">`getMetadataField`</span> <span class="st">&quot;slides&quot;</span>)</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> (<span class="ot">`getMetadataField`</span> <span class="st">&quot;slides&quot;</span>)</code></pre></div></td>
 </tr>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> slidesCompiler <span class="fu">.</span> maybe <span class="dt">SlidySlides</span> read</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> slidesCompiler <span class="fu">.</span> maybe <span class="dt">SlidySlides</span> read</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="fu">&gt;&gt;=</span> relativizeUrls</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     ≫<span class="fu">=</span> relativizeUrls</code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -269,7 +275,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesTemplate ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Identifier</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesTemplate ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">→</span> <span class="dt">Identifier</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -307,7 +313,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesExpectHTML5 ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesExpectHTML5 ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">→</span> <span class="dt">Bool</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -336,7 +342,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesCompiler ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">-&gt;</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; slidesCompiler ::</span> <span class="dt">HTMLSlideVariant</span> <span class="ot">→</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</code></pre></div></td>
 </tr>
 <tr class="even">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> slidesCompiler sv <span class="fu">=</span></code></pre></div></td>
@@ -345,7 +351,7 @@
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   pandocCompilerWith readerOptions slideWriterOpts</code></pre></div></td>
 </tr>
 <tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="fu">&gt;&gt;=</span> loadAndApplyTemplate (slidesTemplate sv) slidesCtx</code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   ≫<span class="fu">=</span> loadAndApplyTemplate (slidesTemplate sv) slidesCtx</code></pre></div></td>
 </tr>
 <tr class="odd">
 <td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></div></td>
