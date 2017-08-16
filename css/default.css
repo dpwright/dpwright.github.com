@@ -212,6 +212,12 @@ td.postdate {
     vertical-align: middle;
 }
 
+img {
+    display: inline-block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
 .elastic-tabstops > table {
     border-spacing: 0px;
     border-collapse: collapse;
