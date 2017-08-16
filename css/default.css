@@ -100,6 +100,10 @@ a:hover {
     color: #47a3ff;
 }
 
+.postMenuItem {
+    text-align: left;
+}
+
 .postMenuItem h2 {
     font-weight: 500;
     padding-bottom: 0px;
