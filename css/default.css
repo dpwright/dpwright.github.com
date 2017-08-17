@@ -11,6 +11,7 @@ body {
     padding: 0 2em;
     text-rendering: optimizeLegibility;
     text-align: justify;
+    -webkit-text-size-adjust: none;
 }
 
 div#content  div#titlematter{
@@ -24,6 +25,9 @@ div#content div#mainmatter {
 }
 
 p {
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
 }
 
 div .sourceCode {

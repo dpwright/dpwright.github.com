@@ -5,17 +5,23 @@ title: Writing a ZX Spectrum game in Haskell
 subtitle: introducing the z80 and zxspectrum packages
 ---
 
-Haskell, [the world's finest imperative language][haskell-imperative], can now
-be used to write games for the ZX Spectrum, the world's finest 80s
-microcomputer.  This post introduces the two packages that make this possible:
+Haskell, [the world's finest imperative programming
+language][haskell-imperative], can now be used to write games for the ZX
+Spectrum, the world's finest 80s microcomputer.  This post introduces the two
+packages that make this possible:
 
 - [z80], a fully-functional Z80 macro-assembler embedded in Haskell, and
 - [zxspectrum], a set of utilities and macros to make working with the ZX
   Spectrum specifically easier, including labels for important routines in the
   Spectrum 48k ROM.
 
+These packages wouldn't have been possible without Russell O'Connor's excellent
+article in [The Monad.Reader Issue 6][monad-6], "Assembly: Circular Programming
+with Recursive do", which was the main inspiration both for those packages and
+for this post.
+
 Here's the game we're going to be making.  It's basically a port of the project
-pursued over the course of [this excellent set of ZX Spectrum
+pursued over the course of [this great set of ZX Spectrum
 tutorials][speccy-tuts], which itself is a clone of the game centipede.  You
 can play it directly on this webpage, or you can download the `.tap` file for
 playing in an emulator [here][tapfile].
@@ -413,7 +419,7 @@ memory area you wanted.  `ldVia` is so common that I have included it in the
 macros 'type-safe'.  Here's its type signature:
 
 ```haskell
-ldVia :: (Load a c, Load b a) => a → b → c → Z80ASM
+ldVia :: (Load a c, Load b a) ⇒ a → b → c → Z80ASM
 ```
 
 What this says is, "given an `a` that can be loaded into from `c`, and a `b`
@@ -1235,6 +1241,7 @@ With that, we can compile and run the program, which should spit out a file call
 [haskell-imperative]: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/mark.pdf
 [z80]:                https://github.com/dpwright/z80
 [zxspectrum]:         https://github.com/dpwright/zxspectrum
+[monad-6]:            https://wiki.haskell.org/wikiupload/1/14/TMR-Issue6.pdf
 [speccy-tuts]:        https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/
 [titlescreen]:        lvtc.scr
 [tapfile]:            lambdaman.tap

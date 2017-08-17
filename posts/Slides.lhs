@@ -1,6 +1,6 @@
 ---
 date: 2016-01-22 18:50:00
-tags: literate-programs, hakyll, generating this website
+tags: hakyll, literate-programs, generating this website
 title: Generating this website part 7
 subtitle: Slideshows
 clone: posts/2016/01/22/generating-this-website-part-7-slideshows/index.html

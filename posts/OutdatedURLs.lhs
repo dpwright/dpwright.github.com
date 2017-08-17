@@ -96,7 +96,7 @@ into the metadata for the post.
 >     cloneURL meta 	= constRoute <$> lookupString "clone" meta
 
 This version is very similar to `outdatedURLs` above, but rather than try to be
-clever with the date field, it simply searches for any post containing a
+clever with the `date` field, it simply searches for any post containing a
 `clone` field.  If it finds one, it outputs a cloned version to the location
 specified in that field.
 
