@@ -594,7 +594,7 @@
 <h2 id="added-extras">Added extras</h2>
 <p>That’s really all there is to it on the Hakyll side! To make writing slides and blog posts in the same file easier, I have a couple of CSS <code>div</code> classes set up in the slideshow style files – for instance, anything inside a <code>&lt;div class=&quot;notes&quot;&gt;</code> will be shown in the blog post but not in the slideshow. I have yet to add the reverse functionality but I can’t imagine it would be too difficult. All that can be done with a bit of CSS cleverness, though, with no special support from Hakyll itself.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -958,7 +958,7 @@
 <h2 id="added-extras">Added extras</h2>
 <p>That’s really all there is to it on the Hakyll side! To make writing slides and blog posts in the same file easier, I have a couple of CSS <code>div</code> classes set up in the slideshow style files – for instance, anything inside a <code>&lt;div class=&quot;notes&quot;&gt;</code> will be shown in the blog post but not in the slideshow. I have yet to add the reverse functionality but I can’t imagine it would be too difficult. All that can be done with a bit of CSS cleverness, though, with no special support from Hakyll itself.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -971,12 +971,13 @@
 
 
 
-<p>Haskell, <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/mark.pdf">the world’s finest imperative language</a>, can now be used to write games for the ZX Spectrum, the world’s finest 80s microcomputer. This post introduces the two packages that make this possible:</p>
+<p>Haskell, <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/mark.pdf">the world’s finest imperative programming language</a>, can now be used to write games for the ZX Spectrum, the world’s finest 80s microcomputer. This post introduces the two packages that make this possible:</p>
 <ul>
 <li><a href="https://github.com/dpwright/z80">z80</a>, a fully-functional Z80 macro-assembler embedded in Haskell, and</li>
 <li><a href="https://github.com/dpwright/zxspectrum">zxspectrum</a>, a set of utilities and macros to make working with the ZX Spectrum specifically easier, including labels for important routines in the Spectrum 48k ROM.</li>
 </ul>
-<p>Here’s the game we’re going to be making. It’s basically a port of the project pursued over the course of <a href="https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/">this excellent set of ZX Spectrum tutorials</a>, which itself is a clone of the game centipede. You can play it directly on this webpage, or you can download the <code>.tap</code> file for playing in an emulator <a href="lambdaman.tap">here</a>.</p>
+<p>These packages wouldn’t have been possible without Russell O’Connor’s excellent article in <a href="https://wiki.haskell.org/wikiupload/1/14/TMR-Issue6.pdf">The Monad.Reader Issue 6</a>, “Assembly: Circular Programming with Recursive do”, which was the main inspiration both for those packages and for this post.</p>
+<p>Here’s the game we’re going to be making. It’s basically a port of the project pursued over the course of <a href="https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/">this great set of ZX Spectrum tutorials</a>, which itself is a clone of the game centipede. You can play it directly on this webpage, or you can download the <code>.tap</code> file for playing in an emulator <a href="lambdaman.tap">here</a>.</p>
 <script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jdataview.js"></script>
 <script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jsspeccy-core.min.js"></script>
 <script>
@@ -1887,7 +1888,7 @@ Movement: QAOP/HJKL Fire: Space<br /> Powered by <a href="http://jsspeccy.zxdemo
 </colgroup>
 <tbody>
 <tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">ldVia ::</span> (<span class="dt">Load</span> a c, <span class="dt">Load</span> b a) <span class="ot">=&gt;</span> a <span class="ot">→</span> b <span class="ot">→</span> c <span class="ot">→</span> <span class="dt">Z80ASM</span></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">ldVia ::</span> (<span class="dt">Load</span> a c, <span class="dt">Load</span> b a) <span class="ot">⇒</span> a <span class="ot">→</span> b <span class="ot">→</span> c <span class="ot">→</span> <span class="dt">Z80ASM</span></code></pre></div></td>
 </tr>
 </tbody>
 </table>
@@ -4789,7 +4790,7 @@ Movement: QAOP/HJKL Fire: Space<br /> Powered by <a href="http://jsspeccy.zxdemo
 </tbody>
 </table>
 </div>
-<p>This version is very similar to <code>outdatedURLs</code> above, but rather than try to be clever with the date field, it simply searches for any post containing a <code>clone</code> field. If it finds one, it outputs a cloned version to the location specified in that field.</p>
+<p>This version is very similar to <code>outdatedURLs</code> above, but rather than try to be clever with the <code>date</code> field, it simply searches for any post containing a <code>clone</code> field. If it finds one, it outputs a cloned version to the location specified in that field.</p>
 <p>Hopefully that should cover me from now on! If I need to clone into multiple locations in future, I’ll have to update this function to accept a comma-separated list or something, but it’ll do for now…</p>
 
 <div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
@@ -5044,7 +5045,7 @@ Movement: QAOP/HJKL Fire: Space<br /> Powered by <a href="http://jsspeccy.zxdemo
 </tbody>
 </table>
 </div>
-<p>This version is very similar to <code>outdatedURLs</code> above, but rather than try to be clever with the date field, it simply searches for any post containing a <code>clone</code> field. If it finds one, it outputs a cloned version to the location specified in that field.</p>
+<p>This version is very similar to <code>outdatedURLs</code> above, but rather than try to be clever with the <code>date</code> field, it simply searches for any post containing a <code>clone</code> field. If it finds one, it outputs a cloned version to the location specified in that field.</p>
 <p>Hopefully that should cover me from now on! If I need to clone into multiple locations in future, I’ll have to update this function to accept a comma-separated list or something, but it’ll do for now…</p>
 
 <div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
