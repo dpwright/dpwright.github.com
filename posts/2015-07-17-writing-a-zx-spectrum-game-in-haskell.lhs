@@ -29,6 +29,8 @@ playing in an emulator [here][tapfile].
 <script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jdataview.js"></script>
 <script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jsspeccy-core.min.js"></script>
 <script>
+  var jsspeccy;
+  var audioState = true;
   function go() {
     var scaleFactor = 1.5;
     var startResizingWidth = 700;
@@ -37,19 +39,26 @@ playing in an emulator [here][tapfile].
     if(windowWidth < startResizingWidth) {
       scaleFactor = windowWidth / resizeFactor;
     }
-    var jsspeccy = JSSpeccy('speccy', {
+    jsspeccy = JSSpeccy('speccy', {
       'autostart': false,
       'autoload': true,
       'scaleFactor': scaleFactor,
       'loadFile': '/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/lambdaman.tap'
     });
   }
+  function toggleSound() {
+    if(typeof jsspeccy !== 'undefined') {
+      audioState = !audioState;
+      jsspeccy.setAudioState(audioState);
+    }
+  }
 </script>
 
 <center><figure>
 <div id="speccy"><img src onerror="go()" /></div>
 <figcaption>Movement: QAOP/HJKL Fire: Space<br />
-Powered by [jsspeccy]</figcaption>
+Powered by [jsspeccy]<br />
+<a onClick="toggleSound()">Toggle Sound</a></figcaption>
 </figure></center>
 
 I made some of my own customisations along the way, but credit for most of the
