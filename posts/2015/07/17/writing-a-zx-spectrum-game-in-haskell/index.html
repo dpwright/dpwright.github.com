@@ -51,44 +51,10 @@
 <li><a href="https://github.com/dpwright/zxspectrum">zxspectrum</a>, a set of utilities and macros to make working with the ZX Spectrum specifically easier, including labels for important routines in the Spectrum 48k ROM.</li>
 </ul>
 <p>These packages wouldn’t have been possible without Russell O’Connor’s excellent article in <a href="https://wiki.haskell.org/wikiupload/1/14/TMR-Issue6.pdf">The Monad.Reader Issue 6</a>, “Assembly: Circular Programming with Recursive do”, which was the main inspiration both for those packages and for this post.</p>
-<p>Here’s the game we’re going to be making. It’s basically a port of the project pursued over the course of <a href="https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/">this great set of ZX Spectrum tutorials</a>, which itself is a clone of the game centipede. You can play it directly on this webpage, or you can download the <code>.tap</code> file for playing in an emulator <a href="lambdaman.tap">here</a>.</p>
-<script src="../../../../../posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jdataview.js"></script>
-<script src="../../../../../posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jsspeccy-core.min.js"></script>
-<script>
-  var jsspeccy;
-  var audioState = true;
-  function go() {
-    var scaleFactor = 1.5;
-    var startResizingWidth = 700;
-    var resizeFactor = startResizingWidth * (1.0 / scaleFactor);
-    var windowWidth = window.innerWidth
-    if(windowWidth < startResizingWidth) {
-      scaleFactor = windowWidth / resizeFactor;
-    }
-    jsspeccy = JSSpeccy('speccy', {
-      'autostart': false,
-      'autoload': true,
-      'scaleFactor': scaleFactor,
-      'loadFile': '/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/lambdaman.tap'
-    });
-  }
-  function toggleSound() {
-    if(typeof jsspeccy !== 'undefined') {
-      audioState = !audioState;
-      jsspeccy.setAudioState(audioState);
-    }
-  }
-</script>
-<center>
-<figure>
-<div id="speccy">
-<img src onerror="go()" />
+<div class="sidenote">
+<p><strong>Warning</strong> Before clicking on the link to load the game below, you should know that I’ve heard reports that on some platforms the JavaScript emulator I’m using to embed it causes a loud, unpleasant noise. I’ve had one report from someone using an Android device and one from somebody using Firefox (not sure on what platform). I’ve tested the page in Safari and it’s fine, but if you’re not using that you might want to turn off your speakers before clicking, or just download the file to play in an emulator. Sorry!</p>
 </div>
-<figcaption>
-Movement: QAOP/HJKL Fire: Space<br /> Powered by <a href="http://jsspeccy.zxdemo.org">jsspeccy</a><br /> <a onClick="toggleSound()">Toggle Sound</a>
-</figcaption>
-</figure>
-</center>
+<p><a href="../../../../../pages/lambdaman">Here’s the game we’re going to be making</a>. It’s basically a port of the project pursued over the course of <a href="https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/">this great set of ZX Spectrum tutorials</a>, which itself is a clone of the game centipede. You can play it directly on this webpage, or you can download the <code>.tap</code> file for playing in an emulator <a href="lambdaman.tap">here</a>.</p>
 <p>I made some of my own customisations along the way, but credit for most of the actual assembly code must go to those tutorials, which were an excellent resource for me while I was testing these packages too. Thanks!</p>
 <p>OK, without further ado, let’s get started! This is a literate Haskell post, so when it is executed the lines prefixed with <code>&gt;</code> are compiled and run, and the .tap file which is embedded above is generated.</p>
 <h2 id="preliminaries">Preliminaries</h2>
@@ -327,7 +293,7 @@ Movement: QAOP/HJKL Fire: Space<br /> Powered by <a href="http://jsspeccy.zxdemo
 </table>
 </div>
 <p>Here we define the state relating to the player. <code>plx</code> and <code>ply</code> represent the player’s own co-ordinates, while <code>pbx</code> and <code>pby</code> represent the co-ordinates of the bullet the player fires. <code>dead</code> simply tells us if the player has been killed.</p>
-<div id="sidenote">
+<div class="sidenote">
 <p>The original tutorials on which this is based swap the <em>x</em> and the <em>y</em> co-ordinates, so that <em>x</em> describes how far down the screen we are and <em>y</em> how far across. I found this too confusing, so I have a more traditional co-ordinate system here where <em>x</em> is horizontal, <em>y</em> is vertical, and the origin is at the top-left of the screen.</p>
 </div>
 <p>Another syntactic difference here is the use of Haskell list notation when passed to <code>defb</code>. <code>defb</code> takes either a <code>ByteString</code> or a list of <code>Word8</code>s, and puts the values into the final binary file as-is.</p>
