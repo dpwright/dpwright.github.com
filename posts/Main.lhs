@@ -1,6 +1,6 @@
 ---
 date: 2014-08-04 08:38:23
-tags: literate-programs, hakyll, generating this website
+tags: hakyll, literate-programs, generating this website
 title: Generating this website part 1
 subtitle: Introduction
 clone: posts/2014/08/04/generating-this-website-part-1-introduction/index.html
