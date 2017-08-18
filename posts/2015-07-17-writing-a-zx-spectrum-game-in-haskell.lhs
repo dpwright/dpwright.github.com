@@ -20,46 +20,21 @@ article in [The Monad.Reader Issue 6][monad-6], "Assembly: Circular Programming
 with Recursive do", which was the main inspiration both for those packages and
 for this post.
 
-Here's the game we're going to be making.  It's basically a port of the project
-pursued over the course of [this great set of ZX Spectrum
+<div class="sidenote">
+**Warning** Before clicking on the link to load the game below, you should know
+that I've heard reports that on some platforms the JavaScript emulator I'm
+using to embed it causes a loud, unpleasant noise.  I've had one report from
+someone using an Android device and one from somebody using Firefox (not sure
+on what platform).  I've tested the page in Safari and it's fine, but if you're
+not using that you might want to turn off your speakers before clicking, or just
+download the file to play in an emulator.  Sorry!
+</div>
+
+[Here's the game we're going to be making](/pages/lambdaman).  It's basically a
+port of the project pursued over the course of [this great set of ZX Spectrum
 tutorials][speccy-tuts], which itself is a clone of the game centipede.  You
 can play it directly on this webpage, or you can download the `.tap` file for
 playing in an emulator [here][tapfile].
-
-<script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jdataview.js"></script>
-<script src="/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/jsspeccy-core.min.js"></script>
-<script>
-  var jsspeccy;
-  var audioState = true;
-  function go() {
-    var scaleFactor = 1.5;
-    var startResizingWidth = 700;
-    var resizeFactor = startResizingWidth * (1.0 / scaleFactor);
-    var windowWidth = window.innerWidth
-    if(windowWidth < startResizingWidth) {
-      scaleFactor = windowWidth / resizeFactor;
-    }
-    jsspeccy = JSSpeccy('speccy', {
-      'autostart': false,
-      'autoload': true,
-      'scaleFactor': scaleFactor,
-      'loadFile': '/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/lambdaman.tap'
-    });
-  }
-  function toggleSound() {
-    if(typeof jsspeccy !== 'undefined') {
-      audioState = !audioState;
-      jsspeccy.setAudioState(audioState);
-    }
-  }
-</script>
-
-<center><figure>
-<div id="speccy"><img src onerror="go()" /></div>
-<figcaption>Movement: QAOP/HJKL Fire: Space<br />
-Powered by [jsspeccy]<br />
-<a onClick="toggleSound()">Toggle Sound</a></figcaption>
-</figure></center>
 
 I made some of my own customisations along the way, but credit for most of the
 actual assembly code must go to those tutorials, which were an excellent
@@ -200,7 +175,7 @@ Here we define the state relating to the player.  `plx` and `ply` represent the
 player's own co-ordinates, while `pbx` and `pby` represent the co-ordinates of the
 bullet the player fires.  `dead` simply tells us if the player has been killed.
 
-<div id="sidenote">
+<div class="sidenote">
 The original tutorials on which this is based swap the *x* and the *y*
 co-ordinates, so that *x* describes how far down the screen we are and *y* how
 far across.  I found this too confusing, so I have a more traditional
@@ -1254,7 +1229,6 @@ With that, we can compile and run the program, which should spit out a file call
 [speccy-tuts]:        https://chuntey.wordpress.com/2012/12/18/how-to-write-zx-spectrum-games-chapter-1/
 [titlescreen]:        lvtc.scr
 [tapfile]:            lambdaman.tap
-[jsspeccy]:           http://jsspeccy.zxdemo.org
 [\@danielpwright]:    https://twitter.com/danielpwright
 [\@atype808]:         https://twitter.com/atype808
 [random]:             https://chuntey.wordpress.com/2013/02/28/how-to-write-zx-spectrum-games-chapter-4/
