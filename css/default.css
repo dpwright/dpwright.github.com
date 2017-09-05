@@ -222,6 +222,10 @@ img {
     max-width: 100%;
 }
 
+figure {
+    margin: 0px;
+}
+
 .elastic-tabstops > table {
     border-spacing: 0px;
     border-collapse: collapse;
