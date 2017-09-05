@@ -8,8 +8,61 @@
         <name>Daniel P. Wright</name>
         <email>dani@dpwright.com</email>
     </author>
-    <updated>2017-08-24T06:37:52Z</updated>
+    <updated>2017-09-04T13:25:00Z</updated>
     <entry>
+    <title>Nymphetamine Fix</title>
+    <link href="http://dpwright.com/posts/2017/09/04/nymphetamine-fix/index.html" />
+    <id>http://dpwright.com/posts/2017/09/04/nymphetamine-fix/index.html</id>
+    <published>2017-09-04T13:25:00Z</published>
+    <updated>2017-09-04T13:25:00Z</updated>
+    <summary type="html"><![CDATA[<div class="info"> 4 September, 2017</div>
+
+
+
+<p>I’ve been on a bit of a Cradle of Filth nostalgia rush recently, so I decided to write an arrangement of their song, <em>Nymphetamine Fix</em>, from the album of (almost) the same name, <em>Nymphetamine</em>. I’m still working on actually being able to <em>play</em> this arrangement, but I have got a MIDI rendering of it you can listen to here:</p>
+<center>
+<audio src="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix.mp3" controls />
+</center>
+<p>I should note that I didn’t just do this by ear (which I’m rubbish at); I made the use of the following resources while I was arranging it:</p>
+<ul>
+<li><a href="https://www.songsterr.com/a/wsa/cradle-of-filth-nymphetamine-tab-g-s3838">Nymphetamine tab on Songsterr</a>, which I used to get a basic feel for the song, and</li>
+<li><a href="https://www.scribd.com/doc/7847913/Cradle-of-Filth-NymphEtaMine-piano">Christine Palethorpe’s piano arrangement</a>, which was especially useful for getting the vocal melodies, as well as some other nice bits which I brazenly stole. There is a <a href="https://www.youtube.com/watch?v=7NaecpN11l8">recording of this piano arrangement on her YouTube channel</a> which is definitely worth checking out.</li>
+</ul>
+<p>You can download versions engraved in traditional notation, tablature, or both below:</p>
+<center>
+<a href="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix.pdf">
+<figure style="display: inline-block;">
+<img src="/posts/2017/09/04/nymphetamine-fix/both.jpg" alt="Nymphetamine Fix" />
+<figcaption>
+Traditional and Tab
+</figcaption>
+</figure>
+</a> <a href="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix-traditional.pdf">
+<figure style="display: inline-block;">
+<img src="/posts/2017/09/04/nymphetamine-fix/traditional.jpg" alt="Nymphetamine Fix (Traditional Notation)" />
+<figcaption>
+Traditional Only
+</figcaption>
+</figure>
+</a> <a href="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix-tab.pdf">
+<figure style="display: inline-block;">
+<img src="/posts/2017/09/04/nymphetamine-fix/tab.jpg" alt="Nymphetamine Fix (Tablature)" />
+<figcaption>
+Tablature Only
+</figcaption>
+</figure>
+</a>
+</center>
+<p>If you aren’t familiar with Cradle of Filth or their song <em>Nymphetamine Fix</em>, here’s the official video. It is a bit louder than the solo guitar version above.</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/6dW6aNAZGTM?rel=0" frameborder="0" style="max-width: 100%" allowfullscreen>
+</iframe>
+</center>
+
+<div class="tagsinfo">Tagged with: <a href="/tags/guitar/index.html">guitar</a>, <a href="/tags/tablature/index.html">tablature</a>, <a href="/tags/lilypond/index.html">lilypond</a></div>
+]]></summary>
+</entry>
+<entry>
     <title>Station 13 Podcast</title>
     <link href="http://dpwright.com/posts/2017/08/24/station-13-podcast/index.html" />
     <id>http://dpwright.com/posts/2017/08/24/station-13-podcast/index.html</id>
@@ -4543,261 +4596,6 @@
 <p>I have found that I get pretty good results by setting the tabstop length to 1, and making tabs visible. That way I can use spaces to align as usual, but use a tab as the last “space”. This looks good in my editor and also on the site, <em>and</em> I can see what’s going on thanks to the visible tabs.</p>
 <p>Another issue is the way post previews come up in RSS feeds. The reader that I use, feedly, renders the tables representing my code quite badly – I end up with single-character columns with all the code written vertically! I think the solution to this is not to do the elastic tabstops transformation when generating the RSS feed, but I haven’t got around to this yet.</p>
 <p>All in all, though, I’m pleased with the way it looks – and it’s a testament both to Haskell and to Pandoc’s design that it was so easy to add as a post-process to my site. There’s something lovely about the fact that the entry point to this entire blog post is a pure function with type <em><code>Pandoc</code></em> <code>→</code> <em><code>Pandoc</code></em>. No missiles being launched here!</p>
-
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
-]]></summary>
-</entry>
-<entry>
-    <title>Generating this website part 5</title>
-    <link href="http://dpwright.com/posts/2015/04/13/generating-this-website-part-5-outdated-urls/index.html" />
-    <id>http://dpwright.com/posts/2015/04/13/generating-this-website-part-5-outdated-urls/index.html</id>
-    <published>2015-04-13T07:57:17Z</published>
-    <updated>2015-04-13T07:57:17Z</updated>
-    <summary type="html"><![CDATA[<div class="info">13 April, 2015</div>
-
-
-
-<div class="sidenote">
-<p>This is part five of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website">here</a></p>
-</div>
-<p>On February 1st, 2015, I decided to change the URL scheme for this site, such that instead of outputting pages to <code>post-name.html</code> it would output to <code>post-name/index.html</code>. Unfortunately, this breaks any existing links to the original pages that might be out there. This module keeps those links active by generating any posts prior to that date at the original URL.</p>
-<h2 id="imports">Imports</h2>
-<p>Let’s get the obvious out the way…</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE UnicodeSyntax #-}</span></code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></code></pre></div></td>
-</tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">module</span> <span class="dt">OutdatedURLs</span> <span class="kw">where</span></code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Hakyll</span></code></pre></div></td>
-</tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Prelude.Unicode</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>We’re going to need a couple of <code>Maybe</code>-related utilities.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Maybe</span> (fromMaybe, isJust)</code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>We’ll also import <em><code>Posts</code></em>, since for the most part we want to generate these posts exactly like their correctly-addressed counterparts.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Posts</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Finally, we import <code>Data.Time</code> so that we can check the dates. Note we hide <code>readTime</code> because we’re going to use the version from the <code>Posts</code> module.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> <span class="kw">import </span><span class="dt">Data.Time</span> <span class="kw">hiding</span> (readTime)</code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<h2 id="setting-up-the-rules">Setting up the rules</h2>
-<p>First we define the cut-off date, before which an old-style <code>.html</code> page will be created. This applies to any posts made prior to midnight, February 1st, 2015.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; cutoffDate ::</span> <span class="dt">UTCTime</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> cutoffDate <span class="fu">=</span> <span class="dt">UTCTime</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(fromGregorian <span class="dv">2015</span> <span class="dv">02</span> <span class="dv">01</span>)</code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>                      </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(secondsToDiffTime <span class="dv">0</span>)</code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The <code>Rules</code> managing these posts are similar to those for <a href="/posts/2014/09/29/generating-this-website-part-2-posts">standard <code>Posts</code></a>. We make use of the recently-added <code>matchMetadata</code> to compare the <code>date</code> field of the posts with our <code>cutoffDate</code>, and we tag the rule with the version “outdated” to avoid them showing up in the index. And of course we use <code>setExtension</code> rather than <code>simplifyURL</code>, since that’s the whole point of the exercise!</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; outdatedURLs ::</span> <span class="dt">Tags</span> <span class="ot">→</span> <span class="dt">Rules</span> ()</code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> outdatedURLs tags <span class="fu">=</span></code></pre></div></td>
-</tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   matchMetadata <span class="st">&quot;posts/*&quot;</span> isOutdated ∘ version <span class="st">&quot;outdated&quot;</span> <span class="fu">$</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="0%" />
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="kw">do</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">route   </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">metadataRoute dateAndTitle <span class="ot">`composeRoutes`</span></code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">        </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">  </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">setExtension <span class="st">&quot;.html&quot;</span></code></pre></div></td>
-</tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">compile </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">postCompiler tags</code></pre></div></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     isOutdated </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> maybe <span class="dt">False</span> checkDate ∘ lookupString <span class="st">&quot;date&quot;</span></code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     checkDate  </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> (<span class="fu">&gt;</span> <span class="dv">0</span>) ∘ diffUTCTime cutoffDate ∘ readTime</code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<h2 id="thats-it">That’s it!</h2>
-<p>With just a small amount of effort, we’ve managed to completely change our URL scheme without breaking any old links. I wouldn’t want to make a habit of this sort of thing, but it’s good to know it can be resolved fairly easily should the need arise!</p>
-<h2 id="or-is-it">…or is it?</h2>
-<p>Well, it was, until in August 2017 I found myself wanting to make another change that would invalidate some old URLs. This time, to try and give myself a modicum of future-proofing, I’m going to encode the old URL I want to support into the metadata for the post.</p>
-<div class="elastic-tabstops">
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt; clonedURLs ::</span> <span class="dt">Tags</span> <span class="ot">-&gt;</span> <span class="dt">Rules</span> ()</code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span> clonedURLs tags <span class="fu">=</span></code></pre></div></td>
-</tr>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   matchMetadata <span class="st">&quot;posts/*&quot;</span> hasCloneField ∘ version <span class="st">&quot;cloned&quot;</span> <span class="fu">$</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     <span class="kw">do</span> </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">route   </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> metadataRoute (fromMaybe mempty ∘ cloneURL)</code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>        </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">compile </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">$</span> postCompiler tags</code></pre></div></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>   <span class="kw">where</span></code></pre></div></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col width="0%" />
-<col width="100%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     hasCloneField </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> isJust ∘ lookupString <span class="st">&quot;clone&quot;</span></code></pre></div></td>
-</tr>
-<tr class="even">
-<td align="left"><div class="sourceCode"><pre class="sourceCode literate literatehaskell"><code class="sourceCode literatehaskell"><span class="ot">&gt;</span>     cloneURL meta </code></pre></div></td>
-<td align="left"><div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">=</span> constRoute <span class="fu">&lt;$&gt;</span> lookupString <span class="st">&quot;clone&quot;</span> meta</code></pre></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>This version is very similar to <code>outdatedURLs</code> above, but rather than try to be clever with the <code>date</code> field, it simply searches for any post containing a <code>clone</code> field. If it finds one, it outputs a cloned version to the location specified in that field.</p>
-<p>Hopefully that should cover me from now on! If I need to clone into multiple locations in future, I’ll have to update this function to accept a comma-separated list or something, but it’ll do for now…</p>
 
 <div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
