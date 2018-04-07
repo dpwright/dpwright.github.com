@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta property="og:image" content="/posts/2018/04/06/graphical-log-with-vimfugitive/fugitive-lg.gif">
+        <title>Wright Access - Graphical log with vim-fugitive</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-35158763-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+             <h1 id="logomain"><a href="../../../../../">Wright Access.</a></h1>
+            </div>
+            <div id="navigation">
+                <a href="../../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+            </div>
+        </div>
+
+        <div id="content">
+            <div id="titlematter">
+              
+                <h1 class="title">Graphical log with vim-fugitive</h1>
+              
+              
+            </div>
+
+            <div id="mainmatter">
+              <div class="info"> 6 April, 2018</div>
+
+
+
+<p>Tim Pope’s excellent <a href="https://github.com/tpope/vim-fugitive"><code>vim-fugitive</code></a> is the best interface I’ve encountered for working with git. I love using <code>:Gdiff</code> not just to compare changes, but to stage and unstage hunks to the index, looking up the origin of a particular change with <code>:Gblame</code>, and being able to fetch, merge, and commit changes from within the editor.</p>
+<p>One feature I miss from other tools, however, is an easy way to browse the history of the repository as a whole, rather than on a file-by-file basis. <code>:Glog</code> loads the history of the current file into the change list, which is a great way to see the changes to that file over time, but the changes are limited to a single file. You can use <code>:Glog --</code> to load the history of the entire repository, but it will still get loaded as a single, flat list, and since it is now much longer it can be quite unwieldy to navigate.</p>
+<p>I have long had the following line in my git aliases, which displays a nicely-formatted graph of the repository:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"></code></pre></div></td>
+<td align="left"><div class="sourceCode"><pre class="sourceCode ini"><code class="sourceCode ini"><span class="dt">lg </span><span class="ot">=</span><span class="st"> log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%ad)%C(yellow)%d%Creset %s %C(bold blue)&lt;%an&gt;%Creset' --abbrev-commit --date=local</span></code></pre></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>I can’t remember where I originally copied this from. It looks very similar to <a href="https://coderwall.com/p/euwpig/a-better-git-log">this one</a>, although the date is at the start, and absolute rather than relative. Perhaps I customised it. This is the output it produces:</p>
+<center>
+<img src="../../../../../posts/2018/04/06/graphical-log-with-vimfugitive/git-lg.png" title="Output of the git-lg command" />
+</center>
+<p>I’ve always liked this visualisation, but one problem with it is that it’s pretty static—you just get the list of commits, with no way to “select” a commit and see its contents. For this, I’ve tended to use <a href="https://github.com/jonas/tig"><code>tig</code></a>, or some graphical git client like <code>gitk</code>. I don’t find <code>tig</code> nearly as readable as <code>git lg</code>, though, and having to switch to a whole graphical client just to read the log feels like overkill. And, apart from anything else, what I usually want to do once I’ve <em>found</em> the commit I’m interested in is to edit it in vim!</p>
+<p>Well, it turns out it’s easy to get this integrated into vim using fugitive. As a first pass, I simply created a <code>Glg</code> command by adding the following to my <code>.vimrc</code>:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre><code>command -nargs=* Glg Git! log --graph --pretty=format:'\%h - (\%ad)\%d \%s &lt;\%an&gt;' --abbrev-commit --date=local &lt;args&gt;</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Alternatively if you already have the <code>git lg</code> alias set up in your <code>.gitconfig</code> you can just call that:</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre><code>command -nargs=* Glg Git! lg &lt;args&gt;</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This gives us the graph visualisation we want, but some syntax highlighting would be nice. Fugitive’s <code>:Git!</code> command sets the filetype of the output buffer to <code>git</code>, so I created the file <code>~/.vim/after/syntax/git.vim</code> and added the following highlighting rules to it.</p>
+<div class="elastic-tabstops">
+<table>
+<colgroup>
+<col width="0%" />
+<col width="100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><pre><code>syn match gitLgLine     </code></pre></td>
+<td align="left"><pre><code>/^[_\*|\/\\ ]\+\(\&lt;\x\{4,40\}\&gt;.*\)\?$/</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>syn match gitLgHead     </code></pre></td>
+<td align="left"><pre><code>/^[_\*|\/\\ ]\+\(\&lt;\x\{4,40\}\&gt; - ([^)]\+)\( ([^)]\+)\)\? \)\?/ contained containedin=gitLgLine</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre><code>syn match gitLgDate     </code></pre></td>
+<td align="left"><pre><code>/(\u\l\l \u\l\l \d\=\d \d\d:\d\d:\d\d \d\d\d\d)/ contained containedin=gitLgHead nextgroup=gitLgRefs skipwhite</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>syn match gitLgRefs     </code></pre></td>
+<td align="left"><pre><code>/([^)]*)/ contained containedin=gitLgHead</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre><code>syn match gitLgGraph    </code></pre></td>
+<td align="left"><pre><code>/^[_\*|\/\\ ]\+/ contained containedin=gitLgHead,gitLgCommit nextgroup=gitHashAbbrev skipwhite</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>syn match gitLgCommit   </code></pre></td>
+<td align="left"><pre><code>/^[^-]\+- / contained containedin=gitLgHead nextgroup=gitLgDate skipwhite</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre><code>syn match gitLgIdentity </code></pre></td>
+<td align="left"><pre><code>/&lt;[^&gt;]*&gt;$/ contained containedin=gitLgLine</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>hi def link gitLgGraph    </code></pre></td>
+<td align="left"><pre><code>Comment</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre><code>hi def link gitLgDate     </code></pre></td>
+<td align="left"><pre><code>gitDate</code></pre></td>
+</tr>
+<tr class="even">
+<td align="left"><pre><code>hi def link gitLgRefs     </code></pre></td>
+<td align="left"><pre><code>gitReference</code></pre></td>
+</tr>
+<tr class="odd">
+<td align="left"><pre><code>hi def link gitLgIdentity </code></pre></td>
+<td align="left"><pre><code>gitIdentity</code></pre></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This is all pretty rudimentary, but it seems to do the job! If you change the format of <code>git lg</code>, these syntax highlighting rules would need to be updated as well. Here’s the end result in action:</p>
+<center>
+<img src="../../../../../posts/2018/04/06/graphical-log-with-vimfugitive/fugitive-lg.gif" title="The :Glg command in action" />
+</center>
+<p>Because the temporary buffer <code>vim-fugitive</code> creates for the output of <code>:Git!</code> commands is of filetype <code>git</code>, we get some of fugitive’s global shortcuts for free. This allows us to open the commit under the cursor with <code>&lt;C-w&gt;f</code>, and from there inspect the diffs for each file within.</p>
+<p>It’s not perfect—some shortcuts are inexplicably unavailable, and it would be nice if <code>&lt;C-w&gt;f</code> worked anywhere in the line, rather than having to move the cursor over the SHA1 hash itself—but it’s pretty good considering how easy it was to set up!</p>
+
+<div class="tagsinfo">Tagged with: <a href="../../../../../tags/vim">vim</a>, <a href="../../../../../tags/git">git</a></div>
+
+            </div>
+        </div>
+        <div id="footer">
+          <div id="text-licence">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">Wright Access</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://dpwright.com/" property="cc:attributionName" rel="cc:attributionURL">Daniel P. Wright</a> is licensed under a<br />
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </div>
+          <br />
+          <div id="code-licence">
+            All code is released under the <a href="../../../../../pages/about#simplified-bsd-2-clause-license">BSD (2-Clause) License</a>.
+          </div>
+        </div>
+    </body>
+</html>
