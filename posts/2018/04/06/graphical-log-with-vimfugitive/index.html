@@ -4,11 +4,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta property="og:image" content="/posts/2018/04/06/graphical-log-with-vimfugitive/fugitive-lg.gif">
+          <meta property="og:image" content="/posts/2018/04/06/graphical-log-with-vimfugitive/fugitive-lg.gif" />
         <title>Wright Access - Graphical log with vim-fugitive</title>
         <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>
     </head>
@@ -18,7 +17,7 @@
              <h1 id="logomain"><a href="../../../../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+                <a href="../../../../../pages/about">?</a>
             </div>
         </div>
 
@@ -31,9 +30,9 @@
             </div>
 
             <div id="mainmatter">
-              <div class="info"> 6 April, 2018</div>
+              
 
-
+<div class="info"> 6 April, 2018</div>
 
 <p>Tim Pope’s excellent <a href="https://github.com/tpope/vim-fugitive"><code>vim-fugitive</code></a> is the best interface I’ve encountered for working with git. I love using <code>:Gdiff</code> not just to compare changes, but to stage and unstage hunks to the index, looking up the origin of a particular change with <code>:Gblame</code>, and being able to fetch, merge, and commit changes from within the editor.</p>
 <p>One feature I miss from other tools, however, is an easy way to browse the history of the repository as a whole, rather than on a file-by-file basis. <code>:Glog</code> loads the history of the current file into the change list, which is a great way to see the changes to that file over time, but the changes are limited to a single file. You can use <code>:Glog --</code> to load the history of the entire repository, but it will still get loaded as a single, flat list, and since it is now much longer it can be quite unwieldy to navigate.</p>
@@ -145,7 +144,7 @@
 <p>Because the temporary buffer <code>vim-fugitive</code> creates for the output of <code>:Git!</code> commands is of filetype <code>git</code>, we get some of fugitive’s global shortcuts for free. This allows us to open the commit under the cursor with <code>&lt;C-w&gt;f</code>, and from there inspect the diffs for each file within.</p>
 <p>It’s not perfect—some shortcuts are inexplicably unavailable, and it would be nice if <code>&lt;C-w&gt;f</code> worked anywhere in the line, rather than having to move the cursor over the SHA1 hash itself—but it’s pretty good considering how easy it was to set up!</p>
 
-<div class="tagsinfo">Tagged with: <a href="../../../../../tags/vim">vim</a>, <a href="../../../../../tags/git">git</a></div>
+<div class="tagsinfo"><a href="../../../../../tags/vim">vim</a>, <a href="../../../../../tags/git">git</a></div>
 
             </div>
         </div>

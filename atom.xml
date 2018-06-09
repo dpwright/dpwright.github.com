@@ -15,9 +15,9 @@
     <id>http://dpwright.com/posts/2018/04/06/graphical-log-with-vimfugitive/index.html</id>
     <published>2018-04-06T20:43:00Z</published>
     <updated>2018-04-06T20:43:00Z</updated>
-    <summary type="html"><![CDATA[<div class="info"> 6 April, 2018</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info"> 6 April, 2018</div>
 
 <p>Tim Pope’s excellent <a href="https://github.com/tpope/vim-fugitive"><code>vim-fugitive</code></a> is the best interface I’ve encountered for working with git. I love using <code>:Gdiff</code> not just to compare changes, but to stage and unstage hunks to the index, looking up the origin of a particular change with <code>:Gblame</code>, and being able to fetch, merge, and commit changes from within the editor.</p>
 <p>One feature I miss from other tools, however, is an easy way to browse the history of the repository as a whole, rather than on a file-by-file basis. <code>:Glog</code> loads the history of the current file into the change list, which is a great way to see the changes to that file over time, but the changes are limited to a single file. You can use <code>:Glog --</code> to load the history of the entire repository, but it will still get loaded as a single, flat list, and since it is now much longer it can be quite unwieldy to navigate.</p>
@@ -129,7 +129,7 @@
 <p>Because the temporary buffer <code>vim-fugitive</code> creates for the output of <code>:Git!</code> commands is of filetype <code>git</code>, we get some of fugitive’s global shortcuts for free. This allows us to open the commit under the cursor with <code>&lt;C-w&gt;f</code>, and from there inspect the diffs for each file within.</p>
 <p>It’s not perfect—some shortcuts are inexplicably unavailable, and it would be nice if <code>&lt;C-w&gt;f</code> worked anywhere in the line, rather than having to move the cursor over the SHA1 hash itself—but it’s pretty good considering how easy it was to set up!</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/vim/index.html">vim</a>, <a href="/tags/git/index.html">git</a></div>
+<div class="tagsinfo"><a href="/tags/vim/index.html">vim</a>, <a href="/tags/git/index.html">git</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -138,9 +138,9 @@
     <id>http://dpwright.com/posts/2017/09/04/nymphetamine-fix/index.html</id>
     <published>2017-09-04T13:25:00Z</published>
     <updated>2017-09-04T13:25:00Z</updated>
-    <summary type="html"><![CDATA[<div class="info"> 4 September, 2017</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info"> 4 September, 2017</div>
 
 <p>I’ve been on a bit of a Cradle of Filth nostalgia rush recently, so I decided to write an arrangement of their song, <em>Nymphetamine Fix</em>, from the album of (almost) the same name, <em>Nymphetamine</em>. I’m still working on actually being able to <em>play</em> this arrangement, but I have got a MIDI rendering of it you can listen to here:</p>
 <center>
@@ -182,7 +182,7 @@ Tablature Only
 </iframe>
 </center>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/guitar/index.html">guitar</a>, <a href="/tags/tablature/index.html">tablature</a>, <a href="/tags/lilypond/index.html">lilypond</a></div>
+<div class="tagsinfo"><a href="/tags/guitar/index.html">guitar</a>, <a href="/tags/tablature/index.html">tablature</a>, <a href="/tags/lilypond/index.html">lilypond</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -191,9 +191,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2017/08/24/station-13-podcast/index.html</id>
     <published>2017-08-24T06:37:52Z</published>
     <updated>2017-08-24T06:37:52Z</updated>
-    <summary type="html"><![CDATA[<div class="info">24 August, 2017</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info">24 August, 2017</div>
 
 <p>This site has lain fallow for a little while now, for a number of reasons, not least of which that I found myself in a pit of Cabal Hell which I didn’t get around to digging myself out of for two years. I have now switched the site, and its <code>.travis.yml</code> spec, over to stack, so I’m up and running again, and hopefully I’ll remember to post occasionally!</p>
 <p>Anyway, just wanted to take the opportunity to plug one of my new projects, <a href="https://station13.fm">Station 13</a>.</p>
@@ -214,7 +214,7 @@ Tablature Only
 <a href="https://station13.fm"><img src="/posts/2017/08/24/station-13-podcast/station-13.jpg" alt="Station 13" /></a>
 </center>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/Station%2013/index.html">Station 13</a>, <a href="/tags/podcasts/index.html">podcasts</a></div>
+<div class="tagsinfo"><a href="/tags/Station%2013/index.html">Station 13</a>, <a href="/tags/podcasts/index.html">podcasts</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -223,9 +223,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2017/08/02/generating-this-website-part-8-crossposting/index.html</id>
     <published>2017-08-02T20:09:00Z</published>
     <updated>2017-08-02T20:09:00Z</updated>
-    <summary type="html"><![CDATA[<div class="info"> 2 August, 2017</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info"> 2 August, 2017</div>
 
 <div class="sidenote">
 <p>This is part eight of the “generating this website” series. To read the rest of the series, go to the series index <a href="/tags/generating%20this%20website">here</a></p>
@@ -326,7 +326,7 @@ Tablature Only
 </div>
 <p>Note that the header itself is a template, rendered using the <code>defaultContext</code> context. This means it has access to other fields in the post’s metadata – useful if you want to link to the other version of the site, as you can put its URL or ID into the metadata.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+<div class="tagsinfo"><a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -335,9 +335,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2017/08/02/generating-this-website-part-8/index.html</id>
     <published>2017-08-02T20:09:00Z</published>
     <updated>2017-08-02T20:09:00Z</updated>
-    <summary type="html"><![CDATA[<div class="info"> 2 August, 2017</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info"> 2 August, 2017</div>
 
 <div class="sidenote">
 <p>This is part eight of the “generating this website” series. To read the rest of the series, go to the series index <a href="/tags/generating%20this%20website">here</a></p>
@@ -438,7 +438,7 @@ Tablature Only
 </div>
 <p>Note that the header itself is a template, rendered using the <code>defaultContext</code> context. This means it has access to other fields in the post’s metadata – useful if you want to link to the other version of the site, as you can put its URL or ID into the metadata.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+<div class="tagsinfo"><a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -447,9 +447,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2016/01/22/generating-this-website-part-7-slideshows/index.html</id>
     <published>2016-01-22T18:50:00Z</published>
     <updated>2016-01-22T18:50:00Z</updated>
-    <summary type="html"><![CDATA[<div class="info">22 January, 2016</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info">22 January, 2016</div>
 
 <div class="sidenote">
 <p>This is part seven of the “generating this website” series. To read the rest of the series, go to the series index <a href="/tags/generating%20this%20website">here</a></p>
@@ -802,7 +802,7 @@ Tablature Only
 <h2 id="added-extras">Added extras</h2>
 <p>That’s really all there is to it on the Hakyll side! To make writing slides and blog posts in the same file easier, I have a couple of CSS <code>div</code> classes set up in the slideshow style files – for instance, anything inside a <code>&lt;div class=&quot;notes&quot;&gt;</code> will be shown in the blog post but not in the slideshow. I have yet to add the reverse functionality but I can’t imagine it would be too difficult. All that can be done with a bit of CSS cleverness, though, with no special support from Hakyll itself.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+<div class="tagsinfo"><a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -811,9 +811,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2016/01/22/generating-this-website-part-7/index.html</id>
     <published>2016-01-22T18:50:00Z</published>
     <updated>2016-01-22T18:50:00Z</updated>
-    <summary type="html"><![CDATA[<div class="info">22 January, 2016</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info">22 January, 2016</div>
 
 <div class="sidenote">
 <p>This is part seven of the “generating this website” series. To read the rest of the series, go to the series index <a href="/tags/generating%20this%20website">here</a></p>
@@ -1166,7 +1166,7 @@ Tablature Only
 <h2 id="added-extras">Added extras</h2>
 <p>That’s really all there is to it on the Hakyll side! To make writing slides and blog posts in the same file easier, I have a couple of CSS <code>div</code> classes set up in the slideshow style files – for instance, anything inside a <code>&lt;div class=&quot;notes&quot;&gt;</code> will be shown in the blog post but not in the slideshow. I have yet to add the reverse functionality but I can’t imagine it would be too difficult. All that can be done with a bit of CSS cleverness, though, with no special support from Hakyll itself.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+<div class="tagsinfo"><a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -1175,9 +1175,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2015/07/17/writing-a-zx-spectrum-game-in-haskell/index.html</id>
     <published>2015-07-17T08:41:23Z</published>
     <updated>2015-07-17T08:41:23Z</updated>
-    <summary type="html"><![CDATA[<div class="info">17 July, 2015</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info">17 July, 2015</div>
 
 <p>Haskell, <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/mark.pdf">the world’s finest imperative programming language</a>, can now be used to write games for the ZX Spectrum, the world’s finest 80s microcomputer. This post introduces the two packages that make this possible:</p>
 <ul>
@@ -3905,7 +3905,7 @@ Tablature Only
 </div>
 <p>With that, we can compile and run the program, which should spit out a file called <code>lambdaman.tap</code> which you can load into your favourite emulator.</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/haskell/index.html">haskell</a>, <a href="/tags/assembly/index.html">assembly</a>, <a href="/tags/z80/index.html">z80</a>, <a href="/tags/spectrum/index.html">spectrum</a>, <a href="/tags/literate-programs/index.html">literate-programs</a></div>
+<div class="tagsinfo"><a href="/tags/haskell/index.html">haskell</a>, <a href="/tags/assembly/index.html">assembly</a>, <a href="/tags/z80/index.html">z80</a>, <a href="/tags/spectrum/index.html">spectrum</a>, <a href="/tags/literate-programs/index.html">literate-programs</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -3914,9 +3914,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2015/05/15/checking-out-old-versions-of-files-in-git/index.html</id>
     <published>2015-05-15T11:36:27Z</published>
     <updated>2015-05-15T11:36:27Z</updated>
-    <summary type="html"><![CDATA[<div class="info">15 May, 2015</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info">15 May, 2015</div>
 
 <p>Here’s another useful alias if you’re using git. Sometimes you want to recover a file which has been deleted, or restore an old version of a single file. Or, you might want to grab a file from a different branch. This alias will let you do that:</p>
 <div class="elastic-tabstops">
@@ -3974,7 +3974,7 @@ Tablature Only
 </table>
 </div>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/git/index.html">git</a>, <a href="/tags/alias/index.html">alias</a></div>
+<div class="tagsinfo"><a href="/tags/git/index.html">git</a>, <a href="/tags/alias/index.html">alias</a></div>
 ]]></summary>
 </entry>
 <entry>
@@ -3983,9 +3983,9 @@ Tablature Only
     <id>http://dpwright.com/posts/2015/05/02/generating-this-website-part-6-elastic-tabstops/index.html</id>
     <published>2015-05-02T22:02:26Z</published>
     <updated>2015-05-02T22:02:26Z</updated>
-    <summary type="html"><![CDATA[<div class="info"> 2 May, 2015</div>
+    <summary type="html"><![CDATA[
 
-
+<div class="info"> 2 May, 2015</div>
 
 <div class="sidenote">
 <p>This is part six of the “generating this website” series. To read the rest of the series, go to the series index <a href="http://www.dpwright.com/tags/generating%20this%20website">here</a></p>
@@ -4347,7 +4347,7 @@ Tablature Only
 <p>Another issue is the way post previews come up in RSS feeds. The reader that I use, feedly, renders the tables representing my code quite badly – I end up with single-character columns with all the code written vertically! I think the solution to this is not to do the elastic tabstops transformation when generating the RSS feed, but I haven’t got around to this yet.</p>
 <p>All in all, though, I’m pleased with the way it looks – and it’s a testament both to Haskell and to Pandoc’s design that it was so easy to add as a post-process to my site. There’s something lovely about the fact that the entry point to this entire blog post is a pure function with type <em><code>Pandoc</code></em> <code>→</code> <em><code>Pandoc</code></em>. No missiles being launched here!</p>
 
-<div class="tagsinfo">Tagged with: <a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
+<div class="tagsinfo"><a href="/tags/hakyll/index.html">hakyll</a>, <a href="/tags/literate-programs/index.html">literate-programs</a>, <a href="/tags/generating%20this%20website/index.html">generating this website</a></div>
 ]]></summary>
 </entry>
 

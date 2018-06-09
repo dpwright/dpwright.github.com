@@ -7,7 +7,6 @@
         <title>Wright Access - Git alias to amend old commits</title>
         <link rel="stylesheet" type="text/css" href="../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>
     </head>
@@ -17,7 +16,7 @@
              <h1 id="logomain"><a href="../../../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+                <a href="../../../../pages/about">?</a>
             </div>
         </div>
 
@@ -30,9 +29,9 @@
             </div>
 
             <div id="mainmatter">
-              <div class="info">26 June, 2012</div>
+              
 
-
+<div class="info">26 June, 2012</div>
 
 <p><code>git commit --amend</code> is a useful little command for fixing mistakes in log messages just after you’ve made a commit, but sometimes you don’t realise your error until a few commits down the line, by which time it’s too late. You have to reset to the earlier version, amend the commit message, and then rebase all your commits since then on top of the new, amended commit.</p>
 <p>Earlier today, in #git on freenode, somebody who went by the name of constant mentioned that they wanted to do this in one command. Another member of the chat, frogsonwheels, suggested a solution which essentially did as described above in a series of git commands strung together using <code>&amp;amp;&amp;amp;</code>.</p>
@@ -51,7 +50,7 @@
 </div>
 <p>Note that this is still doing the rebase mentioned above, it’s just automatin the steps a little bit. These means that all the usual warnings regarding rebase apply: don’t run this command on a commit which has already been published. Also, this rebases the currently checked out branch/revision, which means if any other branches have been made based off the amended commit <em>or any commit since</em>, those branches won’t be rebased and you’ll have to rebase them automatically once you’ve done the amend-commit. You can usually tell if this is the case pretty easily by inspecting the output of <code>git log --graph --oneline --decorate</code>.</p>
 
-<div class="tagsinfo">Tagged with: <a href="../../../../tags/alias">alias</a>, <a href="../../../../tags/git">git</a></div>
+<div class="tagsinfo"><a href="../../../../tags/alias">alias</a>, <a href="../../../../tags/git">git</a></div>
 
             </div>
         </div>

@@ -7,7 +7,6 @@
         <title>Wright Access - File-specific merge resolution in git</title>
         <link rel="stylesheet" type="text/css" href="../../../../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../../../../css/syntax.css" />
-        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
         </script>
     </head>
@@ -17,7 +16,7 @@
              <h1 id="logomain"><a href="../../../../">Wright Access.</a></h1>
             </div>
             <div id="navigation">
-                <a href="../../../../pages/about"><i class="fa fa-question-circle"></i></a>
+                <a href="../../../../pages/about">?</a>
             </div>
         </div>
 
@@ -30,9 +29,9 @@
             </div>
 
             <div id="mainmatter">
-              <div class="info">11 May, 2012</div>
+              
 
-
+<div class="info">11 May, 2012</div>
 
 <p>I’ve been using git-svn for a while now so that I can take advantage of the power and convenience of git without having to bother everyone else on the project (who are all happily using SVN). It was a bit frustrating at first, but once I got the hang of the basic workflow and settled into a routine I started to really like it, and now I don’t think I could ever go back to using the SVN client directly.</p>
 <p>One annoyance I’ve come across multiple times using both SVN and Git is that of checked in binary files. Ideally, we’d only check in the source files and build off that, but in practice this is problematic for a number of reasons. We’d like the non-programmers on the team to be able to build the project without having to have the compiler toolchain installed; we’d like the version of our executable everyone is running to be guaranteed to be the same; and we’d like it to be possible to checkout the project and start running it straight away without having to do a build.</p>
@@ -157,7 +156,7 @@
 <p>If anybody knows how to do this sort of thing using [Tortoise]SVN, I’d love to hear about it in the comments!</p>
 <p>(Note: All the above code samples were copied almost verbatim from the previously mentioned <a href="http://stackoverflow.com/questions/928646/how-do-i-tell-git-to-always-select-my-local-version-for-conflicted-merges-on-a-s">stackoverflow entry</a>. I don’t claim credit for any of it.)</p>
 
-<div class="tagsinfo">Tagged with: <a href="../../../../tags/git">git</a>, <a href="../../../../tags/subversion">subversion</a>, <a href="../../../../tags/version%20control">version control</a></div>
+<div class="tagsinfo"><a href="../../../../tags/git">git</a>, <a href="../../../../tags/subversion">subversion</a>, <a href="../../../../tags/version%20control">version control</a></div>
 
             </div>
         </div>
