@@ -16,6 +16,7 @@ body {
 div#content  div#titlematter{
     max-width: 700px;
     margin: auto;
+    margin-bottom: 2.0em;
 }
 
 div#content div#mainmatter {
@@ -160,7 +161,7 @@ div#header {
 
 div#logo {
     position: relative;
-    margin-right: 3.0em;
+    margin-right: 7.0em;
 }
 
 div#header a {
@@ -212,16 +213,15 @@ div#footer {
 }
 
 div.info {
-    color: #555;
-    font-size: 16px;
-    text-align: center;
-    vertical-align: middle;
-    padding-top: 0.5em;
+}
+
+div.info:after {
+    content: ".";
 }
 
 div.tagsinfo {
     color: #555;
-    font-size: 14px;
+    font-size: 0.8em;
     font-style: italic;
     text-align: right;
 }
