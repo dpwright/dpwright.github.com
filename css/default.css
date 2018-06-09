@@ -1,11 +1,10 @@
-@import url(../fonts/ComputerModern/Serif/cmun-serif.css);
-@import url(../fonts/ComputerModern/Concrete/cmun-concrete.css);
-
 body {
     max-width: 800px;
     background-color: #fafafa;
     color: #333;
-    font-family: "Computer Modern Serif", serif;
+    /* I'd like to be able to type this but apparently the world hasn't caught up yet... */
+    /* font-family: system-ui; */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
     font-size: 1.1em;
     margin: 0 auto;
     padding: 0 2em;
@@ -36,7 +35,8 @@ div .sourceCode {
 }
 
 code {
-    font-family: "Computer Modern Concrete", monospace;
+    font-family: monospace;
+    font-size: 1.1em;
 }
 
 blockquote {
@@ -138,7 +138,6 @@ a:hover {
 }
 
 div#header {
-    font-family: "Computer Modern Serif", "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     margin: 0px;
     padding: 0px;
     position: relative;
@@ -157,10 +156,12 @@ div#header a:hover {
     color: #da1071;
 }
 
-h1#logomain {
-    font-family: "Computer Modern Serif", serif;
-    text-align: left;
+div#header h1 {
     font-size: 60px;
+}
+
+h1#logomain {
+    text-align: left;
 }
 
 div#header #social {
@@ -171,16 +172,17 @@ div#header #social {
 div#header #navigation {
     text-align: right;
     position: absolute;
-    top: 7px;
+    top: 0.5em;
     right: 0px;
 }
 
 div#header #navigation a {
-    font-size: 50px;
-    margin: 20px 10px 0px 12px;
+    margin: 25px 10px 0px 12px;
     text-decoration: none;
     text-transform: lowercase;
     color: #333;
+    font-size: 50px;
+    font-weight: bold;
 }
 
 div#header #navigation a:hover {
