@@ -270,3 +270,61 @@ figure {
     margin: 0px;
     padding: 0px;
 }
+
+/* Dark Mode customisations */
+body#dark {
+    background-color: #202124;
+    color: #ccc;
+}
+
+body#dark blockquote {
+    color: #333;
+}
+
+body#dark div.sidenote {
+    color: #333;
+}
+
+body#dark div#crosspost {
+    color: #333;
+}
+
+body#dark a {
+    color: #da1071;
+}
+
+body#dark a:hover {
+    color: #47a3ff;
+}
+
+body#dark .postMenuItem a .postTitle {
+    color: #ccc
+}
+
+body#dark .postMenuItem a:hover .postTitle {
+    color: #da1071
+}
+
+body#dark div#header a {
+    color: #ccc;
+}
+
+body#dark div#header a:hover {
+    color: #da1071;
+}
+
+body#dark div#header #navigation a {
+    color: #ccc;
+}
+
+body#dark div#header #navigation a:hover {
+    color: #da1071;
+}
+
+body#dark div#footer {
+    color: #aaa;
+}
+
+body#dark div.tagsinfo {
+    color: #aaa;
+}
