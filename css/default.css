@@ -1,11 +1,10 @@
-@import url(../fonts/ComputerModern/Serif/cmun-serif.css);
-@import url(../fonts/ComputerModern/Concrete/cmun-concrete.css);
-
 body {
     max-width: 800px;
     background-color: #fafafa;
     color: #333;
-    font-family: "Computer Modern Serif", serif;
+    /* I'd like to be able to type this but apparently the world hasn't caught up yet... */
+    /* font-family: system-ui; */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
     font-size: 1.1em;
     margin: 0 auto;
     padding: 0 2em;
@@ -17,6 +16,7 @@ body {
 div#content  div#titlematter{
     max-width: 700px;
     margin: auto;
+    margin-bottom: 2.0em;
 }
 
 div#content div#mainmatter {
@@ -36,7 +36,8 @@ div .sourceCode {
 }
 
 code {
-    font-family: "Computer Modern Concrete", monospace;
+    font-family: monospace;
+    font-size: 1.1em;
 }
 
 blockquote {
@@ -74,12 +75,12 @@ h1, h2, h3, h4 {
 
 h1 {
     text-align: center;
-    font-size: 190%;
+    font-size: 1.9em;
 }
 
 h2 {
     margin-top: 1.5em;
-    font-size: 130%;
+    font-size: 1.3em;
 }
 
 h1.title {
@@ -90,9 +91,9 @@ h1.title {
 h2.subtitle {
     margin: 0px;
     padding: 0px;
-    font-size: 120%;
+    font-size: 1em;
     text-align: center;
-    font-style: italic; /* TODO find a way to disable this for Japanese subtitles */
+    font-weight: 800;
 }
 
 a {
@@ -106,10 +107,12 @@ a:hover {
 
 .postMenuItem {
     text-align: left;
+    margin-bottom: 2.0em;
+    vertical-align: bottom;
 }
 
 .postMenuItem h2 {
-    font-weight: 500;
+    margin-top: 0em;
     padding-bottom: 0px;
     margin-bottom: 0px;
 }
@@ -121,8 +124,8 @@ a:hover {
     margin-bottom: 0px;
 }
 
-.postMenuItem .postDate {
-    font-weight: 600;
+.postMenuItem .post {
+    display: block;
 }
 
 .postMenuItem a .postTitle {
@@ -133,12 +136,23 @@ a:hover {
     color: #da1071
 }
 
+.postMenuItem .postDate {
+    display: inline-block;
+    margin-right: auto;
+    font-weight: 800;
+}
+
 .postMenuItem .postTagsList {
+    display: inline-block;
     font-size: 0.7em;
+    text-align: right;
+    vertical-align: bottom;
+    padding-top: 0.4em;
+    float:right;
+    right:0;
 }
 
 div#header {
-    font-family: "Computer Modern Serif", "Open Sans Condensed", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
     margin: 0px;
     padding: 0px;
     position: relative;
@@ -147,6 +161,7 @@ div#header {
 
 div#logo {
     position: relative;
+    margin-right: 7.0em;
 }
 
 div#header a {
@@ -157,10 +172,12 @@ div#header a:hover {
     color: #da1071;
 }
 
-h1#logomain {
-    font-family: "Computer Modern Serif", serif;
-    text-align: left;
+div#header h1 {
     font-size: 60px;
+}
+
+h1#logomain {
+    text-align: left;
 }
 
 div#header #social {
@@ -171,16 +188,17 @@ div#header #social {
 div#header #navigation {
     text-align: right;
     position: absolute;
-    top: 7px;
+    top: 0.5em;
     right: 0px;
 }
 
 div#header #navigation a {
-    font-size: 50px;
-    margin: 20px 10px 0px 12px;
+    margin: 25px 10px 0px 12px;
     text-decoration: none;
     text-transform: lowercase;
     color: #333;
+    font-size: 50px;
+    font-weight: 800;
 }
 
 div#header #navigation a:hover {
@@ -195,14 +213,15 @@ div#footer {
 }
 
 div.info {
-    color: #555;
-    font-size: 16px;
-    text-align: center;
+}
+
+div.info:after {
+    content: ".";
 }
 
 div.tagsinfo {
     color: #555;
-    font-size: 14px;
+    font-size: 0.8em;
     font-style: italic;
     text-align: right;
 }
@@ -250,22 +269,4 @@ figure {
 .elastic-tabstops > table > tbody > tr > td > pre {
     margin: 0px;
     padding: 0px;
-}
-
-@media screen and (max-width: 700px) {
-    h1#logomain {
-        font-size: 8vw;
-    }
-
-    div#header #navigation a {
-        font-size: 7vw;
-    }
-
-    h1.title {
-        font-size: 4.6vw;
-    }
-
-    h2.subtitle {
-        font-size: 3.0vw;
-    }
 }
