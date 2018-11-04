@@ -8,7 +8,10 @@ tags: latin, fabellae-latinae, llpsi, podcasts
 
 <div class="sidenote">This is an extract from *[Fabellae
 Latinae][fabellae-latinae]*, the freely downloadable companion text to Hans H.
-Ørberg's excellent series, *[Lingua Latina][lingua-latina]*.</div>
+Ørberg's excellent series, *[Lingua Latina][lingua-latina]*.  It is also
+available in podcast form on [iTunes][itunes], [Google Play
+Music][google-play], or by searching for "Fabellae Latinae" / subscribing to
+[this RSS feed][rss].</div>
 
 <center>
 <audio controls preload="none">
@@ -56,3 +59,6 @@ Sed mea est pecūnia quae est in sacculō Mēdī!”
 
 [fabellae-latinae]: https://www.hackettpublishing.com/pdfs/FabellaeLatinae_2016_HansOrberg.pdf
 [lingua-latina]: https://www.hackettpublishing.com/lingua-latina-per-se-illustrata-series
+[itunes]: https://itunes.apple.com/us/podcast/fabellae-latinae/id1439859681
+[google-play]: https://play.google.com/music/m/Iejungfyafunuhg4ehuhrfjerdq?t=Fabellae_Latinae
+[rss]: https://s3.amazonaws.com/fabellaelatinae/feed.rss
