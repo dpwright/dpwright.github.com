@@ -2,7 +2,7 @@
 title: Fabellae Latinae Capitulum III
 subtitle: Pater dormit
 date: 2018-10-28 21:07:20
-thumbnail: /images/FabellaeLatinae.jpg
+thumbnail: https://dpwright.com/images/FabellaeLatinae.jpg
 tags: latin, fabellae-latinae, llpsi, podcasts
 ---
 

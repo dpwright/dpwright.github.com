@@ -2,7 +2,7 @@
 title: Fabellae Latinae Capitulum I
 subtitle: Prōvinciae Rōmānae
 date: 2018-10-13 12:28:20
-thumbnail: /images/FabellaeLatinae.jpg
+thumbnail: https://dpwright.com/images/FabellaeLatinae.jpg
 tags: latin, fabellae-latinae, llpsi, podcasts
 ---
 

@@ -2,7 +2,7 @@
 title: Fabellae Latinae Capitulum II
 subtitle: Līberī et librī
 date: 2018-10-21 16:44:20
-thumbnail: /images/FabellaeLatinae.jpg
+thumbnail: https://dpwright.com/images/FabellaeLatinae.jpg
 tags: latin, fabellae-latinae, llpsi, podcasts
 ---
 
