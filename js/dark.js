@@ -6,10 +6,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     toggle.innerHTML = "◑";
   }
 
+  var darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var altMode = darkMode ? "light" : "dark";
+
   var location = new URL(window.location);
-  if(location.searchParams.has("alt")) {
-    // Set the body id to "alt"
-    document.body.id = "alt";
+  if(location.searchParams.has(altMode)) {
+    // Set the body id to altMode
+    document.body.id = altMode;
 
     // Find all internal links and add "?alt" to them
     var links = document.getElementsByTagName("a");
@@ -18,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     for(i = 0; i < linksCount; i++) {
       href = new URL(links[i].href);
         if(href.hostname == host) {
-          links[i].href += "?alt";
+          links[i].href += "?" + altMode;
         }
     }
 
@@ -26,6 +29,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     toggle.href = "?";
   } else {
     // Set the toggle to turn alternate mode on
-    toggle.href = "?alt";
+    toggle.href = "?" + altMode;
   }
 });
