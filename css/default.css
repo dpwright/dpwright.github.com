@@ -328,3 +328,119 @@ body#dark div#footer {
 body#dark div.tagsinfo {
     color: #aaa;
 }
+
+@media (prefers-color-scheme: dark) {
+body {
+    background-color: #202124;
+    color: #ccc;
+}
+
+body blockquote {
+    color: #333;
+}
+
+body div.sidenote {
+    color: #333;
+}
+
+body div#crosspost {
+    color: #333;
+}
+
+body a {
+    color: #da1071;
+}
+
+body a:hover {
+    color: #47a3ff;
+}
+
+body .postMenuItem a .postTitle {
+    color: #ccc
+}
+
+body .postMenuItem a:hover .postTitle {
+    color: #da1071
+}
+
+body div#header a {
+    color: #ccc;
+}
+
+body div#header a:hover {
+    color: #da1071;
+}
+
+body div#header #navigation a {
+    color: #ccc;
+}
+
+body div#header #navigation a:hover {
+    color: #da1071;
+}
+
+body div#footer {
+    color: #aaa;
+}
+
+body div.tagsinfo {
+    color: #aaa;
+}
+
+body#light {
+    background-color: #fafafa;
+    color: #333;
+}
+
+body#light blockquote {
+    color: #333;
+}
+
+body#light div.sidenote {
+    color: #333;
+}
+
+body#light div#crosspost {
+    color: #333;
+}
+
+body#light a {
+    color: #da1071;
+}
+
+body#light a:hover {
+    color: #47a3ff;
+}
+
+body#light .postMenuItem a .postTitle {
+    color: black
+}
+
+body#light .postMenuItem a:hover .postTitle {
+    color: #da1071
+}
+
+body#light div#header a {
+    color: #333;
+}
+
+body#light div#header a:hover {
+    color: #da1071;
+}
+
+body#light div#header #navigation a {
+    color: #333;
+}
+
+body#light div#header #navigation a:hover {
+    color: #da1071;
+}
+
+body#light div#footer {
+    color: #555;
+}
+
+body#light div.tagsinfo {
+    color: #555;
+}
+}
