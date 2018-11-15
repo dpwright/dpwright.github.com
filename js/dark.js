@@ -7,25 +7,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   var location = new URL(window.location);
-  if(location.searchParams.has("dark")) {
-    // Set the body id to "dark"
-    document.body.id = "dark";
+  if(location.searchParams.has("alt")) {
+    // Set the body id to "alt"
+    document.body.id = "alt";
 
-    // Find all internal links and add "?dark" to them
+    // Find all internal links and add "?alt" to them
     var links = document.getElementsByTagName("a");
     var linksCount = links.length;
     var host = window.location.hostname;
     for(i = 0; i < linksCount; i++) {
       href = new URL(links[i].href);
         if(href.hostname == host) {
-          links[i].href += "?dark";
+          links[i].href += "?alt";
         }
     }
 
-    // Set the toggle to turn dark mode off
+    // Set the toggle to turn alternate mode off
     toggle.href = "?";
   } else {
-    // Set the toggle to turn dark mode on
-    toggle.href = "?dark";
+    // Set the toggle to turn alternate mode on
+    toggle.href = "?alt";
   }
 });
