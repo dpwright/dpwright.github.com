@@ -8,8 +8,47 @@
         <name>Daniel P. Wright</name>
         <email>dani@dpwright.com</email>
     </author>
-    <updated>2018-12-01T18:30:00Z</updated>
+    <updated>2018-12-08T12:30:00Z</updated>
     <entry>
+    <title>Fabellae Latinae Capitulum IX</title>
+    <link href="http://dpwright.com/posts/2018/12/08/fabellae-latinae-capitulum-ix/index.html" />
+    <id>http://dpwright.com/posts/2018/12/08/fabellae-latinae-capitulum-ix/index.html</id>
+    <published>2018-12-08T12:30:00Z</published>
+    <updated>2018-12-08T12:30:00Z</updated>
+    <summary type="html"><![CDATA[
+
+<div class="info"> 8 December, 2018</div>
+
+<div class="sidenote">
+This is an extract from <em><a href="https://www.hackettpublishing.com/pdfs/FabellaeLatinae_2016_HansOrberg.pdf">Fabellae Latinae</a></em>, the freely downloadable companion text to Hans H. Ørberg’s excellent series, <em><a href="https://www.hackettpublishing.com/lingua-latina-per-se-illustrata-series">Lingua Latina</a></em>. It is also available in podcast form on <a href="https://itunes.apple.com/us/podcast/fabellae-latinae/id1439859681">iTunes</a>, <a href="https://play.google.com/music/m/Iejungfyafunuhg4ehuhrfjerdq?t=Fabellae_Latinae">Google Play Music</a>, or by searching for “Fabellae Latinae” / subscribing to <a href="https://s3.amazonaws.com/fabellaelatinae/feed.rss">this RSS feed</a>.
+</div>
+<center>
+<audio controls preload="none">
+<source src="https://s3.amazonaws.com/fabellaelatinae/capitula/09-OrnamentaDominae.mp3" type="audio/mpeg" />
+</audio>
+</center>
+<p>Aemilia in cubiculō suō est cum Dēliā ancillā. Dēlia dominam suam ōrnat: margarītās circum collum Aemiliae pōnit. Aemilia ōrnāmentīs dēlectātur neque sine ōrnāmentīs ē cubiculō exit. Multās margārītas et gemmās pulchrās habet, neque ūnum tantum ānulum, sed decem ānulōs gemmātōs. Aemilia multa ōrnāmenta ā virō suō pecūniōsō accipit – et multās rosās ā fīliā suā.</p>
+<p>Domina ancillae suae sacculum ostendit: “In hōc sacculō nōn nummī, sed ānulī sunt. Ecce ānulī gemmātī quī mē dēlectant.” Aemilia quattuor ānulōs gemmātōs ē sacculō sūmit et in mēnsā pōnit.</p>
+<p>Dēlia: “Ō, quam pulchrī sunt illī ānulī!”</p>
+<p>Aemilia ūnum ex quattuor ānulīs sūmit et Dēliae ostendit: “Aspice hunc ānulum! Pretium huius ānulī est mīlle et centum sēstertiī.”</p>
+<p>Dēlia: “Id magnum pretium est!”</p>
+<p>Dēlia ānulum sūmit et ante ōculōs suōs tenet; gemmam ānulī aspicit.</p>
+<p>Dēlia: “In hōc ānulō nōn tanta gemma est quanta in illō.” Dēlia mōnstrat alium ānulum gemmātum.</p>
+<p>Aemilia: “Tanta gemma ad tam parvum ānulum nōn convenit. Neque pretium illīus gemmae tantum est quantum huius. Haec gemma sōla mīlle sēstertiīs cōnstat. Hunc ānulum pōne in digitō meō!”</p>
+<p>Ancilla ānulum gemmātum in digitō dominae pōnit. In quō digitō? In digitō quārtō, nam ānulus ad eum digitum convenit. Aemilia laeta aspicit digitum suum quī ānulō ōrnātur.</p>
+<p>Aemilia: “Speculum tenē ante mē!”</p>
+<p>Dēlia speculum tenet ante dominam, quae sē cum margarītīs suīs fōrmōsīs aspicit. Et ānulō et margarītīs dēlectātur.</p>
+<p>Aemilia cum ōrnāmentīs ē cubiculō exit neque ōstium post sē claudit.</p>
+<p>Dēlia, quae iam sōla est in cubiculō, sacculum et ānulōs trēs quī in mēnsā sunt aspicit. Ōstium claudit, et ex ānulīs sūmit eum quī magnam gemmam habet.</p>
+<p>Dēlia: “Quam pulcher est hic ānulus! Neque haec gemma nimis magna est. Etiam ad meum digitum convenit ānulus gemmātus!”</p>
+<p>Ancilla, quae nūllum ōrnāmentum habet, ānulum Aemiliae in digitō suō pōnit! Digitum cum ānulō laeta aspicit − neque ea cum ōrnāmentīs exit.</p>
+<p>Dēlia, ancilla proba, quae tam pulchra est quam domina sua, trēs ānulōs rūrsus in sacculō dominae pōnit et sine ōrnāmentīs ē cubiculō exit. Dēlia ōstium post sē claudit.</p>
+<p>Dominae Rōmānae multīs ōrnāmentīs pulchrīs ōrnantur. Ancillae nūlla aut pauca ōrnāmenta habent.</p>
+
+<div class="tagsinfo"><a href="/tags/latin/index.html">latin</a>, <a href="/tags/fabellae-latinae/index.html">fabellae-latinae</a>, <a href="/tags/llpsi/index.html">llpsi</a>, <a href="/tags/podcasts/index.html">podcasts</a></div>
+]]></summary>
+</entry>
+<entry>
     <title>Fabellae Latinae Capitulum VIII</title>
     <link href="http://dpwright.com/posts/2018/12/01/fabellae-latinae-capitulum-viii/index.html" />
     <id>http://dpwright.com/posts/2018/12/01/fabellae-latinae-capitulum-viii/index.html</id>
@@ -446,59 +485,6 @@ small-caps;">c</span>.</p>
 <p>It’s not perfect—some shortcuts are inexplicably unavailable, and it would be nice if <code>&lt;C-w&gt;f</code> worked anywhere in the line, rather than having to move the cursor over the SHA1 hash itself—but it’s pretty good considering how easy it was to set up!</p>
 
 <div class="tagsinfo"><a href="/tags/vim/index.html">vim</a>, <a href="/tags/git/index.html">git</a></div>
-]]></summary>
-</entry>
-<entry>
-    <title>Nymphetamine Fix</title>
-    <link href="http://dpwright.com/posts/2017/09/04/nymphetamine-fix/index.html" />
-    <id>http://dpwright.com/posts/2017/09/04/nymphetamine-fix/index.html</id>
-    <published>2017-09-04T13:25:00Z</published>
-    <updated>2017-09-04T13:25:00Z</updated>
-    <summary type="html"><![CDATA[
-
-<div class="info"> 4 September, 2017</div>
-
-<p>I’ve been on a bit of a Cradle of Filth nostalgia rush recently, so I decided to write an arrangement of their song, <em>Nymphetamine Fix</em>, from the album of (almost) the same name, <em>Nymphetamine</em>. I’m still working on actually being able to <em>play</em> this arrangement, but I have got a MIDI rendering of it you can listen to here:</p>
-<center>
-<audio src="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix.mp3" controls />
-</center>
-<p>I should note that I didn’t just do this by ear (which I’m rubbish at); I made the use of the following resources while I was arranging it:</p>
-<ul>
-<li><a href="https://www.songsterr.com/a/wsa/cradle-of-filth-nymphetamine-tab-g-s3838">Nymphetamine tab on Songsterr</a>, which I used to get a basic feel for the song, and</li>
-<li><a href="https://www.scribd.com/doc/7847913/Cradle-of-Filth-NymphEtaMine-piano">Christine Palethorpe’s piano arrangement</a>, which was especially useful for getting the vocal melodies, as well as some other nice bits which I brazenly stole. There is a <a href="https://www.youtube.com/watch?v=7NaecpN11l8">recording of this piano arrangement on her YouTube channel</a> which is definitely worth checking out.</li>
-</ul>
-<p>You can download versions engraved in traditional notation, tablature, or both below:</p>
-<center>
-<a href="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix.pdf">
-<figure style="display: inline-block;">
-<img src="/posts/2017/09/04/nymphetamine-fix/both.jpg" alt="Nymphetamine Fix" />
-<figcaption>
-Traditional and Tab
-</figcaption>
-</figure>
-</a> <a href="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix-traditional.pdf">
-<figure style="display: inline-block;">
-<img src="/posts/2017/09/04/nymphetamine-fix/traditional.jpg" alt="Nymphetamine Fix (Traditional Notation)" />
-<figcaption>
-Traditional Only
-</figcaption>
-</figure>
-</a> <a href="/posts/2017/09/04/nymphetamine-fix/nymphetamine-fix-tab.pdf">
-<figure style="display: inline-block;">
-<img src="/posts/2017/09/04/nymphetamine-fix/tab.jpg" alt="Nymphetamine Fix (Tablature)" />
-<figcaption>
-Tablature Only
-</figcaption>
-</figure>
-</a>
-</center>
-<p>If you aren’t familiar with Cradle of Filth or their song <em>Nymphetamine Fix</em>, here’s the official video. It is a bit louder than the solo guitar version above.</p>
-<center>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/6dW6aNAZGTM?rel=0" frameborder="0" style="max-width: 100%" allowfullscreen>
-</iframe>
-</center>
-
-<div class="tagsinfo"><a href="/tags/guitar/index.html">guitar</a>, <a href="/tags/tablature/index.html">tablature</a>, <a href="/tags/lilypond/index.html">lilypond</a></div>
 ]]></summary>
 </entry>
 
