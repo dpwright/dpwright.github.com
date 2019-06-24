@@ -1,0 +1,258 @@
+body {
+  max-width: 800px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  /*background-color: #fafafa;*/
+  background: url(paper.jpg) #F4EEDF;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #333;
+  font-size: 1.1em;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1em;
+  text-rendering: optimizeLegibility;
+  text-align: justify;
+  -webkit-text-size-adjust: none;
+}
+
+h1#title-bilingual {
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 3.0em;
+  letter-spacing: 30px;
+}
+
+img#title-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+}
+
+h1#title-boshuuchuu {
+  text-align: center;
+  position: relative;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  top: -53px; 
+  left: 80px;
+  font-size: 3.0em;
+}
+
+div#lang-select {
+  display: block;
+  margin-top: -20px;
+  margin-bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div#lang-select h3 {
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 24px;
+}
+
+p.final {
+    font-weight: bold;
+  font-size: 1.1em;
+}
+
+h2 {
+  padding-top: 0.75em;
+}
+
+h2#subtitle {
+  text-align: center;
+  margin-top: 0px;
+}
+
+a {
+  color: #ed1c23;
+  text-decoration: none;
+  word-wrap: break-word;
+}
+
+a:hover {
+  color: #777;
+}
+
+.stretch {
+  text-align: justify;
+  text-align-last: justify;
+  height: 1em;
+  line-height: 1;
+}
+/*
+.stretch:after {
+  content: '';
+  width: 100%;
+  display: inline-block;
+}
+*/
+td {
+  text-align: left;
+  padding-left: 1em;
+}
+
+tr {
+  margin-bottom: -1em;
+}
+
+.speech-bubble-right {
+  position: relative;
+  background: #B3EBFF;
+  border-radius: .4em;
+  margin: 1em;
+  padding: 0.2em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  width: 80%;
+}
+
+.speech-bubble-right:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-left-color: #B3EBFF;
+  border-right: 0;
+  border-bottom: 0;
+  margin-top: -10px;
+  margin-right: -20px;
+}
+
+.speech-bubble-left {
+  position: relative;
+  background: #fddce3;
+  border: solid 2px #ed1c23;
+  border-radius: .4em;
+  margin-left: 160px;
+  padding: 0.5em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.speech-bubble-left:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-right-color: #ed1c23;
+  border-left: 0;
+  border-bottom: 0;
+  margin-top: -10px;
+  margin-left: -20px;
+}
+
+figure {
+  margin-bottom: 20px;
+}
+
+figcaption {
+  text-align: center;
+  font-size: 0.8em;
+  margin: 0px;
+  margin-bottom: 20px;
+  padding: 0px;
+}
+
+.float-right {
+  float:right;
+  margin: 10px 0.75em;
+}
+
+.float-left {
+  float:left;
+  margin: 0px 0.75em;
+}
+
+.starter-art {
+  float:left;
+  margin: 0px 0.75em;
+}
+
+.dnd-books {
+  float:right;
+  margin: 10px 0.75em;
+}
+
+.play-bilingual {
+  float:left;
+  margin: 0px 0.75em;
+}
+
+.flip-horizontal {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+@media screen and (max-width: 650px) {
+  body {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+  }
+
+  figure {
+    margin-bottom: 40px;
+  }
+
+figcaption {
+  margin-bottom: 40px;
+}
+
+  h1#title-bilingual {
+    font-size: 2.5em;
+    letter-spacing: 10px;
+  }
+
+  h1#title-boshuuchuu {
+    top: 0px; 
+    left: 0px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-size: 2.5em;
+  }
+
+  div#lang-select {
+    margin-top: 0px;
+  }
+
+  .starter-art {
+    float: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+  }
+
+  .dnd-books {
+    float: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+  }
+
+  .play-bilingual {
+    float: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+  }
+}
