@@ -272,63 +272,6 @@ figure {
 }
 
 /* Dark Mode customisations */
-body#dark {
-    background-color: #202124;
-    color: #ccc;
-}
-
-body#dark blockquote {
-    color: #333;
-}
-
-body#dark div.sidenote {
-    color: #333;
-}
-
-body#dark div#crosspost {
-    color: #333;
-}
-
-body#dark a {
-    color: #da1071;
-}
-
-body#dark a:hover {
-    color: #47a3ff;
-}
-
-body#dark .postMenuItem a .postTitle {
-    color: #ccc
-}
-
-body#dark .postMenuItem a:hover .postTitle {
-    color: #da1071
-}
-
-body#dark div#header a {
-    color: #ccc;
-}
-
-body#dark div#header a:hover {
-    color: #da1071;
-}
-
-body#dark div#header #navigation a {
-    color: #ccc;
-}
-
-body#dark div#header #navigation a:hover {
-    color: #da1071;
-}
-
-body#dark div#footer {
-    color: #aaa;
-}
-
-body#dark div.tagsinfo {
-    color: #aaa;
-}
-
 @media (prefers-color-scheme: dark) {
 body {
     background-color: #202124;
@@ -385,62 +328,5 @@ body div#footer {
 
 body div.tagsinfo {
     color: #aaa;
-}
-
-body#light {
-    background-color: #fafafa;
-    color: #333;
-}
-
-body#light blockquote {
-    color: #333;
-}
-
-body#light div.sidenote {
-    color: #333;
-}
-
-body#light div#crosspost {
-    color: #333;
-}
-
-body#light a {
-    color: #da1071;
-}
-
-body#light a:hover {
-    color: #47a3ff;
-}
-
-body#light .postMenuItem a .postTitle {
-    color: black
-}
-
-body#light .postMenuItem a:hover .postTitle {
-    color: #da1071
-}
-
-body#light div#header a {
-    color: #333;
-}
-
-body#light div#header a:hover {
-    color: #da1071;
-}
-
-body#light div#header #navigation a {
-    color: #333;
-}
-
-body#light div#header #navigation a:hover {
-    color: #da1071;
-}
-
-body#light div#footer {
-    color: #555;
-}
-
-body#light div.tagsinfo {
-    color: #555;
 }
 }
