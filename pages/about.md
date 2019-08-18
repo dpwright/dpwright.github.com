@@ -13,7 +13,9 @@ I mostly blog in English, but given that I used to live in Japan and was
 involved in the functional programming community in Kansai I sometimes post in
 Japanese as well.  This is particularly true of writeups for any talks I gave
 there.  If you are interested in Japanese content in particular, there is a
-[tag][日本語] for that.
+[tag][日本語] for that.  I also have a separate, Japanese-only blog,
+[駄日記][駄日記].  And recently I've been getting into Latin and Ancient Greek,
+so I may venture into those languages occasionally, too.
 
 I also have a podcast, [Station 13].  You should subscribe to it!
 
@@ -68,6 +70,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [日本語]:                  https://dpwright.com/tags/日本語
+[駄日記]:                  https://jp.dpwright.com/
 [Station 13]:              https://station13.fm
 [tataminomusi]:            http://twitter.com/tataminomusi
 [danielpwright]:           http://twitter.com/danielpwright
