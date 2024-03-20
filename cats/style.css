@@ -12,3 +12,34 @@ body {
     text-align: justify;
     -webkit-text-size-adjust: none;
 }
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+img.fullwidth {
+    width: 100%;
+}
+
+th {
+    min-width: 10em;
+    vertical-align: top;
+}
+
+td {
+    vertical-align: top;
+}
+
+@media screen and (max-width: 800px) {
+  h1 {
+    font-size: 4.25vw;
+  }
+
+  h2 {
+    font-size: 3.25vw;
+  }
+}
